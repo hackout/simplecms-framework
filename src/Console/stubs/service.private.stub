@@ -1,0 +1,13 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ modelNamespace }}\{{ modelName }};
+use SimpleCMS\Framework\Services\SimpleService;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+class {{ class }}Service extends SimpleService
+{
+    public ?string $className = {{modelName}}::class;
+    
+}

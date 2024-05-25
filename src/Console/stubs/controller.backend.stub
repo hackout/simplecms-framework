@@ -1,0 +1,201 @@
+<?php
+
+namespace {{ namespace }}\{{ controllerNamespace }};
+
+use {{ namespacedService }};
+use {{ namespacedRequests }}
+use Illuminate\Support\Facades\Validator;
+use SimpleCMS\Http\Controller\BackendController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
+class {{ class }} extends BackendController
+{
+
+    /**
+     * {{ class }} 获取列表
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  Request         $request
+     * @param  {{storeService}} $service
+     * @return JsonResponse
+     */
+    public function index({{ storeRequest }} $request,{{storeService}} $service):JsonResponse
+    {
+        $rules = [
+            'keyword' => 'sometimes|nullable|max:250'
+        ];
+        $messages = [
+            'keyword.max' => '关键词最大支持250个字符'
+        ];
+        $data = $request->validate($rules,$messages);
+        $result = $service->getList($request->user(),$data);
+        return $this->success($result);
+    }
+
+    /**
+     * {{ class }} 添加信息
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  Request         $request
+     * @param  {{storeService}} $service
+     * @return JsonResponse
+     */
+    public function create({{ storeRequest }} $request,{{storeService}} $service):JsonResponse
+    {
+        $rules = [
+            //
+        ];
+        $messages = [
+            //
+        ];
+        $data = $request->validate($rules,$messages);
+        $service->createByUser($request->user(),$data);
+        return $this->success();
+    }
+
+    /**
+     * {{ class }} 编辑信息
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  string $id
+     * @param  Request         $request
+     * @param  {{storeService}} $service
+     * @return JsonResponse
+     */
+    public function update(string $id,{{ storeRequest }} $request,{{storeService}} $service):JsonResponse
+    {
+        $rules = [
+            'id' => 'exists:{{ table }},id'
+        ];
+        $messages = [
+            'id.exists' => '信息不存在或删除',
+        ];
+        $validator = Validator::make(array_merge([
+            'id' => $id
+        ], $request->all()), $rules, $messages);
+        if ($validator->fails()) {
+            return $this->error($validator->errors()->first());
+        }
+        $data = $validator->safe()->only([
+            //Todo..
+        ]);
+        $service->updateByUser($request->user(),$id,$data);
+        return $this->success();
+    }
+
+    /**
+     * {{ class }} 信息详情
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  string $id
+     * @param  Request         $request
+     * @param  {{storeService}} $service
+     * @return JsonResponse
+     */
+    public function detail(string $id,{{ storeRequest }} $request,{{storeService}} $service):JsonResponse
+    {
+        $rules = [
+            'id' => 'exists:{{ table }},id'
+        ];
+        $messages = [
+            'id.exists' => '信息不存在或删除',
+        ];
+        $validator = Validator::make(array_merge([
+            'id' => $id
+        ], $request->post()), $rules, $messages);
+        if ($validator->fails()) {
+            return $this->error($validator->errors()->first());
+        }
+        $result = $service->detailByUser($request->user(),$id);
+        return $this->success($result);
+    }
+
+    
+    /**
+     * {{ class }} 删除信息
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  string         $id
+     * @param  Request         $request
+     * @param  CommitInlineService $commitInlineService
+     * @return JsonResponse
+     */
+    public function delete(string $id,{{ storeRequest }} $request,{{storeService}} $service): JsonResponse
+    {
+        $rules = [
+            'id' => 'exists:{{ table }},id'
+        ];
+        $messages = [
+            'id.exists' => '信息不存在或删除',
+        ];
+        $validator = Validator::make(array_merge([
+            'id' => $id
+        ], $request->post()), $rules, $messages);
+        if ($validator->fails()) {
+            return $this->error($validator->errors()->first());
+        }
+        $data = $validator->safe()->only([
+            //Todo..
+        ]);
+        $service->deleteByUser($request->user(),$id,$data);
+        return $this->success();
+    }
+    
+
+    /**
+     * {{ class }} 下载导入模板
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  {{storeService}} $service
+     * @return BinaryFileResponse
+     */
+    public function template({{storeService}} $service): BinaryFileResponse
+    {
+        return $service->downloadImportTemplate();
+    }
+
+    /**
+     * {{ class }} 导入数据
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  {{ storeRequest }} $request
+     * @param  {{storeService}} $service
+     * @return JsonResponse
+     */
+    public function import({{ storeRequest }} $request,{{storeService}} $service): JsonResponse
+    {
+        $rules = [
+            'file' => 'required|file|mimes:xls,xlsx',
+        ];
+        $messages = [
+            'file.required' => '上传文件不能为空',
+            'file.file' => '上传文件错误',
+            'file.mimes' => '上传文件格式错误'
+        ];
+        $data = $request->validate($rules, $messages);
+        $service->importFile($request->user(), $data['file']);
+        return $this->success();
+    }
+    
+    /**
+     * {{ class }} 导出数据
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  {{ storeRequest }} $request
+     * @param  {{storeService}} $service
+     * @return JsonResponse
+     */
+    public function export({{ storeRequest }} $request, {{storeService}} $service): JsonResponse
+    {
+        $rules = [
+            'keyword' => 'sometimes|nullable|max:250'
+        ];
+        $messages = [
+            'keyword.max' => '关键词最大支持250个字符'
+        ];
+        $data = $request->validate($rules,$messages);
+        $result = $service->export($data);
+        return $this->success($result);
+    }
+}

@@ -1,0 +1,94 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ modelNamespace }}\User;
+use {{ modelNamespace }}\{{ modelName }};
+use SimpleCMS\Framework\Services\SimpleService;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+class {{ class }} extends SimpleService
+{
+
+    public ?string $className = {{modelName}}::class;
+    
+    /**
+     * 获取列表
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  User  $user
+     * @param  array $data
+     * @return array
+     */
+    public function getList(User $user,array $data):array
+    {
+        $condition = [
+            'keyword' => ['search', ['id']],
+            'date' => ['datetime_range','created_at']
+        ];
+        parent::listQuery($data, $condition);
+        $result = parent::list();
+        return $result;
+    }
+
+    /**
+     * 获取详情
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  User  $user
+     * @param  string $id
+     * @return array
+     */
+    public function detail(User $user,string $id): array
+    {
+        $item = parent::findById($id);
+        
+        return $result;
+    }
+
+    /**
+     * 添加数据
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  User  $user
+     * @param  array $data
+     * @return void
+     */
+    public function createByUser(User $user,array $data): void
+    {
+        $sql = array_merge([
+            'user_id' => $user->id,
+        ],$data);
+        parent::create($sql);
+    }
+
+    /**
+     * 修改数据
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  User  $user
+     * @param  string $id
+     * @param  array $data
+     * @return void
+     */
+    public function createByUser(User $user,string $id,array $data): void
+    {
+        $sql = array_merge([
+            'user_id' => $user->id,
+        ],$data);
+        parent::update($id,$sql);
+    }
+
+    /**
+     * 删除数据
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  User  $user
+     * @param  string $id
+     * @return void
+     */
+    public function deleteByUser(User $user,string $id): void
+    {
+        parent::delete($id);
+    }
+}
