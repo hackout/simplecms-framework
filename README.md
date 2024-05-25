@@ -21,3 +21,4 @@ php artisan create:migration #同php artisan make:migration
 ## 其他说明
 
 服务及控制器等使用请参考IDE提示。
+更多文档请自行查阅代码
