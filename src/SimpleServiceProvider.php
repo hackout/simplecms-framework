@@ -2,12 +2,18 @@
 
 namespace SimpleCMS\Framework;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\ServiceProvider;
-use SimpleCMS\Framework\Console\MigrateMakeCommand;
-use SimpleCMS\Framework\Console\SeederMakeCommand;
-use SimpleCMS\Framework\Console\ServiceMakeCommand;
-use SimpleCMS\Framework\Console\ControllerMakeCommand;
+use Illuminate\Support\Facades\Validator;
 use SimpleCMS\Framework\Console\ModelMakeCommand;
+use SimpleCMS\Framework\Validation\Rule\PhoneRule;
+use SimpleCMS\Framework\Console\SeederMakeCommand;
+use SimpleCMS\Framework\Console\MigrateMakeCommand;
+use SimpleCMS\Framework\Console\ServiceMakeCommand;
+use SimpleCMS\Framework\Validation\Rule\IDCardRule;
+use SimpleCMS\Framework\Validation\Rule\MobileRule;
+use SimpleCMS\Framework\Validation\Rule\TelephoneRule;
+use SimpleCMS\Framework\Console\ControllerMakeCommand;
 
 class SimpleServiceProvider extends ServiceProvider
 {
@@ -45,6 +51,65 @@ class SimpleServiceProvider extends ServiceProvider
                 __DIR__ . '/Console/stubs/service.frontend.stub' => base_path('stubs/service.frontend.stub'),
                 __DIR__ . '/Console/stubs/service.private.stub' => base_path('stubs/service.private.stub'),
             ], 'stubs');
+        }
+    }
+
+    /**
+     * 加载验证
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return void
+     */
+    protected function loadedValidator(): void
+    {
+        Validator::extend(
+            'id_card',
+            IDCardRule::class
+        );
+        Validator::extend(
+            'mobile',
+            MobileRule::class
+        );
+        Validator::extend(
+            'telephone',
+            TelephoneRule::class
+        );
+        Validator::extend(
+            'phone',
+            PhoneRule::class
+        );
+    }
+
+    /**
+     * 加载辅助函数
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return void
+     */
+    protected function loadedHelpers(): void
+    {
+
+        foreach (scandir(__DIR__ . DIRECTORY_SEPARATOR . 'helpers') as $helperFile) {
+            $path = sprintf(
+                '%s%s%s%s%s',
+                __DIR__,
+                DIRECTORY_SEPARATOR,
+                'helpers',
+                DIRECTORY_SEPARATOR,
+                $helperFile
+            );
+
+            if (!is_file($path)) {
+                continue;
+            }
+
+            $function = Str::before($helperFile, '.php');
+
+            if (function_exists($function)) {
+                continue;
+            }
+
+            require_once $path;
         }
     }
 

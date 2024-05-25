@@ -47,8 +47,8 @@ class SimpleUploadService
     public function makeScreenshot(string $file): string
     {
         $ffmpegConfig = [
-            'ffmpeg.binaries' => env('FFMPEG_PATH'),
-            'ffprobe.binaries' => env('FFPROBE_PATH')
+            'ffmpeg.binaries' => config('cms.ffmpeg_path'),
+            'ffprobe.binaries' => config('cms.ffprobe_path')
         ];
         $ffmpeg = FFMpeg::create($ffmpegConfig);
         $video = $ffmpeg->open(Storage::path($file));
