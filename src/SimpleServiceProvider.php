@@ -57,7 +57,7 @@ class SimpleServiceProvider extends ServiceProvider
         $this->loadedHelpers();
         $this->bootDefaultDisk();
         $this->loadedValidator();
-        
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'simplecms');
         // HTTP routing
         if(!config('cms.captcha.disable')){
             $router = $this->app['router'];

@@ -2,9 +2,8 @@
 
 namespace {{ namespace }};
 
-use Illuminate\Database\Seeder;
 use {{ namespacedUserModel }};
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
 class {{ class }} extends Seeder
 {

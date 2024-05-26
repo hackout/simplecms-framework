@@ -72,17 +72,17 @@ class MigrateMakeCommand extends GeneratorCommand
      */
     protected function replaceNamespace(&$stub, $name)
     {
-        $table = str_replace(['create_','_table'],'',$this->argument('name'));
+        $table = str_replace(['create_', '_table'], '', $this->argument('name'));
         $searches = [
-            ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel','DummyTable'],
-            ['{{ namespace }}', '{{ rootNamespace }}', '{{ namespacedUserModel }}','{{ table }}'],
-            ['{{namespace}}', '{{rootNamespace}}', '{{namespacedUserModel}}','{{table}}'],
+            ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel', 'DummyTable'],
+            ['{{ namespace }}', '{{ rootNamespace }}', '{{ namespacedUserModel }}', '{{ table }}'],
+            ['{{namespace}}', '{{rootNamespace}}', '{{namespacedUserModel}}', '{{table}}'],
         ];
 
         foreach ($searches as $search) {
             $stub = str_replace(
                 $search,
-                [$this->getNamespace($name), $this->rootNamespace(), $this->userProviderModel(),$table],
+                [$this->getNamespace($name), $this->rootNamespace(), $this->userProviderModel(), $table],
                 $stub
             );
         }

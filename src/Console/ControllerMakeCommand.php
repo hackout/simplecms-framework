@@ -61,7 +61,9 @@ class ControllerMakeCommand extends GeneratorCommand
         }
 
         $class = str_replace(
-            array_keys($replace), array_values($replace), parent::buildClass($name)
+            array_keys($replace),
+            array_values($replace),
+            parent::buildClass($name)
         );
 
         return $class;
@@ -81,14 +83,16 @@ class ControllerMakeCommand extends GeneratorCommand
         $table = Str::snake(Str::pluralStudly(class_basename($this->option('model'))));
 
         [$namespace, $storeRequestClass, $updateRequestClass] = [
-            'Illuminate\\Http', 'Request', 'Request',
+            'Illuminate\\Http',
+            'Request',
+            'Request',
         ];
-        $namespacedRequests = $namespace.'\\'.$storeRequestClass.';';
+        $namespacedRequests = $namespace . '\\' . $storeRequestClass . ';';
 
         if ($storeRequestClass !== $updateRequestClass) {
-            $namespacedRequests .= PHP_EOL.'use '.$namespace.'\\'.$updateRequestClass.';';
+            $namespacedRequests .= PHP_EOL . 'use ' . $namespace . '\\' . $updateRequestClass . ';';
         }
-        $class = Str::studly(class_basename($this->option('model'))).'Controller';
+        $class = Str::studly(class_basename($this->option('model'))) . 'Controller';
         $controllerNamespace = $this->parseController($this->option('model'));
         return [
             'DummyNamespaceService' => $serviceClass,
@@ -110,10 +114,10 @@ class ControllerMakeCommand extends GeneratorCommand
             '{{storeRequest}}' => $storeRequestClass,
             '{{ updateRequest }}' => $updateRequestClass,
             '{{updateRequest}}' => $updateRequestClass,
-            '{{ namespacedStoreRequest }}' => $namespace.'\\'.$storeRequestClass,
-            '{{namespacedStoreRequest}}' => $namespace.'\\'.$storeRequestClass,
-            '{{ namespacedUpdateRequest }}' => $namespace.'\\'.$updateRequestClass,
-            '{{namespacedUpdateRequest}}' => $namespace.'\\'.$updateRequestClass,
+            '{{ namespacedStoreRequest }}' => $namespace . '\\' . $storeRequestClass,
+            '{{namespacedStoreRequest}}' => $namespace . '\\' . $storeRequestClass,
+            '{{ namespacedUpdateRequest }}' => $namespace . '\\' . $updateRequestClass,
+            '{{namespacedUpdateRequest}}' => $namespace . '\\' . $updateRequestClass,
             '{{ namespacedRequests }}' => $namespacedRequests,
             '{{namespacedRequests}}' => $namespacedRequests,
         ];
@@ -133,7 +137,7 @@ class ControllerMakeCommand extends GeneratorCommand
             throw new InvalidArgumentException('Model name contains invalid characters.');
         }
         $name = class_basename(str_replace('\\', '/', Str::replaceFirst($this->rootNamespace(), '', $model)));
-        return $name.'Service';
+        return $name . 'Service';
     }
 
     /**
@@ -149,7 +153,7 @@ class ControllerMakeCommand extends GeneratorCommand
         $type = Str::studly(class_basename($this->option('type')));
 
         $name = class_basename(str_replace('\\', '/', Str::replaceFirst($this->rootNamespace(), '', $model)));
-        return 'Services\\'.$type.'\\'.$name;
+        return 'Services\\' . $type . '\\' . $name;
 
     }
 
@@ -158,9 +162,9 @@ class ControllerMakeCommand extends GeneratorCommand
         $type = Str::studly(class_basename($this->option('type')));
 
         $model = Str::studly(class_basename($model));
-        return 'Http\\Controllers\\'.$type.'\\'.$model;
+        return 'Http\\Controllers\\' . $type . '\\' . $model;
     }
-    
+
     /**
      * Get the destination class path.
      *
@@ -171,7 +175,7 @@ class ControllerMakeCommand extends GeneratorCommand
     {
         $name = class_basename($this->argument('name'));
         $type = Str::studly(class_basename($this->option('type')));
-        return $this->laravel->basePath().'/App/Http/Controllers/'.$type.'/'.$name.'.php';
+        return $this->laravel->basePath() . '/App/Http/Controllers/' . $type . '/' . $name . '.php';
     }
 
 }

@@ -45,15 +45,15 @@ class SeederMakeCommand extends GeneratorCommand
     protected function replaceNamespace(&$stub, $name)
     {
         $searches = [
-            ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel','ModelClass'],
-            ['{{ namespace }}', '{{ rootNamespace }}', '{{ namespacedUserModel }}','{{ modelClass }}'],
-            ['{{namespace}}', '{{rootNamespace}}', '{{namespacedUserModel}}','{{modelClass}}'],
+            ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel', 'ModelClass'],
+            ['{{ namespace }}', '{{ rootNamespace }}', '{{ namespacedUserModel }}', '{{ modelClass }}'],
+            ['{{namespace}}', '{{rootNamespace}}', '{{namespacedUserModel}}', '{{modelClass}}'],
         ];
 
         foreach ($searches as $search) {
             $stub = str_replace(
                 $search,
-                [$this->getNamespace($name), $this->rootNamespace(), $this->userProviderModel(),$this->getModelClass()],
+                [$this->getNamespace($name), $this->rootNamespace(), $this->userProviderModel(), $this->getModelClass()],
                 $stub
             );
         }
@@ -71,11 +71,11 @@ class SeederMakeCommand extends GeneratorCommand
     {
         $name = str_replace('\\', '/', Str::replaceFirst($this->rootNamespace(), '', $name));
 
-        if (is_dir($this->laravel->databasePath().'/seeds')) {
-            return $this->laravel->databasePath().'/seeds/'.$name.'.php';
+        if (is_dir($this->laravel->databasePath() . '/seeds')) {
+            return $this->laravel->databasePath() . '/seeds/' . $name . '.php';
         }
 
-        return $this->laravel->databasePath().'/seeders/'.$name.'.php';
+        return $this->laravel->databasePath() . '/seeders/' . $name . '.php';
     }
 
     /**
@@ -88,7 +88,7 @@ class SeederMakeCommand extends GeneratorCommand
         return 'Database\Seeders\\';
     }
 
-    
+
     /**
      * Get the model for the default guard's user provider.
      *
@@ -96,9 +96,9 @@ class SeederMakeCommand extends GeneratorCommand
      */
     protected function getModelClass()
     {
-        return $this->option('model');
+        return class_basename($this->option('model'));
     }
-    
+
     /**
      * Get the model for the default guard's user provider.
      *
@@ -106,10 +106,10 @@ class SeederMakeCommand extends GeneratorCommand
      */
     protected function userProviderModel()
     {
-        return $this->laravel->getNamespace().'Models\\'.$this->option('model');
+        return $this->option('model');
     }
 
-    
+
     /**
      * Get the console command options.
      *

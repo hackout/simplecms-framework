@@ -193,7 +193,7 @@ class SimpleService
                     $dateArray = is_array($data[$key]) ? $data[$key] : [$data[$key]];
                     $datetime = array_slice(array_pad($dateArray, 2, null), 0, 2);
                     if (is_array($fields)) {
-                        throw new SimpleException("请求字段错误");
+                        throw new SimpleException(trans('simplecms::parameter_valid'));
                     }
                     if ($datetime[0]) {
                         $sql[] = [$fields, '>=', Carbon::parse($datetime[0])];
@@ -206,7 +206,7 @@ class SimpleService
                     $dateArray = is_array($data[$key]) ? $data[$key] : [$data[$key]];
                     $datetime = array_slice(array_pad($dateArray, 2, null), 0, 2);
                     if (is_array($fields)) {
-                        throw new SimpleException("请求字段错误");
+                        throw new SimpleException(trans('simplecms::parameter_valid'));
                     }
                     if ($datetime[0]) {
                         $sql[] = [$fields, '>=', $datetime[0]];
@@ -218,47 +218,47 @@ class SimpleService
                 if ($action == 'datetime' && array_key_exists($key, $data) && $data[$key]) {
                     $datetime = Carbon::parse($data[$key]);
                     if (is_array($fields)) {
-                        throw new SimpleException("请求字段错误");
+                        throw new SimpleException(trans('simplecms::parameter_valid'));
                     }
                     $sql[] = [$fields, '>=', $datetime];
                 }
                 if ($action == 'date' && array_key_exists($key, $data) && $data[$key]) {
                     $datetime = Carbon::parse($data[$key]);
                     if (is_array($fields)) {
-                        throw new SimpleException("请求字段错误");
+                        throw new SimpleException(trans('simplecms::parameter_valid'));
                     }
                     $sql[] = [$fields, 'Date', $datetime->toDateString()];
                 }
                 if ($action == 'year' && array_key_exists($key, $data) && $data[$key]) {
                     $datetime = Carbon::parse($data[$key]);
                     if (is_array($fields)) {
-                        throw new SimpleException("请求字段错误");
+                        throw new SimpleException(trans('simplecms::parameter_valid'));
                     }
                     $sql[] = [$fields, 'Year', $datetime->year];
                 }
                 if ($action == 'month' && array_key_exists($key, $data) && $data[$key]) {
                     $datetime = Carbon::parse($data[$key]);
                     if (is_array($fields)) {
-                        throw new SimpleException("请求字段错误");
+                        throw new SimpleException(trans('simplecms::parameter_valid'));
                     }
                     $sql[] = [$fields, 'Month', $datetime->month];
                 }
                 if ($action == 'day' && array_key_exists($key, $data) && $data[$key]) {
                     $datetime = Carbon::parse($data[$key]);
                     if (is_array($fields)) {
-                        throw new SimpleException("请求字段错误");
+                        throw new SimpleException(trans('simplecms::parameter_valid'));
                     }
                     $sql[] = [$fields, 'Day', $datetime->day];
                 }
                 if ($action == 'column' && array_key_exists($key, $data) && $data[$key]) {
                     if (is_array($fields)) {
-                        throw new SimpleException("请求字段错误");
+                        throw new SimpleException(trans('simplecms::parameter_valid'));
                     }
                     $sql[] = [$fields, 'Column', $data[$key]];
                 }
                 if ($action == 'in' && array_key_exists($key, $data) && $data[$key]) {
                     if (is_array($fields)) {
-                        throw new SimpleException("请求字段错误");
+                        throw new SimpleException(trans('simplecms::parameter_valid'));
                     }
                     $arr = is_array($data[$key]) ? $data[$key] : [$data[$key]];
                     $sql[] = [
@@ -269,13 +269,13 @@ class SimpleService
                 }
                 if ($action == 'eq' && array_key_exists($key, $data) && $data[$key] !== null) {
                     if (is_array($fields)) {
-                        throw new SimpleException("请求字段错误");
+                        throw new SimpleException(trans('simplecms::parameter_valid'));
                     }
                     $sql[] = [$fields, '=', $data[$key]];
                 }
                 if ($action == 'like' && array_key_exists($key, $data) && $data[$key] !== null) {
                     if (is_array($fields)) {
-                        throw new SimpleException("请求字段错误");
+                        throw new SimpleException(trans('simplecms::parameter_valid'));
                     }
                     $sql[] = [$fields, 'LIKE', $data[$key]];
                 }
@@ -401,7 +401,7 @@ class SimpleService
                         list ($relation, $relationColumnString) = explode(':', $relation);
                         list ($val, $valColumnString) = array_pad(explode(':', $val), 2, null);
                         if (!$relationColumnString) {
-                            throw new SimpleException("选项语法错误");
+                            throw new SimpleException(trans('simplecms:range_valid'));
                         }
                         $valColumns = $valColumnString ? explode(',', $valColumnString) : null;
                         $relationColumns = explode(',', $relationColumnString);
@@ -420,7 +420,7 @@ class SimpleService
                         list ($relation, $relationColumnString) = explode(':', $relation);
                         list ($val, $valColumnString) = array_pad(explode(':', $val), 2, null);
                         if (!$relationColumnString) {
-                            throw new SimpleException("选项语法错误");
+                            throw new SimpleException(trans('simplecms:range_valid'));
                         }
                         $valColumns = $valColumnString ? explode(',', $valColumnString) : null;
                         $relationColumns = explode(',', $relationColumnString);
@@ -593,7 +593,7 @@ class SimpleService
         $this->item = $this->model->where($this->primaryKey, $id)->first();
 
         if (!$this->item) {
-            throw new SimpleException("信息不存在或已删除");
+            throw new SimpleException(trans('simplecms:not_exists'));
         }
 
         $this->item->fill($data);
@@ -647,7 +647,7 @@ class SimpleService
     {
         $this->item = $this->model->where($this->primaryKey, $id)->first();
         if (!$this->item) {
-            throw new SimpleException("删除信息失败");
+            throw new SimpleException(trans('simplecms:delete_failed'));
         }
         $result = $this->item->delete();
         if ($result) {
