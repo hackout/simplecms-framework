@@ -44,9 +44,9 @@ class {{ class }} extends SimpleService
      */
     public function detail(User $user,string $id): array
     {
-        $item = parent::findById($id);
+        $result = parent::findById($id);
         
-        return $result;
+        return $result->toArray();
     }
 
     /**
@@ -74,7 +74,7 @@ class {{ class }} extends SimpleService
      * @param  array $data
      * @return void
      */
-    public function createByUser(User $user,string $id,array $data): void
+    public function updateByUser(User $user,string $id,array $data): void
     {
         $sql = array_merge([
             'user_id' => $user->id,
