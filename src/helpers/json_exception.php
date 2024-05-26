@@ -1,6 +1,5 @@
 <?php
 
-use Exception;
 use Illuminate\Http\JsonResponse;
 
 
