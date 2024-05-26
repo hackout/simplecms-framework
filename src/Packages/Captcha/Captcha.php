@@ -279,7 +279,7 @@ class Captcha
         return $api ? [
             'sensitive' => $generator['sensitive'],
             'key' => $generator['key'],
-            'img' => $this->image->encode()
+            'img' => $this->image->toJpg($this->quality)->toDataUri()
         ] : response($this->image->toJpg($this->quality),'200',['Content-Type'=>'image/jpeg']);
     }
 
