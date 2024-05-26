@@ -72,7 +72,7 @@ class MigrateMakeCommand extends GeneratorCommand
      */
     protected function replaceNamespace(&$stub, $name)
     {
-        $table = Str::snake(Str::pluralStudly($this->argument('name')));
+        $table = str_replace(['create_','_table'],'',$this->argument('name'));
         $searches = [
             ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel','DummyTable'],
             ['{{ namespace }}', '{{ rootNamespace }}', '{{ namespacedUserModel }}','{{ table }}'],

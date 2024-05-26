@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use SimpleCMS\Framework\Console\ModelMakeCommand;
+use SimpleCMS\Framework\Packages\Captcha\Captcha;
 use SimpleCMS\Framework\Validation\Rule\PhoneRule;
 use SimpleCMS\Framework\Console\SeederMakeCommand;
 use SimpleCMS\Framework\Console\MigrateMakeCommand;
@@ -32,6 +33,7 @@ class SimpleServiceProvider extends ServiceProvider
             ControllerMakeCommand::class,
             ModelMakeCommand::class
         ]);
+        $this->bindCaptcha();
     }
 
     /**
@@ -55,6 +57,28 @@ class SimpleServiceProvider extends ServiceProvider
         $this->loadedHelpers();
         $this->bootDefaultDisk();
         $this->loadedValidator();
+        
+        // HTTP routing
+        if(!config('cms.captcha.disable')){
+            $router = $this->app['router'];
+            $router->get('captcha/api/{config?}', '\SimpleCMS\Framework\Http\Controllers\CaptchaController@getCaptchaApi');
+            $router->get('captcha/{config?}', '\SimpleCMS\Framework\Http\Controllers\CaptchaController@getCaptcha');
+        }
+    }
+
+    protected function bindCaptcha(): void
+    {
+
+        // Bind captcha
+        $this->app->bind('captcha', function ($app) {
+            return new Captcha(
+                $app['Illuminate\Filesystem\Filesystem'],
+                $app['Illuminate\Contracts\Config\Repository'],
+                $app['Illuminate\Session\Store'],
+                $app['Illuminate\Hashing\BcryptHasher'],
+                $app['Illuminate\Support\Str']
+            );
+        });
     }
 
     /**
@@ -80,6 +104,18 @@ class SimpleServiceProvider extends ServiceProvider
         Validator::extend(
             'phone',
             PhoneRule::class
+        );
+        Validator::extend(
+            'captcha',
+            function ($attribute, $value, $parameters) {
+                return config('cms.captcha.disable') || ($value && captcha_check($value));
+            }
+        );
+        Validator::extend(
+            'captcha_api',
+            function ($attribute, $value, $parameters) {
+                return config('cms.captcha.disable') || ($value && captcha_api_check($value, $parameters[0], $parameters[1] ?? 'default'));
+            }
         );
     }
 

@@ -2,7 +2,7 @@
     "name": "simplecms/framework",
     "description": "Simple-CMS is a SimpleCMS",
     "keywords": ["laravel", "framework", "simplecms"],
-    "version": "1.0.1",
+    "version": "1.0.2",
     "license": "MIT",
     "autoload": {
         "psr-4": {

@@ -8,6 +8,12 @@
 2. Imagick
 3. FFmpeg
 
+## 安装指令
+
+```bash
+php artisan vendor:publish --provider="SimpleCMS\Framework\SimpleServiceProvider" --tag=cms
+```
+
 ## 命令行
 
 ```bash
@@ -22,3 +28,7 @@ php artisan create:migration #同php artisan make:migration
 
 服务及控制器等使用请参考IDE提示。
 更多文档请自行查阅代码
+
+## 借鉴
+
+验证码借鉴： mews/captcha
