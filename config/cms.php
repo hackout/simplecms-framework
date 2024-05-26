@@ -5,16 +5,19 @@ return [
     'ffmpeg_path' => (string) env('FFMPEG_PATH'),
     //FFPROBE 完整路径 D:\\ffmpeg-master-latest-win64-gpl\\bin\\ffprobe.exe
     'ffprobe_path' => (string) env('FFPROBE_PATH'),
+    //默认密码
+    'default_password' => (string) env('DEFAULT_PASSWORD','123456'),
     'captcha' => [
         'disable' => env('CAPTCHA_DISABLE', false),
         'characters' => ['2', '3', '4', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'm', 'n', 'p', 'q', 'r', 't', 'u', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'M', 'N', 'P', 'Q', 'R', 'T', 'U', 'X', 'Y', 'Z'],
         'default' => [
-            'length' => 9,
+            'length' => 4,
             'width' => 120,
             'height' => 36,
             'quality' => 90,
             'math' => false,
             'expire' => 60,
+            'fontColors' => ['#2020f0', '#ff0000', '#ff00ff', '#00ffff', '#0f0f0f', '#000fff', '#fff000', '#0000ff'],
             'encrypt' => false,
         ],
         'math' => [

@@ -50,7 +50,6 @@ use function array_pad;
  * @method Model|null find(callable|null|array $where = null)
  * @method bool setValue(string|int|array $id, string $field, string|float|array $value)
  * @method bool quick(array $data)
- * @method array getRelationList(Model $item)
  * 
  */
 class SimpleService
@@ -664,46 +663,6 @@ class SimpleService
     public function clean()
     {
         $this->model->truncate();
-    }
-
-    /**
-     * 检查关联数据返回下级列表
-     *
-     * @param  Model $item
-     * @return array
-     */
-    public function getRelationList(Model $item)
-    {
-        $model = new \ReflectionClass($this->className);
-        $document = $model->getDocComment();
-        $array = [];
-        if ($document) {
-            $strings = explode("\n", $document);
-            foreach ($strings as $string) {
-                $string = trim(str_replace('*', '', $string));
-                $arr = explode(" ", $string);
-                if (count($arr) > 1 && $arr[0] == '@property-read') {
-                    if (strpos($string, 'Many') !== false || strpos($string, 'One') !== false) {
-                        $array[] = substr($arr[2], 1);
-                    }
-                }
-            }
-        }
-        $result = [];
-        if ($array) {
-            foreach ($array as $key) {
-                if ($item->{$key}) {
-                    if ($item->{$key} instanceof Collection) {
-                        if ($count = $item->{$key}->count()) {
-                            $result[$key] = $count;
-                        }
-                    } else {
-                        $result[$key] = 1;
-                    }
-                }
-            }
-        }
-        return $result;
     }
 
     /**

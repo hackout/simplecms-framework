@@ -23,7 +23,7 @@ class SimpleServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        if (!app()->configurationIsCached()) {
+        if (!$this->app->configurationIsCached()) {
             $this->mergeConfigFrom(__DIR__ . '/../config/cms.php', 'cms');
         }
         $this->commands([
@@ -57,9 +57,9 @@ class SimpleServiceProvider extends ServiceProvider
         $this->loadedHelpers();
         $this->bootDefaultDisk();
         $this->loadedValidator();
-        $this->loadTranslationsFrom(__DIR__.'/../lang', 'simplecms');
+        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'simplecms');
         // HTTP routing
-        if(!config('cms.captcha.disable')){
+        if (!config('cms.captcha.disable')) {
             $router = $this->app['router'];
             $router->get('captcha/api/{config?}', '\SimpleCMS\Framework\Http\Controllers\CaptchaController@getCaptchaApi');
             $router->get('captcha/{config?}', '\SimpleCMS\Framework\Http\Controllers\CaptchaController@getCaptcha');
@@ -188,6 +188,6 @@ class SimpleServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/cms.php' => config_path('cms.php'),
-        ], 'cms');
+        ], 'laravel-assets');
     }
 }

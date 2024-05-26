@@ -280,7 +280,7 @@ class Captcha
             'sensitive' => $generator['sensitive'],
             'key' => $generator['key'],
             'img' => $this->image->encode()
-        ] : $this->image->toPng($this->quality);
+        ] : response($this->image->toJpg($this->quality),'200',['Content-Type'=>'image/jpeg']);
     }
 
     /**
