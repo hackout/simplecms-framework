@@ -2,20 +2,19 @@
 
 namespace SimpleCMS\Framework\Packages\Captcha;
 
-use Exception;
-use Illuminate\Contracts\Config\Repository;
-use Illuminate\Hashing\BcryptHasher as Hasher;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use Intervention\Image\Geometry\Factories\LineFactory;
 use Intervention\Image\Image;
-use Intervention\Image\ImageManager;
-use Illuminate\Session\Store as Session;
-use Intervention\Image\Interfaces\ImageInterface;
-use Intervention\Image\Drivers\Imagick\Driver;
 use Illuminate\Support\HtmlString;
+use Intervention\Image\ImageManager;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Session\Store as Session;
+use Illuminate\Contracts\Config\Repository;
+use Illuminate\Hashing\BcryptHasher as Hasher;
+use Intervention\Image\Interfaces\ImageInterface;
+use SimpleCMS\Framework\Exceptions\SimpleException;
+use Intervention\Image\Geometry\Factories\LineFactory;
 
 /**
  * 验证码类
@@ -205,7 +204,8 @@ class Captcha
     ) {
         $this->files = $files;
         $this->config = $config;
-        $this->imageManager = new ImageManager(new Driver());
+        $driver = \extension_loaded('imagick') ? 'imagick' : 'gd';
+        $this->imageManager = new ImageManager($driver);
         $this->session = $session;
         $this->hasher = $hasher;
         $this->str = $str;
@@ -241,7 +241,6 @@ class Captcha
 
         if (version_compare(app()->version(), '5.5.0', '>=')) {
             $this->fonts = array_map(function ($file) {
-                /* @var File $file */
                 return $file->getPathName();
             }, $this->fonts);
         }
@@ -280,7 +279,7 @@ class Captcha
             'sensitive' => $generator['sensitive'],
             'key' => $generator['key'],
             'img' => $this->image->toJpg($this->quality)->toDataUri()
-        ] : response($this->image->toJpg($this->quality),'200',['Content-Type'=>'image/jpeg']);
+        ] : response($this->image->toJpg($this->quality), '200', ['Content-Type' => 'image/jpeg']);
     }
 
     /**
@@ -297,7 +296,7 @@ class Captcha
      * Generate captcha text
      *
      * @return array
-     * @throws Exception
+     * @throws SimpleException
      */
     protected function generate(): array
     {
@@ -422,7 +421,7 @@ class Captcha
     protected function lines()
     {
         for ($i = 0; $i <= $this->lines; $i++) {
-            $this->image->drawLine(function (LineFactory $line) use($i) {
+            $this->image->drawLine(function (LineFactory $line) use ($i) {
                 $line->from(rand(0, $this->image->width()) + $i * rand(0, $this->image->height()), rand(0, $this->image->width()) + $i * rand(0, $this->image->height()));
                 $line->to(rand(0, $this->image->width()), rand(0, $this->image->height()));
                 $line->color($this->fontColor());

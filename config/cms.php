@@ -2,9 +2,9 @@
 
 return [
     //FFMPEG 完整路径 D:\\ffmpeg-master-latest-win64-gpl\\bin\\ffmpeg.exe
-    'ffmpeg_path' => (string) env('FFMPEG_PATH'),
+    'ffmpeg_path' => (string) env('FFMPEG_PATH','D:\\ffmpeg-master-latest-win64-gpl\\bin\\ffmpeg.exe'),
     //FFPROBE 完整路径 D:\\ffmpeg-master-latest-win64-gpl\\bin\\ffprobe.exe
-    'ffprobe_path' => (string) env('FFPROBE_PATH'),
+    'ffprobe_path' => (string) env('FFPROBE_PATH','D:\\ffmpeg-master-latest-win64-gpl\\bin\\ffprobe.exe'),
     //默认密码
     'default_password' => (string) env('DEFAULT_PASSWORD','123456'),
     'captcha' => [
@@ -56,5 +56,17 @@ return [
             'invert' => true,
             'contrast' => -5,
         ]
-    ]
+        ],
+        'sms' => [
+            'alibaba' => [
+                'access_key_id' => env('ALIBABA_ACCESS_KEY_ID'),
+                'access_key_secret' => env('ALIBABA_ACCESS_KEY_SECRET'),
+                //签名
+                'sign' => env('ALIBABA_SMS_SIGN','SimpleCMS'),
+                //验证码模板编号
+                'template' => env('ALIBABA_SMS_TEMPLATE'),
+                //验证码变量
+                'template_code' => env('ALIBABA_SMS_TEMPLATE_CODE','code')
+            ]
+        ]
 ];

@@ -6,7 +6,6 @@ use Illuminate\Support\Str;
 use FFMpeg\Coordinate\TimeCode;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Drivers\Imagick\Driver;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -27,7 +26,8 @@ class SimpleUploadService
     public function makeThumbnail(string $file, int $width = 0): string|null
     {
         if ($width && Storage::has($file)) {
-            $manager = new ImageManager(new Driver());
+            $driver = \extension_loaded('imagick') ? 'imagick' : 'gd';
+            $manager = new ImageManager($driver);
             $image = $manager->read(Storage::path($file));
             $image->scale(width: $width);
             $path = str_replace('.' . Str::of(Storage::path($file))->afterLast('.'), '_100.png', Storage::path($file));

@@ -1,8 +1,12 @@
 {
     "name": "simplecms/framework",
     "description": "Simple-CMS is a SimpleCMS",
-    "keywords": ["laravel", "framework", "simplecms"],
-    "version": "1.0.3",
+    "keywords": [
+        "laravel",
+        "framework",
+        "simplecms"
+    ],
+    "version": "1.0.1",
     "license": "MIT",
     "autoload": {
         "psr-4": {
@@ -17,6 +21,7 @@
     ],
     "require": {
         "php": "^8.2",
+        "alibabacloud/dysmsapi-20170525": "^2.0",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^3.1",
@@ -28,7 +33,10 @@
         "laravel": {
             "providers": [
                 "SimpleCMS\\Framework\\SimpleServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "ExcelPlus": "SimpleCMS\\Framework\\Facades\\ExcelPlus"
+            }
         }
     }
 }
