@@ -1,6 +1,7 @@
 # Simple Framework
 
 一个基于Laravel的扩展框架
+测试包~请勿使用
 
 ## 环境配置要求
 
