@@ -153,7 +153,7 @@ class ControllerMakeCommand extends GeneratorCommand
         $type = Str::studly(class_basename($this->option('type')));
 
         $name = class_basename(str_replace('\\', '/', Str::replaceFirst($this->rootNamespace(), '', $model)));
-        return 'Services\\' . $type . '\\' . $name;
+        return 'SimpleCMS\\Framework\\Services\\' . $type . '\\' . $name;
 
     }
 

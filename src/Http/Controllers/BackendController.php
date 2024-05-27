@@ -22,7 +22,7 @@ class BackendController extends BaseController
      */
     public function success(array|string|null|bool|Collection $data = null, $message = 'success'): JsonResponse
     {
-        return json_success($data,$message);
+        return json_success($data, $message);
     }
 
     /**
@@ -36,6 +36,6 @@ class BackendController extends BaseController
      */
     public function error(string $message = 'error', $code = 500, array|string|null|bool|Collection $data = null): JsonResponse
     {
-        return json_error($message,$data);
+        return json_error($message, $data);
     }
 }
