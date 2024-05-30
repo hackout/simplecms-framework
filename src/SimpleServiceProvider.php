@@ -3,7 +3,6 @@
 namespace SimpleCMS\Framework;
 
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use SimpleCMS\Framework\Packages\Captcha\Captcha;
@@ -165,39 +164,6 @@ class SimpleServiceProvider extends ServiceProvider
             $router = $this->app['router'];
             $router->get('captcha/api/{config?}', '\SimpleCMS\Framework\Http\Controllers\CaptchaController@getCaptchaApi');
             $router->get('captcha/{config?}', '\SimpleCMS\Framework\Http\Controllers\CaptchaController@getCaptcha');
-        }
-        Route::group(['prefix' => '/backend'], fn() => $this->loadBackendRoutes());
-        Route::group(['prefix' => '/api'], fn() => $this->loadFrontendRoutes());
-    }
-
-    /**
-     * 添加后台路由
-     *
-     * @author Dennis Lui <hackout@vip.qq.com>
-     * @return void
-     */
-    protected function loadBackendRoutes(): void
-    {
-        $allRoutes = scandir(base_path('routes/backend'));
-        foreach ($allRoutes as $routeFile) {
-            if (strstr($routeFile, '.php')) {
-                Route::group(['prefix' => str_replace('.php', '', $routeFile)], base_path('routes/backend' . $routeFile));
-            }
-        }
-    }
-    /**
-     * 添加前台API路由
-     *
-     * @author Dennis Lui <hackout@vip.qq.com>
-     * @return void
-     */
-    protected function loadFrontendRoutes(): void
-    {
-        $allRoutes = scandir(base_path('routes/api'));
-        foreach ($allRoutes as $routeFile) {
-            if (strstr($routeFile, '.php')) {
-                Route::group(['prefix' => str_replace('.php', '', $routeFile)], base_path('routes/api' . $routeFile));
-            }
         }
     }
 
