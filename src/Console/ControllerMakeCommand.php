@@ -93,7 +93,7 @@ class ControllerMakeCommand extends GeneratorCommand
             $namespacedRequests .= PHP_EOL . 'use ' . $namespace . '\\' . $updateRequestClass . ';';
         }
         $class = Str::studly(class_basename($this->option('model'))) . 'Controller';
-        $controllerNamespace = $this->parseController($this->option('model'));
+        $controllerNamespace = $this->parseController();
         $modelName = Str::studly(class_basename($this->option('model')));
         return [
             'DummyNamespaceService' => $serviceClass,
@@ -161,12 +161,10 @@ class ControllerMakeCommand extends GeneratorCommand
 
     }
 
-    protected function parseController($model)
+    protected function parseController()
     {
         $type = Str::studly(class_basename($this->option('type')));
-
-        $model = Str::studly(class_basename($model));
-        return 'Http\\Controllers\\' . $type . '\\' . $model;
+        return 'Http\\Controllers\\' . $type;
     }
 
     /**
