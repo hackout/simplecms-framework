@@ -1,0 +1,13 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{ controllerNamespace }};
+
+Route::group(['prefix' => '/{{ prefixName }}'],function(){
+    Route::get('/',[{{controllerName}}::class,'index'])->name('backend.{{prefixName}}.index');
+    Route::get('/list',[{{controllerName}}::class,'list'])->name('backend.{{prefixName}}.list');
+    Route::get('/{id}',[{{controllerName}}::class,'detail'])->name('backend.{{prefixName}}.detail')->where(['id'=>uuid_regex()]);
+    Route::post('/',[{{controllerName}}::class,'create'])->name('backend.{{prefixName}}.create');
+    Route::put('/{id}',[{{controllerName}}::class,'update'])->name('backend.{{prefixName}}.update')->where(['id'=>uuid_regex()]);
+    Route::delete('/{id}',[{{controllerName}}::class,'delete'])->name('backend.{{prefixName}}.delete')->where(['id'=>uuid_regex()]);
+});

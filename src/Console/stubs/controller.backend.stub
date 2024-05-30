@@ -2,15 +2,36 @@
 
 namespace {{ namespace }}\{{ controllerNamespace }};
 
+use Inertia\Inertia;
 use {{ namespacedService }};
 use {{ namespacedRequests }}
+use Inertia\Response as InertiaResponse;
 use Illuminate\Support\Facades\Validator;
-use SimpleCMS\Framework\Http\Controllers\BackendController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use SimpleCMS\Framework\Http\Controllers\BackendController as BaseController;
 
-class {{ class }} extends BackendController
+class {{ class }} extends BaseController
 {
+
+    /**
+     * {{ class }} 首页
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  Request         $request
+     * @param  {{storeService}} $service
+     * @return InertiaResponse
+     */
+    public function index({{ storeRequest }} $request,{{storeService}} $service):InertiaResponse
+    {        
+        return Inertia::render('{{ modelName }}/Index', [
+            'query' => [
+                'page' => $request->get('page',1),
+                'limit' => $request->get('limit',20),
+                'keyword' => $request->get('keyword',null)
+            ]
+        ]);
+    }
 
     /**
      * {{ class }} 获取列表
@@ -20,7 +41,7 @@ class {{ class }} extends BackendController
      * @param  {{storeService}} $service
      * @return JsonResponse
      */
-    public function index({{ storeRequest }} $request,{{storeService}} $service):JsonResponse
+    public function list({{ storeRequest }} $request,{{storeService}} $service):JsonResponse
     {
         $rules = [
             'keyword' => 'sometimes|nullable|max:250'

@@ -94,6 +94,7 @@ class ControllerMakeCommand extends GeneratorCommand
         }
         $class = Str::studly(class_basename($this->option('model'))) . 'Controller';
         $controllerNamespace = $this->parseController($this->option('model'));
+        $modelName = Str::studly(class_basename($this->option('model')));
         return [
             'DummyNamespaceService' => $serviceClass,
             '{{ namespacedService }}' => $serviceClass,
@@ -107,6 +108,9 @@ class ControllerMakeCommand extends GeneratorCommand
             'DummyTable' => $table,
             '{{ table }}' => $table,
             '{{table}}' => $table,
+            'DummyModelName' => $modelName,
+            '{{ modelName }}' => $modelName,
+            '{{modelName}}' => $modelName,
             'DummyClass' => $class,
             '{{ class }}' => $class,
             '{{class}}' => $class,
@@ -153,7 +157,7 @@ class ControllerMakeCommand extends GeneratorCommand
         $type = Str::studly(class_basename($this->option('type')));
 
         $name = class_basename(str_replace('\\', '/', Str::replaceFirst($this->rootNamespace(), '', $model)));
-        return 'SimpleCMS\\Framework\\Services\\' . $type . '\\' . $name;
+        return 'App\\Services\\' . $type . '\\' . $name;
 
     }
 

@@ -5,11 +5,11 @@ namespace {{ namespace }}\{{ controllerNamespace }};
 use {{ namespacedService }};
 use {{ namespacedRequests }}
 use Illuminate\Support\Facades\Validator;
-use SimpleCMS\Framework\Http\Controllers\FrontendController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use SimpleCMS\Framework\Http\Controllers\FrontendController as BaseController;
 
-class {{ class }} extends FrontendController
+class {{ class }} extends BaseController
 {
 
     /**

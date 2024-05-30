@@ -5,7 +5,6 @@ namespace {{ namespace }};
 use {{ modelNamespace }}\User;
 use {{ modelNamespace }}\{{ modelName }};
 use SimpleCMS\Framework\Services\SimpleService;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class {{ class }} extends SimpleService
 {

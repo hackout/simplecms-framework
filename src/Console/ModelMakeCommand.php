@@ -49,6 +49,8 @@ class ModelMakeCommand extends GeneratorCommand
         $this->createBackendService();
         $this->createFrontendService();
         $this->createPrivateService();
+        $this->createBackendRoute();
+        $this->createFrontendRoute();
 
     }
 
@@ -83,6 +85,34 @@ class ModelMakeCommand extends GeneratorCommand
         ]);
     }
 
+    /**
+     * Create a route for the model.
+     *
+     * @return void
+     */
+    protected function createBackendRoute()
+    {
+        $route = Str::studly(class_basename($this->argument('name')));
+
+        $this->call('create:route', array_filter([
+            'name' => "{$route}",
+            '--type' => 'backend'
+        ]));
+    }
+    /**
+     * Create a route for the model.
+     *
+     * @return void
+     */
+    protected function createFrontendRoute()
+    {
+        $route = Str::studly(class_basename($this->argument('name')));
+
+        $this->call('create:route', array_filter([
+            'name' => "{$route}",
+            '--type' => 'frontend'
+        ]));
+    }
     /**
      * Create a controller for the model.
      *

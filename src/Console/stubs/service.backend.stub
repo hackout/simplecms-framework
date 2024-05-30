@@ -5,9 +5,8 @@ namespace {{ namespace }};
 use {{ modelNamespace }}\User;
 use {{ modelNamespace }}\{{ modelName }};
 use SimpleCMS\Framework\Services\SimpleService;
-use SimpleCMS\Framework\Trails\ExportTemplateTrait;
-use SimpleCMS\Framework\Trails\ImportTemplateTrait;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use SimpleCMS\Framework\Traits\ExportTemplateTrait;
+use SimpleCMS\Framework\Traits\ImportTemplateTrait;
 
 class {{ class }} extends SimpleService
 {

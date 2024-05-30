@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use SimpleCMS\Framework\Packages\Captcha\Captcha;
+use SimpleCMS\Framework\Console\RouteMakeCommand;
 use SimpleCMS\Framework\Console\ModelMakeCommand;
 use SimpleCMS\Framework\Validation\Rule\PhoneRule;
 use SimpleCMS\Framework\Console\SeederMakeCommand;
@@ -31,7 +32,8 @@ class SimpleServiceProvider extends ServiceProvider
             MigrateMakeCommand::class,
             ServiceMakeCommand::class,
             ControllerMakeCommand::class,
-            ModelMakeCommand::class
+            ModelMakeCommand::class,
+            RouteMakeCommand::class
         ]);
         $this->bindCaptcha();
     }
@@ -51,6 +53,8 @@ class SimpleServiceProvider extends ServiceProvider
                 __DIR__ . '/Console/stubs/service.backend.stub' => base_path('stubs/service.backend.stub'),
                 __DIR__ . '/Console/stubs/service.frontend.stub' => base_path('stubs/service.frontend.stub'),
                 __DIR__ . '/Console/stubs/service.private.stub' => base_path('stubs/service.private.stub'),
+                __DIR__ . '/Console/stubs/route.backend.stub' => base_path('stubs/route.backend.stub'),
+                __DIR__ . '/Console/stubs/route.frontend.stub' => base_path('stubs/route.frontend.stub'),
             ], 'stubs');
         }
         $this->bootConfig();
@@ -176,6 +180,12 @@ class SimpleServiceProvider extends ServiceProvider
         }
         if (!is_dir(app_path('Services/Private'))) {
             @mkdir(app_path('Services/Private'), 0755);
+        }
+        if (!is_dir(base_path('routes/backend'))) {
+            @mkdir(base_path('routes/backend'), 0755);
+        }
+        if (!is_dir(base_path('routes/frontend'))) {
+            @mkdir(base_path('routes/frontend'), 0755);
         }
     }
 
