@@ -4,6 +4,7 @@ namespace {{ namespace }};
 
 use {{ modelNamespace }}\User;
 use {{ modelNamespace }}\{{ modelName }};
+use App\Enums\{{ modelName }} as {{ modelName }}Enum;
 use SimpleCMS\Framework\Services\SimpleService;
 
 class {{ class }} extends SimpleService

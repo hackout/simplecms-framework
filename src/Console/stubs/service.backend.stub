@@ -2,8 +2,9 @@
 
 namespace {{ namespace }};
 
-use {{ modelNamespace }}\User;
+use {{ modelNamespace }}\Manager;
 use {{ modelNamespace }}\{{ modelName }};
+use App\Enums\{{ modelName }} as {{ modelName }}Enum;
 use SimpleCMS\Framework\Services\SimpleService;
 use SimpleCMS\Framework\Traits\ExportTemplateTrait;
 use SimpleCMS\Framework\Traits\ImportTemplateTrait;
@@ -18,11 +19,11 @@ class {{ class }} extends SimpleService
      * 获取列表
      *
      * @author Dennis Lui <hackout@vip.qq.com>
-     * @param  User  $user
+     * @param  Manager  $manager
      * @param  array $data
      * @return array
      */
-    public function getList(User $user,array $data):array
+    public function getList(Manager $manager,array $data):array
     {
         $condition = [
             'keyword' => ['search', ['id']],
@@ -37,11 +38,11 @@ class {{ class }} extends SimpleService
      * 获取详情
      *
      * @author Dennis Lui <hackout@vip.qq.com>
-     * @param  User  $user
+     * @param  Manager  $manager
      * @param  string $id
      * @return array
      */
-    public function detail(User $user,string $id): array
+    public function detail(Manager $manager,string $id): array
     {
         $result = parent::findById($id);
         
@@ -52,14 +53,14 @@ class {{ class }} extends SimpleService
      * 添加数据
      *
      * @author Dennis Lui <hackout@vip.qq.com>
-     * @param  User  $user
+     * @param  Manager  $manager
      * @param  array $data
      * @return void
      */
-    public function createByUser(User $user,array $data): void
+    public function createByManager(Manager $manager,array $data): void
     {
         $sql = array_merge([
-            'user_id' => $user->id,
+            'manager_id' => $manager->id,
         ],$data);
         parent::create($sql);
     }
@@ -68,15 +69,15 @@ class {{ class }} extends SimpleService
      * 修改数据
      *
      * @author Dennis Lui <hackout@vip.qq.com>
-     * @param  User  $user
+     * @param  Manager  $manager
      * @param  string $id
      * @param  array $data
      * @return void
      */
-    public function updateByUser(User $user,string $id,array $data): void
+    public function updateByManager(Manager $manager,string $id,array $data): void
     {
         $sql = array_merge([
-            'user_id' => $user->id,
+            'manager_id' => $manager->id,
         ],$data);
         parent::update($id,$sql);
     }
@@ -85,11 +86,11 @@ class {{ class }} extends SimpleService
      * 删除数据
      *
      * @author Dennis Lui <hackout@vip.qq.com>
-     * @param  User  $user
+     * @param  Manager  $manager
      * @param  string $id
      * @return void
      */
-    public function deleteByUser(User $user,string $id): void
+    public function deleteByManager(Manager $manager,string $id): void
     {
         parent::delete($id);
     }

@@ -81,6 +81,7 @@ class ModelMakeCommand extends GeneratorCommand
 
         $this->call('make:enum', [
             'name' => $name,
+            '-i'
         ]);
     }
     /**
