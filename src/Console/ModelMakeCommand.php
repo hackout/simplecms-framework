@@ -51,6 +51,7 @@ class ModelMakeCommand extends GeneratorCommand
         $this->createPrivateService();
         $this->createBackendRoute();
         $this->createFrontendRoute();
+        $this->createEnums();
 
     }
 
@@ -69,6 +70,19 @@ class ModelMakeCommand extends GeneratorCommand
         ]);
     }
 
+    /**
+     * Create a enums file for the model.
+     *
+     * @return void
+     */
+    protected function createEnums()
+    {
+        $name = Str::studly(class_basename($this->argument('name')));
+
+        $this->call('make:enum', [
+            'name' => $name,
+        ]);
+    }
     /**
      * Create a seeder file for the model.
      *

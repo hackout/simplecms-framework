@@ -1,61 +1,59 @@
 <?php
 
-namespace {{ namespace }};
+namespace SimpleCMS\Framework\Http\Models;
 
-use Carbon\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Collection;
-use SimpleCMS\Framework\Traits\PrimaryKeyUuidTrait;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
- * {{ class }} Model
- 
+ * 字典项模型
  * @author Dennis Lui <hackout@vip.qq.com>
  *
- * @property string $id 主键
- * @property-read ?Carbon $created_at 创建时间
- * @property-read ?Carbon $updated_at 更新时间
+ * @property int $id ID
+ * @property int $dict_id 字典ID
+ * @property string $name 键名
+ * @property int $content 键值
+ * @property-read int $value 键值
  * @property-read ?Collection<Media> $media 附件
  * @property-read ?array<array<string,string>> $thumbnails 附件记录
  */
-class {{ class }} extends Model implements HasMedia
+class DictItem extends Model implements HasMedia
 {
-    use PrimaryKeyUuidTrait,InteractsWithMedia;
+    use InteractsWithMedia;
 
-    /**
-     * Media Key
-     */
     const MEDIA_FILE = 'file';
 
-    /**
-     * 可输入字段
-     */
     protected $fillable = [
-        'id',
-        //..Todo
+        'dict_id',
+        'name',
+        'content',
     ];
 
-    /**
-     * 显示字段类型
-     */
     public $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'value' => 'integer',
+        'thumbnails' => 'array'
     ];
 
-    /**
-     * 追加字段
-     */
-    public $appends = ['thumbnails'];
+    public $appends = ['value','thumbnails'];
 
+    public $hidden = [
+        'content',
+        'dict_id',
+        'media'
+    ];
 
-    /**
-     * 隐藏关系
-     */
-    public $hidden = ['media'];
+    public function dict()
+    {
+        return $this->belongsTo(Dict::class);
+    }
+
+    public function getValueAttribute()
+    {
+        return (int) $this->content;
+    }
     
     public function getThumbnailsAttribute()
     {

@@ -7,6 +7,7 @@ use {{ namespacedService }};
 use {{ namespacedRequests }}
 use Inertia\Response as InertiaResponse;
 use Illuminate\Support\Facades\Validator;
+use SimpleCMS\Framework\Attributes\ApiName;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use SimpleCMS\Framework\Http\Controllers\BackendController as BaseController;
@@ -22,6 +23,7 @@ class {{ class }} extends BaseController
      * @param  {{storeService}} $service
      * @return InertiaResponse
      */
+     #[ApiName(name:'{{ class }}-首页')]
     public function index({{ storeRequest }} $request,{{storeService}} $service):InertiaResponse
     {        
         return Inertia::render('{{ modelName }}/Index', [
@@ -41,6 +43,7 @@ class {{ class }} extends BaseController
      * @param  {{storeService}} $service
      * @return JsonResponse
      */
+     #[ApiName(name:'{{ class }}-获取列表')]
     public function list({{ storeRequest }} $request,{{storeService}} $service):JsonResponse
     {
         $rules = [
@@ -62,6 +65,7 @@ class {{ class }} extends BaseController
      * @param  {{storeService}} $service
      * @return JsonResponse
      */
+     #[ApiName(name:'{{ class }}-添加信息')]
     public function create({{ storeRequest }} $request,{{storeService}} $service):JsonResponse
     {
         $rules = [
@@ -84,6 +88,7 @@ class {{ class }} extends BaseController
      * @param  {{storeService}} $service
      * @return JsonResponse
      */
+     #[ApiName(name:'{{ class }}-编辑信息')]
     public function update(string $id,{{ storeRequest }} $request,{{storeService}} $service):JsonResponse
     {
         $rules = [
@@ -114,6 +119,7 @@ class {{ class }} extends BaseController
      * @param  {{storeService}} $service
      * @return JsonResponse
      */
+     #[ApiName(name:'{{ class }}-信息详情')]
     public function detail(string $id,{{ storeRequest }} $request,{{storeService}} $service):JsonResponse
     {
         $rules = [
@@ -142,6 +148,7 @@ class {{ class }} extends BaseController
      * @param  CommitInlineService $commitInlineService
      * @return JsonResponse
      */
+     #[ApiName(name:'{{ class }}-删除信息')]
     public function delete(string $id,{{ storeRequest }} $request,{{storeService}} $service): JsonResponse
     {
         $rules = [
@@ -171,6 +178,7 @@ class {{ class }} extends BaseController
      * @param  {{storeService}} $service
      * @return BinaryFileResponse
      */
+     #[ApiName(name:'{{ class }}-下载导入模板')]
     public function template({{storeService}} $service): BinaryFileResponse
     {
         return $service->downloadImportTemplate();
@@ -184,6 +192,7 @@ class {{ class }} extends BaseController
      * @param  {{storeService}} $service
      * @return JsonResponse
      */
+     #[ApiName(name:'{{ class }}-导入数据')]
     public function import({{ storeRequest }} $request,{{storeService}} $service): JsonResponse
     {
         $rules = [
@@ -207,6 +216,7 @@ class {{ class }} extends BaseController
      * @param  {{storeService}} $service
      * @return JsonResponse
      */
+     #[ApiName(name:'{{ class }}-导出数据')]
     public function export({{ storeRequest }} $request, {{storeService}} $service): JsonResponse
     {
         $rules = [

@@ -20,6 +20,7 @@ class {{ class }} extends BaseController
      * @param  {{storeService}} $service
      * @return JsonResponse
      */
+     #[ApiName(name:'{{ class }}-获取列表')]
     public function index({{ storeRequest }} $request,{{storeService}} $service):JsonResponse
     {
         $rules = [
@@ -41,6 +42,7 @@ class {{ class }} extends BaseController
      * @param  {{storeService}} $service
      * @return JsonResponse
      */
+     #[ApiName(name:'{{ class }}-添加信息')]
     public function create({{ storeRequest }} $request,{{storeService}} $service):JsonResponse
     {
         $rules = [
@@ -63,6 +65,7 @@ class {{ class }} extends BaseController
      * @param  {{storeService}} $service
      * @return JsonResponse
      */
+     #[ApiName(name:'{{ class }}-编辑信息')]
     public function update(string $id,{{ storeRequest }} $request,{{storeService}} $service):JsonResponse
     {
         $rules = [
@@ -93,6 +96,7 @@ class {{ class }} extends BaseController
      * @param  {{storeService}} $service
      * @return JsonResponse
      */
+     #[ApiName(name:'{{ class }}-信息详情')]
     public function detail(string $id,{{ storeRequest }} $request,{{storeService}} $service):JsonResponse
     {
         $rules = [
@@ -121,6 +125,7 @@ class {{ class }} extends BaseController
      * @param  CommitInlineService $commitInlineService
      * @return JsonResponse
      */
+     #[ApiName(name:'{{ class }}-删除信息')]
     public function delete(string $id,{{ storeRequest }} $request,{{storeService}} $service): JsonResponse
     {
         $rules = [
