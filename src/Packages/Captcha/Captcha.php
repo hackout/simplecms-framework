@@ -13,8 +13,9 @@ use Illuminate\Session\Store as Session;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Hashing\BcryptHasher as Hasher;
 use Intervention\Image\Interfaces\ImageInterface;
-use SimpleCMS\Framework\Exceptions\SimpleException;
 use Intervention\Image\Geometry\Factories\LineFactory;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 
 /**
  * 验证码类
@@ -192,7 +193,7 @@ class Captcha
      * @param Session $session
      * @param Hasher $hasher
      * @param Str $str
-     * @throws Exception
+     * @throws \Exception
      * @internal param Validator $validator
      */
     public function __construct(
@@ -204,7 +205,7 @@ class Captcha
     ) {
         $this->files = $files;
         $this->config = $config;
-        $driver = \extension_loaded('imagick') ? 'imagick' : 'gd';
+        $driver = \extension_loaded('imagick') ? new ImagickDriver() : new GdDriver();
         $this->imageManager = new ImageManager($driver);
         $this->session = $session;
         $this->hasher = $hasher;
@@ -232,7 +233,7 @@ class Captcha
      * @param string $config
      * @param bool $api
      * @return array|mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function create(string $config = 'default', bool $api = false)
     {
@@ -296,7 +297,6 @@ class Captcha
      * Generate captcha text
      *
      * @return array
-     * @throws SimpleException
      */
     protected function generate(): array
     {

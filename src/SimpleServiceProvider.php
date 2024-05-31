@@ -159,8 +159,8 @@ class SimpleServiceProvider extends ServiceProvider
      */
     protected function loadRoutes(): void
     {
-        // HTTP routing
-        if (!config('cms.captcha.disable')) {
+        // HTTP captcha routing
+        if (config('cms.captcha.disable')) {
             $router = $this->app['router'];
             $router->get('captcha/api/{config?}', '\SimpleCMS\Framework\Http\Controllers\CaptchaController@getCaptchaApi');
             $router->get('captcha/{config?}', '\SimpleCMS\Framework\Http\Controllers\CaptchaController@getCaptcha');
