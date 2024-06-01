@@ -14,8 +14,12 @@ use SimpleCMS\Framework\Console\MigrateMakeCommand;
 use SimpleCMS\Framework\Console\ServiceMakeCommand;
 use SimpleCMS\Framework\Validation\Rule\IDCardRule;
 use SimpleCMS\Framework\Validation\Rule\MobileRule;
+use SimpleCMS\Framework\Validation\Rule\ChineseRule;
 use SimpleCMS\Framework\Validation\Rule\TelephoneRule;
+use SimpleCMS\Framework\Validation\Rule\CarNumberRule;
+use SimpleCMS\Framework\Validation\Rule\CompanyIDRule;
 use SimpleCMS\Framework\Console\ControllerMakeCommand;
+use SimpleCMS\Framework\Validation\Rule\ChinesePostCodeRule;
 
 class SimpleServiceProvider extends ServiceProvider
 {
@@ -103,6 +107,22 @@ class SimpleServiceProvider extends ServiceProvider
         Validator::extend(
             'phone',
             PhoneRule::class
+        );
+        Validator::extend(
+            'chinese',
+            ChineseRule::class
+        );
+        Validator::extend(
+            'car_number',
+            CarNumberRule::class
+        );
+        Validator::extend(
+            'company_id',
+            CompanyIDRule::class
+        );
+        Validator::extend(
+            'chinese_postcode',
+            ChinesePostCodeRule::class
         );
         Validator::extend(
             'captcha',

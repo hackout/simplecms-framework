@@ -7,6 +7,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Collection;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Event;
 
 class BackendController extends BaseController
 {
@@ -22,6 +23,7 @@ class BackendController extends BaseController
      */
     public function success(array|string|null|bool|Collection $data = null, $message = 'success'): JsonResponse
     {
+        Event::dispatch('simplecms.backend.request', [request(), true]);
         return json_success($data, $message);
     }
 
@@ -36,6 +38,7 @@ class BackendController extends BaseController
      */
     public function error(string $message = 'error', $code = 500, array|string|null|bool|Collection $data = null): JsonResponse
     {
+        Event::dispatch('simplecms.backend.request', [request(), false]);
         return json_error($message, $data);
     }
 }
