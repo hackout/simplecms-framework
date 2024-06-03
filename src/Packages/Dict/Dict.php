@@ -2,7 +2,7 @@
 namespace SimpleCMS\Framework\Packages\Dict;
 
 use Illuminate\Database\Eloquent\Collection;
-use SimpleCMS\Framework\Http\Models\Dict as DictModel;
+use SimpleCMS\Framework\Models\Dict as DictModel;
 
 /**
  * 字典操作类
@@ -19,7 +19,7 @@ class Dict
      */
     public function getList(): Collection
     {
-        return DictModel::select(['name', 'code'])->get();
+        return DictModel::select(['name', 'code'])->orderBy('sort_order')->get();
     }
 
     /**

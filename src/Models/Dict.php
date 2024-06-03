@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class Dict extends Model
 {
-    public $timestamp = false;
+    public $timestamps = false;
 
     protected $fillable = [
         'code',
@@ -30,6 +30,6 @@ class Dict extends Model
 
     public function items()
     {
-        return $this->hasMany(DictItem::class);
+        return $this->hasMany(DictItem::class)->orderBy('sort_order','DESC');
     }
 }

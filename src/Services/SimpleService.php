@@ -84,9 +84,23 @@ class SimpleService
         if ($this->className) {
             $this->model = new $this->className;
             $this->primaryKey = $this->model->getKeyName();
-            $this->orderKey = $this->model->timestamps ? 'created_at' : $this->primaryKey;
+            $this->orderKey = $this->model->timestamps ? $this->autoOrderKey() : $this->primaryKey;
             $this->cacheName = $this->model->getTable();
         }
+    }
+
+    /**
+     * 检测sort_order
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return string
+     */
+    protected function autoOrderKey(): string
+    {
+        if (in_array('sort_order', $this->model->getFillable())) {
+            return 'sort_order';
+        }
+        return 'created_at';
     }
 
     /**
@@ -389,16 +403,16 @@ class SimpleService
                 return $item;
             $newItem = collect();
             foreach ($fieldList as $value) {
-                list ($key, $val) = array_pad(explode(' as ', strtolower($value)), 2, null);
-                list ($relation, $key1) = array_pad(explode('.', strtolower($key)), 2, null);
+                list($key, $val) = array_pad(explode(' as ', strtolower($value)), 2, null);
+                list($relation, $key1) = array_pad(explode('.', strtolower($key)), 2, null);
                 $key1 = $key1 ?: $relation;
                 $val = $val ?: $key1;
                 if ($relation === $key) {
                     if (strpos($relation, ':') === false) {
                         $newItem->put($val, $item->{$key});
                     } else {
-                        list ($relation, $relationColumnString) = explode(':', $relation);
-                        list ($val, $valColumnString) = array_pad(explode(':', $val), 2, null);
+                        list($relation, $relationColumnString) = explode(':', $relation);
+                        list($val, $valColumnString) = array_pad(explode(':', $val), 2, null);
                         if (!$relationColumnString) {
                             throw new SimpleException(trans('simplecms:range_valid'));
                         }
@@ -416,8 +430,8 @@ class SimpleService
                     if (strpos($relation, ':') === false) {
                         $newItem->put($val, optional($item->{$relation})->{$key1});
                     } else {
-                        list ($relation, $relationColumnString) = explode(':', $relation);
-                        list ($val, $valColumnString) = array_pad(explode(':', $val), 2, null);
+                        list($relation, $relationColumnString) = explode(':', $relation);
+                        list($val, $valColumnString) = array_pad(explode(':', $val), 2, null);
                         if (!$relationColumnString) {
                             throw new SimpleException(trans('simplecms:range_valid'));
                         }
