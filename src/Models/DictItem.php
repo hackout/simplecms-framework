@@ -30,14 +30,16 @@ class DictItem extends Model implements HasMedia
         'dict_id',
         'name',
         'content',
+        'sort_order'
     ];
 
     public $casts = [
+        'sort_order' => 'integer',
         'value' => 'integer',
         'thumbnail' => 'array'
     ];
 
-    public $appends = ['value','thumbnail'];
+    public $appends = ['value', 'thumbnail'];
 
     public $hidden = [
         'content',
@@ -54,8 +56,8 @@ class DictItem extends Model implements HasMedia
     {
         return (int) $this->content;
     }
-    
-    public function getThumbnailsAttribute()
+
+    public function getThumbnailAttribute()
     {
         return $this->getFirstMediaUrl(self::MEDIA_FILE);
     }

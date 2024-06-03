@@ -21,6 +21,11 @@ class Dict extends Model
     protected $fillable = [
         'code',
         'name',
+        'sort_order'
+    ];
+
+    public $casts = [
+        'sort_order' => 'integer'
     ];
 
     public function items()

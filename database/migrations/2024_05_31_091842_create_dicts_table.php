@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique()->comment("字典标识");
             $table->string('name')->comment("字典名称");
+            $table->integer("sort_order")->default(0)->comment("排序");
         });
     }
 

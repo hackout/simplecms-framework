@@ -91,6 +91,11 @@ class SystemConfig extends Model implements HasMedia
         'content',
         'type',
         'options',
+        'sort_order',
+    ];
+
+    public $casts = [
+        'sort_order' => 'integer'
     ];
 
     public function getKeyType()

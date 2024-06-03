@@ -60,9 +60,6 @@ class SimpleServiceProvider extends ServiceProvider
                 __DIR__ . '/Console/stubs/route.backend.stub' => base_path('stubs/route.backend.stub'),
                 __DIR__ . '/Console/stubs/route.frontend.stub' => base_path('stubs/route.frontend.stub'),
             ], 'stubs');
-            $this->publishesMigrations([
-                __DIR__ . '/../database/migrations' => database_path('migrations'),
-            ]);
         }
         $this->bootConfig();
         $this->loadedHelpers();
@@ -256,6 +253,8 @@ class SimpleServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/cms.php' => config_path('cms.php'),
-        ], 'config');
+            __DIR__ . '/../database/migrations' => database_path('migrations'),
+            __DIR__ . '/../database/seeders' => database_path('seeders'),
+        ], 'simplecms');
     }
 }
