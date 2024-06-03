@@ -5,15 +5,15 @@ namespace SimpleCMS\Framework\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \SimpleCMS\Framework\Packages\Captcha\Captcha
+ * @see \SimpleCMS\Framework\Packages\System\System
  */
-class Captcha extends Facade
+class SystemInfo extends Facade
 {
     /**
      * @return string
      */
     protected static function getFacadeAccessor()
     {
-        return 'captcha';
+        return 'system_info';
     }
 }

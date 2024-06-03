@@ -92,7 +92,7 @@ class RouteMakeCommand extends GeneratorCommand
      */
     protected function getControllerName($name)
     {
-        return Str::studly($name) . 'Controller';
+        return Str::studly(class_basename($name)) . 'Controller';
     }
 
     /**
@@ -103,7 +103,7 @@ class RouteMakeCommand extends GeneratorCommand
      */
     protected function getPrefixName($name)
     {
-        return strtolower($name);
+        return Str::snake(class_basename($name));
     }
 
 }

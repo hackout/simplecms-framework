@@ -6,7 +6,7 @@
         "framework",
         "simplecms"
     ],
-    "version": "1.0.8",
+    "version": "1.0.9",
     "license": "MIT",
     "autoload": {
         "psr-4": {
@@ -35,7 +35,10 @@
                 "SimpleCMS\\Framework\\SimpleServiceProvider"
             ],
             "aliases": {
-                "ExcelPlus": "SimpleCMS\\Framework\\Facades\\ExcelPlus",
+                "SystemConfig": "SimpleCMS\\Framework\\Facades\\SystemConfig",
+                "SystemInfo": "SimpleCMS\\Framework\\Facades\\SystemInfo",
+                "ExcelConvert": "SimpleCMS\\Framework\\Facades\\ExcelConvert",
+                "ExcelDrawing": "SimpleCMS\\Framework\\Facades\\ExcelDrawing",
                 "Captcha": "SimpleCMS\\Framework\\Facades\\Captcha",
                 "Dict": "SimpleCMS\\Framework\\Facades\\Dict"
             }

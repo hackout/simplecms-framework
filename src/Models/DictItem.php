@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleCMS\Framework\Http\Models;
+namespace SimpleCMS\Framework\Models;
 
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +18,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property int $content 键值
  * @property-read int $value 键值
  * @property-read ?Collection<Media> $media 附件
- * @property-read ?array<array<string,string>> $thumbnails 附件记录
+ * @property-read ?string $thumbnail 附件LOGO
  */
 class DictItem extends Model implements HasMedia
 {
@@ -34,10 +34,10 @@ class DictItem extends Model implements HasMedia
 
     public $casts = [
         'value' => 'integer',
-        'thumbnails' => 'array'
+        'thumbnail' => 'array'
     ];
 
-    public $appends = ['value','thumbnails'];
+    public $appends = ['value','thumbnail'];
 
     public $hidden = [
         'content',
@@ -57,14 +57,6 @@ class DictItem extends Model implements HasMedia
     
     public function getThumbnailsAttribute()
     {
-        if (!$medias = $this->getMedia(self::MEDIA_FILE))
-            return [];
-        return $medias->map(function ($item) {
-            return [
-                'name' => $item->file_name,
-                'url' => $item->original_url,
-                'uuid' => $item->uuid
-            ];
-        });
+        return $this->getFirstMediaUrl(self::MEDIA_FILE);
     }
 }

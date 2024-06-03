@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleCMS\Framework\Http\Models;
+namespace SimpleCMS\Framework\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;

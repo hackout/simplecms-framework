@@ -5,7 +5,7 @@ namespace SimpleCMS\Framework\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \SimpleCMS\Framework\Packages\Dict
+ * @see \SimpleCMS\Framework\Packages\Dict\Dict
  */
 class Dict extends Facade
 {

@@ -60,6 +60,9 @@ class SimpleServiceProvider extends ServiceProvider
                 __DIR__ . '/Console/stubs/route.backend.stub' => base_path('stubs/route.backend.stub'),
                 __DIR__ . '/Console/stubs/route.frontend.stub' => base_path('stubs/route.frontend.stub'),
             ], 'stubs');
+            $this->publishesMigrations([
+                __DIR__ . '/../database/migrations' => database_path('migrations'),
+            ]);
         }
         $this->bootConfig();
         $this->loadedHelpers();
@@ -67,6 +70,31 @@ class SimpleServiceProvider extends ServiceProvider
         $this->loadedValidator();
         $this->loadTranslationsFrom(__DIR__ . '/../lang', 'simplecms');
         $this->loadRoutes();
+        $this->loadFacades();
+    }
+
+    /**
+     * 绑定Facades
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return void
+     */
+    protected function loadFacades(): void
+    {
+        $this->app->bind('captcha', function ($app) {
+            return new Captcha(
+                $app['Illuminate\Filesystem\Filesystem'],
+                $app['Illuminate\Contracts\Config\Repository'],
+                $app['Illuminate\Session\Store'],
+                $app['Illuminate\Hashing\BcryptHasher'],
+                $app['Illuminate\Support\Str']
+            );
+        });
+        $this->app->bind('system_config', \SimpleCMS\Framework\Packages\System\Config::class);
+        $this->app->bind('system_info', \SimpleCMS\Framework\Packages\System\System::class);
+        $this->app->bind('excel_convert', \SimpleCMS\Framework\Packages\ExcelPlus\Convert::class);
+        $this->app->bind('excel_drawing', \SimpleCMS\Framework\Packages\ExcelPlus\Drawing::class);
+        $this->app->bind('dict', \SimpleCMS\Framework\Packages\Dict\Dict::class);
     }
 
     protected function bindCaptcha(): void

@@ -5,15 +5,15 @@ namespace SimpleCMS\Framework\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \SimpleCMS\Framework\Packages\Captcha\Captcha
+ * @see \SimpleCMS\Framework\Packages\ExcelPlus\Drawing
  */
-class Captcha extends Facade
+class ExcelDrawing extends Facade
 {
     /**
      * @return string
      */
     protected static function getFacadeAccessor()
     {
-        return 'captcha';
+        return 'excel_drawing';
     }
 }
