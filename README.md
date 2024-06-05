@@ -28,6 +28,22 @@ php artisan create:seeder #同php artisan db:seeder
 php artisan create:migration #同php artisan make:migration
 ```
 
+## 辅助函数
+
+Continue...
+
+## Facades
+
+```bash
+use Captcha; #验证码 
+use Dict; #字典 
+use ExcelConvert; #Excel转换 
+use ExcelDrawing; #Excel提取图片 
+use Menu; #菜单 
+use SystemConfig; #系统设置 
+use SystemInfo; #系统环境参数
+```
+
 ## 其他说明
 
 服务及控制器等使用请参考IDE提示。

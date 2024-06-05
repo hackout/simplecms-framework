@@ -92,6 +92,7 @@ class SimpleServiceProvider extends ServiceProvider
         $this->app->bind('excel_convert', \SimpleCMS\Framework\Packages\ExcelPlus\Convert::class);
         $this->app->bind('excel_drawing', \SimpleCMS\Framework\Packages\ExcelPlus\Drawing::class);
         $this->app->bind('dict', \SimpleCMS\Framework\Packages\Dict\Dict::class);
+        $this->app->bind('menu', \SimpleCMS\Framework\Packages\Menu\Menu::class);
     }
 
     protected function bindCaptcha(): void
