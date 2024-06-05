@@ -65,8 +65,6 @@ class Menu extends Model implements HasMedia
         'parent_id' => 'integer',
     ];
 
-
-
     public $appends = ['thumbnail'];
 
     public $hidden = [

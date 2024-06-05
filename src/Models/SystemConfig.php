@@ -2,7 +2,6 @@
 
 namespace SimpleCMS\Framework\Models;
 
-use Carbon\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
