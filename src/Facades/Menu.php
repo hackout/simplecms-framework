@@ -5,7 +5,7 @@ namespace SimpleCMS\Framework\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \SimpleCMS\Framework\Packages\Dict\Dict
+ * @see \SimpleCMS\Framework\Packages\Menu\Menu
  */
 class Menu extends Facade
 {

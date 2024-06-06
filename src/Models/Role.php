@@ -2,9 +2,9 @@
 
 namespace SimpleCMS\Framework\Models;
 
-
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Collection;
@@ -90,5 +90,28 @@ class Role extends Model implements HasMedia
     public function getThumbnailAttribute()
     {
         return $this->getFirstMediaUrl(self::MEDIA_FILE);
+    }
+
+    /**
+     * 模型获取角色权限
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  object $model
+     * @return array
+     */
+    public static function getRolesByModel(object $model): array
+    {
+        $roles = [];
+        if ($model instanceof Model) {
+            $list = DB::table('roles_more')->where([
+                'model_type' => get_class($model),
+                'model_id' => $model->{$model->getPrimaryKey()}
+            ])->get()->pluck('role_id')->toArray();
+            if ($list) {
+                $roleList = self::whereIn('id', $list)->get()->pluck('routes')->toArray();
+                $roles = array_unique(Arr::collapse($roleList));
+            }
+        }
+        return $roles;
     }
 }

@@ -30,7 +30,7 @@ class Menu
             $menu->where('type', $type == 'backend' ? MenuModel::TYPE_BACKEND : MenuModel::TYPE_FRONTEND);
         }
         $current = $menu->first();
-        $parent = $current->parent;
+        $parent = $current->parent ?? false;
         $list = [$current];
         while ($parent) {
             $list[] = $parent;
