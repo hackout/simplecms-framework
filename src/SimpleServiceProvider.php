@@ -51,7 +51,7 @@ class SimpleServiceProvider extends ServiceProvider
      * @author Dennis Lui <hackout@vip.qq.com>
      * @return void
      */
-    protected function registerMiddleware():void
+    protected function registerMiddleware(): void
     {
         $this->app->singleton(CheckPermission::class);
         $this->app->singleton(LoadLanguage::class);
@@ -164,6 +164,32 @@ class SimpleServiceProvider extends ServiceProvider
         Validator::extend(
             'chinese_postcode',
             ChinesePostCodeRule::class
+        );
+        Validator::extend(
+            'image_or_url',
+            function ($attribute, $value, $parameters) {
+                if (Str::isUrl($value) || strpos($value, '/') === 0) {
+                    return true;
+                } else {
+                    $validator = Validator::make([$attribute => $value], [
+                        $attribute => 'image:' . implode(",", $parameters)
+                    ]);
+                    return !$validator->fails();
+                }
+            }
+        );
+        Validator::extend(
+            'file_or_url',
+            function ($attribute, $value, $parameters) {
+                if (Str::isUrl($value) || strpos($value, '/') === 0) {
+                    return true;
+                } else {
+                    $validator = Validator::make([$attribute => $value], [
+                        $attribute => 'file:' . implode(",", $parameters)
+                    ]);
+                    return !$validator->fails();
+                }
+            }
         );
         Validator::extend(
             'captcha',

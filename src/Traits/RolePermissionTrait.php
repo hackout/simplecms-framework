@@ -1,9 +1,6 @@
 <?php
 namespace SimpleCMS\Framework\Traits;
 
-use Illuminate\Database\Eloquent\Collection;
-use SimpleCMS\Framework\Database\TreeCollection;
-use Exception;
 use SimpleCMS\Framework\Models\Role;
 
 /**
@@ -45,7 +42,7 @@ trait RolePermissionTrait
      */
     public function checkRole(string $role): bool
     {
-        if ($this->{$this->getSuperKey()})
+        if ($this->{$this->getSuperColumnName()})
             return true;
         $allRoles = Role::getRolesByModel($this);
         $roleList = explode(',', $role);
@@ -60,7 +57,7 @@ trait RolePermissionTrait
         return false;
     }
 
-    protected function getSuperKey(): string
+    protected function getSuperColumnName(): string
     {
         return defined('static::SUPER_ID') ? static::SUPER_ID : 'is_super';
     }

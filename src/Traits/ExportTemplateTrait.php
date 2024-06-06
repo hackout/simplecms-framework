@@ -45,7 +45,7 @@ trait ExportTemplateTrait
      */
     protected function getExportClassName(): string
     {
-        return property_exists($this, 'export') && $this->export ? $this->export : '\App\Exports\\' . basename($this->className) . 'Export';
+        return defined('static::EXPORT_NAME') ? static::EXPORT_NAME : '\App\Exports\\' . basename($this->className) . 'Export';
     }
 
 }

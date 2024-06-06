@@ -2,6 +2,8 @@
 namespace SimpleCMS\Framework\Traits;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use SimpleCMS\Framework\Database\TreeCollection;
 use Exception;
 
@@ -32,23 +34,32 @@ use Exception;
  * 你可以重新定义父级ID的字段:
  *
  *   const PARENT_ID = 'my_parent_column';
+ * @property-read mixed $parent 上级
+ * @property-read mixed $children 下级
  */
 trait SimpleTreeTrait
 {
-    public function initializeSimpleTreeTrait()
-    {
-        // 设置关联关系
-        $this->hasMany['children'] = [
-            static::class,
-            'key' => $this->getParentColumnName(),
-            'replicate' => false
-        ];
 
-        $this->belongsTo['parent'] = [
-            static::class,
-            'key' => $this->getParentColumnName(),
-            'replicate' => false
-        ];
+    /**
+     * 上级
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return HasMany
+     */
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(static::class, $this->getParentColumnName());
+    }
+
+    /**
+     * 下级
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return HasMany
+     */
+    public function children(): HasMany
+    {
+        return $this->hasMany(static::class, $this->getParentColumnName());
     }
 
     /**
@@ -172,24 +183,13 @@ trait SimpleTreeTrait
                     $pairMap[$parentId] = [];
                 }
                 $pairMap[$parentId][] = $record;
-            }
-            else {
+            } else {
                 $rootItems[] = $record;
             }
         }
 
         // Recursive helper function
-        $buildCollection = function(
-            $items,
-            $map,
-            $depth = 0
-        ) use (
-            &$buildCollection,
-            $column,
-            $key,
-            $indent,
-            $idName
-        ) {
+        $buildCollection = function ($items, $map, $depth = 0) use (&$buildCollection, $column, $key, $indent, $idName) {
             $result = [];
 
             $indentString = str_repeat($indent, $depth);
@@ -201,8 +201,7 @@ trait SimpleTreeTrait
 
                 if ($key !== null) {
                     $result[$item->{$key}] = $indentString . $item->{$column};
-                }
-                else {
+                } else {
                     $result[] = $indentString . $item->{$column};
                 }
 
@@ -235,7 +234,7 @@ trait SimpleTreeTrait
      */
     public function getQualifiedParentColumnName()
     {
-        return $this->getTable(). '.' .$this->getParentColumnName();
+        return $this->getTable() . '.' . $this->getParentColumnName();
     }
 
     /**
