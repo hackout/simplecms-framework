@@ -18,6 +18,8 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property array $url URL
  * @property bool $is_valid 是否生效
  * @property bool $is_show 是否显示
+ * @property ?string $icon 图标
+ * @property bool $can_delete 是否允许删除
  * @property ?int $sort_order 排序
  * @property ?int $parent_id 父级ID
  * @property-read ?Collection<Media> $media 附件
@@ -50,6 +52,8 @@ class Menu extends Model implements HasMedia
         'name',
         'url',
         'type',
+        'can_delete',
+        'icon',
         'is_valid',
         'is_show',
         'sort_order',
@@ -60,6 +64,7 @@ class Menu extends Model implements HasMedia
         'url' => 'array',
         'is_valid' => 'boolean',
         'is_show' => 'boolean',
+        'can_delete' => 'boolean',
         'type' => 'integer',
         'sort_order' => 'integer',
         'parent_id' => 'integer',
