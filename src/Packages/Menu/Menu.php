@@ -44,10 +44,12 @@ class Menu
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  array     $menus
-     * @return MenuClass
+     * @return MenuClass|null
      */
-    protected function matchRoute(array $menus): MenuClass
+    protected function matchRoute(array $menus): ?MenuClass
     {
+        if (!$menus || empty($menus[0]))
+            return null;
         $menu = new MenuClass;
         $menu->name = $menus[0]->name;
         $menu->url = $menus[0]->url;

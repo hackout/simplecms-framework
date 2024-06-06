@@ -12,16 +12,16 @@ class MenuClass
     /**
      * 菜单名
      *
-     * @var string
+     * @var string|null
      */
-    public string $name;
+    public ?string $name;
 
     /**
      * 路由
      *
      * @var array<string,string>
      */
-    public array $url;
+    public ?array $url;
 
     /**
      * 是否显示
