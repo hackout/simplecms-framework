@@ -33,32 +33,28 @@ class System
         ]);
 
         // 获取 PHP 版本信息
-        $serverInfo['php'] = [
-            'version' => phpversion(),
-            'extensions' => get_loaded_extensions(),
-        ];
+        $serverInfo['php'] = phpversion();
 
         // 获取数据库信息（需要先配置数据库连接）
         $dbInfo = DB::connection()->getPdo()->getAttribute(\PDO::ATTR_SERVER_VERSION);
         ;
-        $serverInfo['database'] = collect([
-            'version' => $dbInfo,
-            // 其他数据库相关信息可根据需要添加
-        ]);
+        $serverInfo['database'] = $dbInfo;
 
         // 获取服务器的 CPU 信息
         if (!$cpuInfo = shell_exec('cat /proc/cpuinfo|grep "model name" && cat /proc/cpuinfo |grep "cache size"')) {
             $cpuInfo = [
                 'name' => 'Unknown',
                 'core' => 'Unknown',
-                'size' => 'Unknown'
+                'size' => 'Unknown',
+                'used' => 'Unknown'
             ];
         } else {
             $cpu = explode(PHP_EOL, $cpuInfo);
             $cpuInfo = [
                 'name' => null,
                 'core' => 0,
-                'size' => 0
+                'size' => 0,
+                'used' => $this->getCpuUsagePercentage()
             ];
             foreach ($cpu as $rs) {
                 if (strpos($rs, 'model name') === 0) {
@@ -79,6 +75,11 @@ class System
         $systemVersion = php_uname('a');
         $serverInfo['system'] = $systemVersion;
 
+        $serverInfo['framework'] = collect(json_decode(file_get_contents(__DIR__ . '/../../../composer.json'), true))->only([
+            'name',
+            'version',
+            'authors'
+        ]);
         return collect($serverInfo);
     }
 
@@ -94,4 +95,28 @@ class System
         return $this->system;
     }
 
+    /**
+     * 获取负载
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return float
+     */
+    protected function getCpuUsage(): float
+    {
+        $load = \sys_getloadavg();
+        return (float) $load[0];
+    }
+
+    /**
+     * CPU使用率
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return float
+     */
+    protected function getCpuUsagePercentage(): float
+    {
+        $load = $this->getCpuUsage();
+        $cpuCount = shell_exec("cat /proc/cpuinfo | grep processor | wc -l");
+        return ($load / $cpuCount) * 100;
+    }
 }
