@@ -13,8 +13,7 @@
 ## 安装指令
 
 ```bash
-php artisan vendor:publish --provider="SimpleCMS\Framework\SimpleServiceProvider" --tag=cms
-php artisan vendor:publish --provider="SimpleCMS\Framework\SimpleServiceProvider" --tag=config
+php artisan vendor:publish --provider="SimpleCMS\Framework\SimpleServiceProvider" --tag=simplecms
 ```
 
 ## 命令行
