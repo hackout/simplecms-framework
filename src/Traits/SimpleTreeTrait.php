@@ -10,14 +10,14 @@ use Exception;
  *
  * @author Dennis Lui <hackout@vip.qq.com>
  *
- * Usage:
+ * 说明:
  *
- * Model table must have parent_id table column.
- * In the model class definition:
+ * 模块中必须存在parent_id父级ID
+ * 模块class中引用:
  *
- *   use \SimpleCMS\Framework\Traits\SimpleTree;
+ *   use \SimpleCMS\Framework\Traits\SimpleTreeTrait;
  *
- * General access methods:
+ * 模型方法:
  *
  *   $model->getChildren(); // Returns children of this node
  *   $model->getChildCount(); // Returns number of all children.
@@ -25,22 +25,19 @@ use Exception;
  *   $model->getAllRoot(); // Returns all root level nodes (eager loaded)
  *   $model->getAll(); // Returns everything in correct order.
  *
- * Query builder methods:
+ * 请求查询方法:
  *
  *   $query->listsNested(); // Returns an indented array of key and value columns.
  *
- * You can change the sort field used by declaring:
+ * 你可以重新定义父级ID的字段:
  *
  *   const PARENT_ID = 'my_parent_column';
  */
 trait SimpleTreeTrait
 {
-    /**
-     * initializeSimpleTree constructor
-     */
-    public function initializeSimpleTree()
+    public function initializeSimpleTreeTrait()
     {
-        // Define relationships
+        // 设置关联关系
         $this->hasMany['children'] = [
             static::class,
             'key' => $this->getParentColumnName(),
@@ -55,7 +52,7 @@ trait SimpleTreeTrait
     }
 
     /**
-     * getAll returns all nodes and children.
+     * 返回所有列表
      * @return Collection
      */
     public function getAll()

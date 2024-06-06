@@ -33,7 +33,7 @@ Continue...
 
 ## Facades
 
-```bash
+```php
 use Captcha; #验证码 
 use Dict; #字典 
 use ExcelConvert; #Excel转换 
@@ -41,6 +41,16 @@ use ExcelDrawing; #Excel提取图片
 use Menu; #菜单 
 use SystemConfig; #系统设置 
 use SystemInfo; #系统环境参数
+```
+
+## Middleware
+
+```php
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->alias([
+        'role' => CheckPermission::class
+    ]);
+})
 ```
 
 ## 其他说明

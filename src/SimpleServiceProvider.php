@@ -15,10 +15,12 @@ use SimpleCMS\Framework\Console\ServiceMakeCommand;
 use SimpleCMS\Framework\Validation\Rule\IDCardRule;
 use SimpleCMS\Framework\Validation\Rule\MobileRule;
 use SimpleCMS\Framework\Validation\Rule\ChineseRule;
+use SimpleCMS\Framework\Http\Middleware\LoadLanguage;
 use SimpleCMS\Framework\Validation\Rule\TelephoneRule;
 use SimpleCMS\Framework\Validation\Rule\CarNumberRule;
 use SimpleCMS\Framework\Validation\Rule\CompanyIDRule;
 use SimpleCMS\Framework\Console\ControllerMakeCommand;
+use SimpleCMS\Framework\Http\Middleware\CheckPermission;
 use SimpleCMS\Framework\Validation\Rule\ChinesePostCodeRule;
 
 class SimpleServiceProvider extends ServiceProvider
@@ -40,6 +42,19 @@ class SimpleServiceProvider extends ServiceProvider
             RouteMakeCommand::class
         ]);
         $this->bindCaptcha();
+        $this->registerMiddleware();
+    }
+
+    /**
+     * 注册Middleware
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return void
+     */
+    protected function registerMiddleware():void
+    {
+        $this->app->singleton(CheckPermission::class);
+        $this->app->singleton(LoadLanguage::class);
     }
 
     /**

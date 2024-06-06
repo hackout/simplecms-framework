@@ -20,15 +20,7 @@ class CheckPermission
     {
         $user = $request->user();
         if (!$user->hasRole($role)) {
-            if ($request->ajax()) {
-                return json_permission();
-            } else {
-                if (method_exists($request->user(), 'failRedirect')) {
-                    return $request->user()->failRedirect();
-                } else {
-                    return abort(401);
-                }
-            }
+            return $request->user()->failRedirect($request);
         }
         return $next($request);
     }
