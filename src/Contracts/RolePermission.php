@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 
 interface RolePermission
 {
-    public function checkRole(string $role): bool;
+    public function hasRole(string $role): bool;
 
     public function failRedirect(Request $request);
 }

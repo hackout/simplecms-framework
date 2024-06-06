@@ -40,7 +40,7 @@ trait RolePermissionTrait
      * @param  string  $role
      * @return boolean
      */
-    public function checkRole(string $role): bool
+    public function hasRole(string $role): bool
     {
         if ($this->{$this->getSuperColumnName()})
             return true;
