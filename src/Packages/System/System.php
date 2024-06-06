@@ -1,8 +1,9 @@
 <?php
 namespace SimpleCMS\Framework\Packages\System;
 
+use Illuminate\Support\Number;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 
 /**
  * 系统环境信息
@@ -38,14 +39,40 @@ class System
         ];
 
         // 获取数据库信息（需要先配置数据库连接）
-        $dbInfo = Artisan::call('db:raw', ['query' => 'SELECT VERSION() as version']);
+        $dbInfo = DB::connection()->getPdo()->getAttribute(\PDO::ATTR_SERVER_VERSION);
+        ;
         $serverInfo['database'] = collect([
             'version' => $dbInfo,
             // 其他数据库相关信息可根据需要添加
         ]);
 
         // 获取服务器的 CPU 信息
-        $cpuInfo = shell_exec('cat /proc/cpuinfo');
+        if (!$cpuInfo = shell_exec('cat /proc/cpuinfo|grep "model name" && cat /proc/cpuinfo |grep "cache size"')) {
+            $cpuInfo = [
+                'name' => 'Unknown',
+                'core' => 'Unknown',
+                'size' => 'Unknown'
+            ];
+        } else {
+            $cpu = explode(PHP_EOL, $cpuInfo);
+            $cpuInfo = [
+                'name' => null,
+                'core' => 0,
+                'size' => 0
+            ];
+            foreach ($cpu as $rs) {
+                if (strpos($rs, 'model name') === 0) {
+                    if (!$cpuInfo['name']) {
+                        $cpuInfo['name'] = trim(last(explode(":", $rs)));
+                    }
+                    $cpuInfo['core']++;
+                }
+                if (strpos($rs, 'cache size') === 0) {
+                    $cpuInfo['size'] += intval(trim(str_replace('KB', '', last(explode(":", $rs)))));
+                }
+            }
+            $cpuInfo['size'] = Number::fileSize($cpuInfo['size'] * 1024 * 1024);
+        }
         $serverInfo['cpu'] = $cpuInfo;
 
         // 获取服务器的系统版本信息
