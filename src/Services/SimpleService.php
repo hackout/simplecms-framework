@@ -8,15 +8,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use SimpleCMS\Framework\Exceptions\SimpleException;
 
+use SimpleCMS\Framework\Services\Query;
 use function is_numeric;
 use function is_string;
 use function is_array;
-use function array_slice;
 use function array_pad;
 
 /**
@@ -69,7 +68,7 @@ class SimpleService
 
     protected $cacheName;
 
-    public Model|HasMany|HasManyThrough|BelongsToMany|MorphMany $model;
+    public null|Model $model = null;
 
     public string $primaryKey;
 
@@ -182,115 +181,48 @@ class SimpleService
         if ($data) {
             $sql = $otherConditions ?: [];
             foreach ($conditions as $key => $value) {
-                $action = is_array($value) && array_key_exists(0, $value) ? $value[0] : $value;
-                $fields = is_array($value) && array_key_exists(1, $value) ? $value[1] : $key;
+                $values = is_array($value) ? $value : [$value];
+                list($action, $fields, $extra) = array_pad($values, 3, null);
+                if (!$fields)
+                    $fields = $key;
                 if ($action == 'search' && array_key_exists($key, $data) && trim($data[$key])) {
                     $keyword = trim($data[$key]);
-                    $sql[] = [
-                        function ($query) use ($keyword, $fields) {
-                            if (is_array($fields)) {
-                                foreach ($fields as $i => $field) {
-                                    if ($i) {
-                                        $query->orWhere($field, 'LIKE', "%{$keyword}%");
-                                    } else {
-                                        $query->where($field, 'LIKE', "%{$keyword}%");
-                                    }
-                                }
-                            } else {
-                                $query->where($fields, 'LIKE', "%{$keyword}%");
-                            }
-                        }
-                    ];
+                    $sql[] = Query\Search::builder($keyword, $fields, $extra ?? false);
                 }
+
                 if ($action == 'datetime_range' && array_key_exists($key, $data) && $data[$key]) {
-                    $dateArray = is_array($data[$key]) ? $data[$key] : [$data[$key]];
-                    $datetime = array_slice(array_pad($dateArray, 2, null), 0, 2);
-                    if (is_array($fields)) {
-                        throw new SimpleException(trans('simplecms::parameter_valid'));
-                    }
-                    if ($datetime[0]) {
-                        $sql[] = [$fields, '>=', Carbon::parse($datetime[0])];
-                    }
-                    if ($datetime[1]) {
-                        $sql[] = [$fields, '<', Carbon::parse($datetime[1])];
-                    }
+                    tap(Query\DateTimeRange::builder($data[$key], $extra ?? false), function (array $_sql) use (&$sql) {
+                        $sql[] = $_sql;
+                    });
                 }
                 if ($action == 'range' && array_key_exists($key, $data) && $data[$key]) {
-                    $dateArray = is_array($data[$key]) ? $data[$key] : [$data[$key]];
-                    $datetime = array_slice(array_pad($dateArray, 2, null), 0, 2);
-                    if (is_array($fields)) {
-                        throw new SimpleException(trans('simplecms::parameter_valid'));
-                    }
-                    if ($datetime[0]) {
-                        $sql[] = [$fields, '>=', $datetime[0]];
-                    }
-                    if ($datetime[1]) {
-                        $sql[] = [$fields, '<', $datetime[1]];
-                    }
+                    tap(Query\Range::builder($data[$key], $extra ?? false), function (array $_sql) use (&$sql) {
+                        $sql[] = $_sql;
+                    });
                 }
                 if ($action == 'datetime' && array_key_exists($key, $data) && $data[$key]) {
-                    $datetime = Carbon::parse($data[$key]);
-                    if (is_array($fields)) {
-                        throw new SimpleException(trans('simplecms::parameter_valid'));
-                    }
-                    $sql[] = [$fields, '>=', $datetime];
+                    $sql[] = Query\Search::builder($data[$key], $fields, $extra ?? false);
                 }
                 if ($action == 'date' && array_key_exists($key, $data) && $data[$key]) {
-                    $datetime = Carbon::parse($data[$key]);
-                    if (is_array($fields)) {
-                        throw new SimpleException(trans('simplecms::parameter_valid'));
-                    }
-                    $sql[] = [$fields, 'Date', $datetime->toDateString()];
+                    $sql[] = Query\Date::builder($data[$key], $fields, $extra ?? false);
                 }
                 if ($action == 'year' && array_key_exists($key, $data) && $data[$key]) {
-                    $datetime = Carbon::parse($data[$key]);
-                    if (is_array($fields)) {
-                        throw new SimpleException(trans('simplecms::parameter_valid'));
-                    }
-                    $sql[] = [$fields, 'Year', $datetime->year];
+                    $sql[] = Query\Year::builder($data[$key], $fields, $extra ?? false);
                 }
                 if ($action == 'month' && array_key_exists($key, $data) && $data[$key]) {
-                    $datetime = Carbon::parse($data[$key]);
-                    if (is_array($fields)) {
-                        throw new SimpleException(trans('simplecms::parameter_valid'));
-                    }
-                    $sql[] = [$fields, 'Month', $datetime->month];
+                    $sql[] = Query\Month::builder($data[$key], $fields, $extra ?? false);
                 }
                 if ($action == 'day' && array_key_exists($key, $data) && $data[$key]) {
-                    $datetime = Carbon::parse($data[$key]);
-                    if (is_array($fields)) {
-                        throw new SimpleException(trans('simplecms::parameter_valid'));
-                    }
-                    $sql[] = [$fields, 'Day', $datetime->day];
-                }
-                if ($action == 'column' && array_key_exists($key, $data) && $data[$key]) {
-                    if (is_array($fields)) {
-                        throw new SimpleException(trans('simplecms::parameter_valid'));
-                    }
-                    $sql[] = [$fields, 'Column', $data[$key]];
+                    $sql[] = Query\Day::builder($data[$key], $fields, $extra ?? false);
                 }
                 if ($action == 'in' && array_key_exists($key, $data) && $data[$key]) {
-                    if (is_array($fields)) {
-                        throw new SimpleException(trans('simplecms::parameter_valid'));
-                    }
-                    $arr = is_array($data[$key]) ? $data[$key] : [$data[$key]];
-                    $sql[] = [
-                        function ($query) use ($fields, $arr) {
-                            $query->whereIn($fields, $arr);
-                        }
-                    ];
+                    $sql[] = Query\In::builder($data[$key], $fields);
                 }
                 if ($action == 'eq' && array_key_exists($key, $data) && $data[$key] !== null) {
-                    if (is_array($fields)) {
-                        throw new SimpleException(trans('simplecms::parameter_valid'));
-                    }
-                    $sql[] = [$fields, '=', $data[$key]];
+                    $sql[] = Query\Eq::builder($data[$key], $fields);
                 }
                 if ($action == 'like' && array_key_exists($key, $data) && $data[$key] !== null) {
-                    if (is_array($fields)) {
-                        throw new SimpleException(trans('simplecms::parameter_valid'));
-                    }
-                    $sql[] = [$fields, 'LIKE', $data[$key]];
+                    $sql[] = Query\Like::builder($data[$key], $fields);
                 }
             }
             if ($sql) {
@@ -506,9 +438,8 @@ class SimpleService
         $limit = request()->get('limit', 10);
         $prop = request()->get('prop', null);
         $order = request()->get('order', null);
-        $fields = request()->get('fields', '*');
         $builder = $this->builder($prop, $order);
-        $data = $this->getCacheData([$builder->toRawSql(), $limit, explode(',', $fields), 'page', $page], fn() => $builder->paginate($limit, explode(',', $fields), 'page', $page));
+        $data = $this->getCacheData([$builder->toRawSql(), $limit, 'page', $page], fn() => $builder->paginate($limit, ['*'], 'page', $page));
         $items = $this->filterData(collect($data->items()), $fieldList);
         return [
             'items' => $items,
