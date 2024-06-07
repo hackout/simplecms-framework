@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace SimpleCMS\Framework\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
