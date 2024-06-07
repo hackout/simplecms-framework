@@ -20,11 +20,11 @@ class {{ class }} extends BaseController
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  Request         $request
-     * @param  {{storeService}} $service
+     * @param  {{ storeService }} $service
      * @return InertiaResponse
      */
      #[ApiName(name:'{{ class }}-首页')]
-    public function index({{ storeRequest }} $request,{{storeService}} $service):InertiaResponse
+    public function index({{ storeRequest }} $request,{{ storeService }} $service):InertiaResponse
     {        
         return Inertia::render('{{ modelName }}/Index', [
             'query' => [
@@ -40,11 +40,11 @@ class {{ class }} extends BaseController
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  Request         $request
-     * @param  {{storeService}} $service
+     * @param  {{ storeService }} $service
      * @return JsonResponse
      */
      #[ApiName(name:'{{ class }}-获取列表')]
-    public function list({{ storeRequest }} $request,{{storeService}} $service):JsonResponse
+    public function list({{ storeRequest }} $request,{{ storeService }} $service):JsonResponse
     {
         $rules = [
             'keyword' => 'sometimes|nullable|max:250'
@@ -62,11 +62,11 @@ class {{ class }} extends BaseController
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  Request         $request
-     * @param  {{storeService}} $service
+     * @param  {{ storeService }} $service
      * @return JsonResponse
      */
      #[ApiName(name:'{{ class }}-添加信息')]
-    public function create({{ storeRequest }} $request,{{storeService}} $service):JsonResponse
+    public function create({{ storeRequest }} $request,{{ storeService }} $service):JsonResponse
     {
         $rules = [
             //
@@ -85,11 +85,11 @@ class {{ class }} extends BaseController
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  string $id
      * @param  Request         $request
-     * @param  {{storeService}} $service
+     * @param  {{ storeService }} $service
      * @return JsonResponse
      */
      #[ApiName(name:'{{ class }}-编辑信息')]
-    public function update(string $id,{{ storeRequest }} $request,{{storeService}} $service):JsonResponse
+    public function update(string $id,{{ storeRequest }} $request,{{ storeService }} $service):JsonResponse
     {
         $rules = [
             'id' => 'exists:{{ table }},id'
@@ -116,11 +116,11 @@ class {{ class }} extends BaseController
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  string $id
      * @param  Request         $request
-     * @param  {{storeService}} $service
+     * @param  {{ storeService }} $service
      * @return JsonResponse
      */
      #[ApiName(name:'{{ class }}-信息详情')]
-    public function detail(string $id,{{ storeRequest }} $request,{{storeService}} $service):JsonResponse
+    public function detail(string $id,{{ storeRequest }} $request,{{ storeService }} $service):JsonResponse
     {
         $rules = [
             'id' => 'exists:{{ table }},id'
@@ -149,7 +149,7 @@ class {{ class }} extends BaseController
      * @return JsonResponse
      */
      #[ApiName(name:'{{ class }}-删除信息')]
-    public function delete(string $id,{{ storeRequest }} $request,{{storeService}} $service): JsonResponse
+    public function delete(string $id,{{ storeRequest }} $request,{{ storeService }} $service): JsonResponse
     {
         $rules = [
             'id' => 'exists:{{ table }},id'
@@ -172,11 +172,11 @@ class {{ class }} extends BaseController
      * {{ class }} 下载导入模板
      *
      * @author Dennis Lui <hackout@vip.qq.com>
-     * @param  {{storeService}} $service
+     * @param  {{ storeService }} $service
      * @return BinaryFileResponse
      */
      #[ApiName(name:'{{ class }}-下载导入模板')]
-    public function template({{storeService}} $service): BinaryFileResponse
+    public function template({{ storeService }} $service): BinaryFileResponse
     {
         return $service->downloadImportTemplate();
     }
@@ -186,11 +186,11 @@ class {{ class }} extends BaseController
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  {{ storeRequest }} $request
-     * @param  {{storeService}} $service
+     * @param  {{ storeService }} $service
      * @return JsonResponse
      */
      #[ApiName(name:'{{ class }}-导入数据')]
-    public function import({{ storeRequest }} $request,{{storeService}} $service): JsonResponse
+    public function import({{ storeRequest }} $request,{{ storeService }} $service): JsonResponse
     {
         $rules = [
             'file' => 'required|file|mimes:xls,xlsx',
@@ -201,7 +201,7 @@ class {{ class }} extends BaseController
             'file.mimes' => '上传文件格式错误'
         ];
         $data = $request->validate($rules, $messages);
-        $service->importFile($data['file']);
+        $service->import($data['file']);
         return $this->success();
     }
     
@@ -210,11 +210,11 @@ class {{ class }} extends BaseController
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  {{ storeRequest }} $request
-     * @param  {{storeService}} $service
+     * @param  {{ storeService }} $service
      * @return JsonResponse
      */
      #[ApiName(name:'{{ class }}-导出数据')]
-    public function export({{ storeRequest }} $request, {{storeService}} $service): JsonResponse
+    public function export({{ storeRequest }} $request, {{ storeService }} $service): JsonResponse
     {
         $rules = [
             'keyword' => 'sometimes|nullable|max:250'
