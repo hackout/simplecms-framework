@@ -53,7 +53,7 @@ class {{ class }} extends BaseController
             'keyword.max' => '关键词最大支持250个字符'
         ];
         $data = $request->validate($rules,$messages);
-        $result = $service->getList($request->user(),$data);
+        $result = $service->getList($data);
         return $this->success($result);
     }
 
@@ -75,7 +75,7 @@ class {{ class }} extends BaseController
             //
         ];
         $data = $request->validate($rules,$messages);
-        $service->createByUser($request->user(),$data);
+        $service->create($data);
         return $this->success();
     }
 
@@ -106,7 +106,7 @@ class {{ class }} extends BaseController
         $data = $validator->safe()->only([
             //Todo..
         ]);
-        $service->updateByUser($request->user(),$id,$data);
+        $service->update($id,$data);
         return $this->success();
     }
 
@@ -128,13 +128,13 @@ class {{ class }} extends BaseController
         $messages = [
             'id.exists' => '信息不存在或删除',
         ];
-        $validator = Validator::make(array_merge([
+        $validator = Validator::make([
             'id' => $id
-        ], $request->post()), $rules, $messages);
+        ], $rules, $messages);
         if ($validator->fails()) {
             return $this->error($validator->errors()->first());
         }
-        $result = $service->detailByUser($request->user(),$id);
+        $result = $service->detail($id);
         return $this->success($result);
     }
 
@@ -157,16 +157,13 @@ class {{ class }} extends BaseController
         $messages = [
             'id.exists' => '信息不存在或删除',
         ];
-        $validator = Validator::make(array_merge([
+        $validator = Validator::make([
             'id' => $id
-        ], $request->post()), $rules, $messages);
+        ], $rules, $messages);
         if ($validator->fails()) {
             return $this->error($validator->errors()->first());
         }
-        $data = $validator->safe()->only([
-            //Todo..
-        ]);
-        $service->deleteByUser($request->user(),$id,$data);
+        $service->delete($id,$data);
         return $this->success();
     }
     
@@ -204,7 +201,7 @@ class {{ class }} extends BaseController
             'file.mimes' => '上传文件格式错误'
         ];
         $data = $request->validate($rules, $messages);
-        $service->importFile($request->user(), $data['file']);
+        $service->importFile($data['file']);
         return $this->success();
     }
     
