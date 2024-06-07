@@ -1,14 +1,14 @@
 <?php
 namespace SimpleCMS\Framework\Services;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use SimpleCMS\Framework\Exceptions\SimpleException;
 
-use SimpleCMS\Framework\Services\Query;
 use function is_numeric;
 use function is_string;
 use function is_array;
@@ -504,31 +504,37 @@ class SimpleService
     /**
      * 创建数据
      *
-     * @param array<string,mixed> $data 数据参数
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  array<string,mixed> $data 数据参数
+     * @param  array<string,string> $mediaFields 附件对应键
      * @return bool
      */
-    public function create(array $data)
+    public function create(array $data, array $mediaFields = [])
     {
-        $this->item = $this->newModel();
-        $this->item->fill($data);
-        $result = $this->item->save();
+        list($sql, $files, $multipleFiles) = app(Work\ConvertData::class, [$this->model])->run($data, $mediaFields);
 
+        $this->item = $this->newModel();
+        $this->item->fill($sql);
+        $result = $this->item->save();
         if ($result) {
+            if ($this->hasMedia()) {
+                $this->updateMedia($files, $multipleFiles, $mediaFields);
+            }
             $this->clearCacheData();
         }
 
         return $result;
     }
 
-
     /**
      * 更新数据
      *
-     * @param string|int $id 主键
-     * @param array $data 更新参数
+     * @param  string|int $id 主键
+     * @param  array<string,mixed> $data 数据参数
+     * @param  array<string,string> $mediaFields 附件对应键
      * @return bool
      */
-    public function update(string|int $id, array $data)
+    public function update(string|int $id, array $data, array $mediaFields = [])
     {
         $this->item = $this->model->where($this->primaryKey, $id)->first();
 
@@ -536,15 +542,105 @@ class SimpleService
             throw new SimpleException(trans('simplecms:not_exists'));
         }
 
-        $this->item->fill($data);
+        list($sql, $files, $multipleFiles) = app(Work\ConvertData::class, [$this->model])->run($data, $mediaFields);
+        $this->item->fill($sql);
         $result = $this->item->save();
 
         if ($result) {
+            if ($this->hasMedia()) {
+                $this->updateMedia($files, $multipleFiles, $mediaFields);
+            }
             $this->clearCacheData();
         }
 
         return $result;
     }
+
+    /**
+     * 更新附件
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  array $files
+     * @param  array $multipleFiles
+     * @param  array $mediaFields
+     * @return void
+     */
+    protected function updateMedia(array $files, array $multipleFiles, array $mediaFields): void
+    {
+        if ($files) {
+            if (!$mediaFields) {
+                $mediaColumn = $this->getMediaColumn() ?? head(array_keys($files));
+                $this->addMedia(head($files), $mediaColumn);
+            } else {
+                foreach ($files as $field => $file) {
+                    if (array_key_exists($field, $mediaFields) && $mediaFields[$field]) {
+                        $this->addMedia($file, $mediaFields[$field]);
+                    }
+                }
+            }
+        }
+        if ($multipleFiles) {
+
+            if (!$mediaFields) {
+                $mediaColumn = $this->getMediaColumn() ?? head(array_keys($files));
+                $this->addMultipleMedia(head($files), $mediaColumn);
+            } else {
+                foreach ($files as $field => $file) {
+                    if (array_key_exists($field, $mediaFields) && $mediaFields[$field]) {
+                        $this->addMultipleMedia($file, $mediaFields[$field]);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 添加附件
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  UploadedFile|string $file
+     * @param  string              $columnName
+     * @return void
+     */
+    public function addMedia(UploadedFile|string $file, string $columnName): void
+    {
+        return app(Work\AddMedia::class, [$this->item])->run($file, $columnName);
+    }
+
+    /**
+     * 添加附件组
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  array<UploadedFile|string> $files
+     * @param  string              $columnName
+     * @return void
+     */
+    public function addMultipleMedia(array $files, string $columnName): void
+    {
+        foreach ($files as $file) {
+            $this->addMedia($file, $columnName);
+        }
+    }
+
+    /**
+     * 检查是否存在Media关系
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return boolean
+     */
+    protected function hasMedia(): bool
+    {
+        return app(Work\HasMedia::class, [$this->model])->run();
+    }
+
+    /**
+     * 获取Media Key
+     */
+    protected function getMediaColumn(): ?string
+    {
+        return defined($this->className . '::MEDIA_FILE') ? $this->className::MEDIA_FILE : null;
+    }
+
 
     /**
      * 条件更新

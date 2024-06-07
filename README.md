@@ -13,7 +13,9 @@
 ## 安装指令
 
 ```bash
+composer require simplecms/framework
 php artisan vendor:publish --provider="SimpleCMS\Framework\SimpleServiceProvider" --tag=simplecms
+php artisan migrate
 ```
 
 ## 命令行

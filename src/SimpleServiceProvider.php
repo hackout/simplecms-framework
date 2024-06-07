@@ -16,6 +16,7 @@ use SimpleCMS\Framework\Validation\Rule\IDCardRule;
 use SimpleCMS\Framework\Validation\Rule\MobileRule;
 use SimpleCMS\Framework\Validation\Rule\ChineseRule;
 use SimpleCMS\Framework\Http\Middleware\LoadLanguage;
+use SimpleCMS\Framework\Console\SimpleCMSInitCommand;
 use SimpleCMS\Framework\Validation\Rule\TelephoneRule;
 use SimpleCMS\Framework\Validation\Rule\CarNumberRule;
 use SimpleCMS\Framework\Validation\Rule\CompanyIDRule;
@@ -39,7 +40,8 @@ class SimpleServiceProvider extends ServiceProvider
             ServiceMakeCommand::class,
             ControllerMakeCommand::class,
             ModelMakeCommand::class,
-            RouteMakeCommand::class
+            RouteMakeCommand::class,
+            SimpleCMSInitCommand::class,
         ]);
         $this->bindCaptcha();
         $this->registerMiddleware();
