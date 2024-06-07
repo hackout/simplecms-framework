@@ -1,7 +1,7 @@
 <?php
 namespace SimpleCMS\Framework\Services\Query;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder;
 
 class Search
 {

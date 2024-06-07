@@ -2,7 +2,7 @@
 namespace SimpleCMS\Framework\Exceptions;
 
 use Exception;
-use Illuminate\Support\Facades\Event;
+use SimpleCMS\Framework\Services\RequestLogService;
 
 class SimpleException extends Exception
 {
@@ -31,7 +31,7 @@ class SimpleException extends Exception
 
     public function render($request)
     {
-        Event::dispatch('simplecms.backend.request', [$request, false]);
+        (new RequestLogService())->makeLog($request, false);
         return response()->json([
             'code' => $this->getCode(),
             'message' => $this->getMessage()

@@ -2,7 +2,7 @@
 namespace SimpleCMS\Framework\Services\Query;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder;
 
 class DateTime
 {

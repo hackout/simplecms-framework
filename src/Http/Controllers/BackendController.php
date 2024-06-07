@@ -2,12 +2,12 @@
 
 namespace SimpleCMS\Framework\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Collection;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Collection;
+use SimpleCMS\Framework\Services\RequestLogService;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class BackendController extends BaseController
 {
@@ -23,7 +23,7 @@ class BackendController extends BaseController
      */
     public function success(array|string|null|bool|Collection $data = null, $message = 'success'): JsonResponse
     {
-        Event::dispatch('simplecms.backend.request', [request(), true]);
+        (new RequestLogService())->makeLog(request(), true);
         return json_success($data, $message);
     }
 
@@ -38,7 +38,7 @@ class BackendController extends BaseController
      */
     public function error(string $message = 'error', $code = 500, array|string|null|bool|Collection $data = null): JsonResponse
     {
-        Event::dispatch('simplecms.backend.request', [request(), false]);
+        (new RequestLogService())->makeLog(request(), false);
         return json_error($message, $data);
     }
 }
