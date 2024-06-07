@@ -2,10 +2,10 @@
 
 namespace SimpleCMS\Framework\Services;
 
-use App\Models\RequestLog;
 use Illuminate\Http\Request;
-use SimpleCMS\Framework\Enums\RequestLogEnum;
+use SimpleCMS\Framework\Models\RequestLog;
 use SimpleCMS\Framework\Attributes\ApiName;
+use SimpleCMS\Framework\Enums\RequestLogEnum;
 use SimpleCMS\Framework\Services\SimpleService;
 
 class RequestLogService extends SimpleService
