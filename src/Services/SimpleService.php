@@ -604,7 +604,7 @@ class SimpleService
      */
     public function addMedia(UploadedFile|string $file, string $columnName): void
     {
-        return app(Work\AddMedia::class, [$this->item])->run($file, $columnName);
+        app(Work\AddMedia::class, [$this->item])->run($file, $columnName);
     }
 
     /**
