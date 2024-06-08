@@ -411,23 +411,20 @@ class SimpleService
                 });
             }
         }
-        $builder = $builder->orderBy($prop, $order);
+        $builder = $this->orderBy($prop, $order);
 
         return $builder;
     }
 
     protected function orderBy(null|Model $model, string $column = null, string $direction = null): null|Model
     {
-        if(!$column && !$direction)
-        {
-            if($model->timestamps)
-            {
-                $model->orderBy($this->orderKey,$this->orderType);
+        if (!$column && !$direction) {
+            if (optional($model)->timestamps) {
+                $model->orderBy($this->orderKey, $this->orderType);
             }
-        }else{
-            if($column && $direction)
-            {
-                $model->orderBy($column,Str::remove('ending', $direction));
+        } else {
+            if ($column && $direction) {
+                $model->orderBy($column, Str::remove('ending', $direction));
             }
         }
         return $model;
