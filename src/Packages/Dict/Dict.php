@@ -66,7 +66,7 @@ class Dict
         $dict = DictModel::where('code', $code)->first();
         if (!$dict)
             return collect([]);
-        return $dict->items->only([
+        return $dict->items->map([
             'name',
             'value'
         ]);
