@@ -44,11 +44,6 @@ use Spatie\MediaLibrary\MediaCollections\FileAdderFactory;
 trait MediaAttributeTrait
 {
 
-    /**
-     * @var array
-     */
-    public array $hasOneMedia = [];
-
     /** @var Conversion[] */
     public array $mediaConversions = [];
 
@@ -665,6 +660,21 @@ trait MediaAttributeTrait
         });
 
         $this->registerMediaConversions($media);
+    }
+
+    /**
+     * 获取一对一附件key
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return array
+     */
+    public function getHasOneMedia():array
+    {
+        if(property_exists($this,'hasOneMedia'))
+        {
+            return $this->hasOneMedia;
+        }
+        return [];
     }
 
     public function __sleep(): array

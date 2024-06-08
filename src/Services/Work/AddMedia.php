@@ -23,7 +23,7 @@ class AddMedia
      */
     public function run(mixed $model, UploadedFile|string $file, string $columnName): void
     {
-        if ($model->hasOneMedia && in_array($columnName, $model->hasOneMedia)) {
+        if ($model->getHasOneMedia() && in_array($columnName, $model->getHasOneMedia())) {
             $model->getMedia($columnName)->each(fn(Media $media) => $media->delete());
         }
 
