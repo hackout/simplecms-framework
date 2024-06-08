@@ -5,8 +5,8 @@ namespace {{ namespace }};
 use Carbon\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Collection;
+use SimpleCMS\Framework\Traits\MediaAttributeTrait;
 use SimpleCMS\Framework\Traits\PrimaryKeyUuidTrait;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -23,7 +23,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  */
 class {{ class }} extends Model implements HasMedia
 {
-    use PrimaryKeyUuidTrait,InteractsWithMedia;
+    use PrimaryKeyUuidTrait,MediaAttributeTrait;
 
     /**
      * Media Key

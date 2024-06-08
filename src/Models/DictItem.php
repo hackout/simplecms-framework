@@ -2,11 +2,10 @@
 
 namespace SimpleCMS\Framework\Models;
 
-use SimpleCMS\Framework\Traits\MediaAttributeTrait;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Collection;
+use SimpleCMS\Framework\Traits\MediaAttributeTrait;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
@@ -23,7 +22,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  */
 class DictItem extends Model implements HasMedia
 {
-    use InteractsWithMedia, MediaAttributeTrait;
+    use MediaAttributeTrait;
 
     const MEDIA_FILE = 'file';
 

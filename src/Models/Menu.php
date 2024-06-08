@@ -4,9 +4,9 @@ namespace SimpleCMS\Framework\Models;
 
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Collection;
 use SimpleCMS\Framework\Traits\SimpleTreeTrait;
+use SimpleCMS\Framework\Traits\MediaAttributeTrait;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
@@ -30,7 +30,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Menu extends Model implements HasMedia
 {
-    use SimpleTreeTrait, InteractsWithMedia;
+    use SimpleTreeTrait, MediaAttributeTrait;
     public $timestamps = false;
 
     /**

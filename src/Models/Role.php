@@ -3,12 +3,9 @@
 namespace SimpleCMS\Framework\Models;
 
 use Illuminate\Support\Arr;
-use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Collection;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * 字典项模型
@@ -20,13 +17,10 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property string $type 角色类型
  * @property string $routes 路由
  * @property string $extra 附加参数
- * @property-read ?Collection<Media> $media 附件
- * @property-read ?string $thumbnail 附件LOGO
  * @property-read ?int $children_count 子级数量
  */
-class Role extends Model implements HasMedia
+class Role extends Model
 {
-    use InteractsWithMedia;
 
     /**
      * 附件KEY
@@ -59,13 +53,6 @@ class Role extends Model implements HasMedia
         'extra' => 'array'
     ];
 
-
-    public $appends = ['thumbnail'];
-
-    public $hidden = [
-        'media'
-    ];
-
     /**
      * 获取关联子级
      *
@@ -85,11 +72,6 @@ class Role extends Model implements HasMedia
     public function getChildrenCountAttribute()
     {
         return DB::table('roles_more')->where('role_id', $this->id)->count();
-    }
-
-    public function getThumbnailAttribute()
-    {
-        return $this->getFirstMediaUrl(self::MEDIA_FILE);
     }
 
     /**
