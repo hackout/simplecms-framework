@@ -26,7 +26,7 @@ class DictItem extends Model implements HasMedia
 
     const MEDIA_FILE = 'file';
 
-    public array $hasOneMedia = [static::MEDIA_FILE];
+    public array $hasOneMedia = ['file'];
 
     protected $fillable = [
         'dict_id',
