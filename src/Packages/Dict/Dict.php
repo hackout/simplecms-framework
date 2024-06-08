@@ -60,9 +60,9 @@ class Dict
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  string     $code
-     * @return Collection
+     * @return Collection|\Illuminate\Support\Collection
      */
-    public function getOptionsByCode(string $code): Collection
+    public function getOptionsByCode(string $code): Collection|\Illuminate\Support\Collection
     {
         $dict = DictModel::where('code', $code)->first();
         if (!$dict)
