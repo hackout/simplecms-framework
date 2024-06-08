@@ -1,6 +1,7 @@
 <?php
 namespace SimpleCMS\Framework\Packages\Dict;
 
+use SimpleCMS\Framework\Models\DictItem;
 use Illuminate\Database\Eloquent\Collection;
 use SimpleCMS\Framework\Models\Dict as DictModel;
 
@@ -66,9 +67,9 @@ class Dict
         $dict = DictModel::where('code', $code)->first();
         if (!$dict)
             return collect([]);
-        return $dict->items->map([
-            'name',
-            'value'
+        return $dict->items->map(fn(DictItem $dictItem) => [
+            'name' => $dictItem->name,
+            'value' => $dictItem->value
         ]);
     }
 
