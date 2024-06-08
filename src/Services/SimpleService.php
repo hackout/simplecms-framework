@@ -1,6 +1,7 @@
 <?php
 namespace SimpleCMS\Framework\Services;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
@@ -410,9 +411,24 @@ class SimpleService
                 });
             }
         }
-        $builder = Query\OrderBy::builder($builder, $prop, $order, $timestamps ? $this->orderKey : null, $timestamps ? $this->orderType : null);
+        $builder = $builder->orderBy($prop, $order);
 
         return $builder;
+    }
+
+    protected function orderBy(null|Model $model, string $column = null, string $direction = null): null|Model
+    {
+        if(!$column && !$direction)
+        {
+            if($model->timestamps)
+            {
+                $model->orderBy($this->orderKey,$this->orderType);
+            }
+        }else{
+            Str::remove('ending', $direction);
+            $model->orderBy($column ?? $this->orderKey,$direction ?? $this->orderType);
+        }
+        return $model;
     }
 
     /**
