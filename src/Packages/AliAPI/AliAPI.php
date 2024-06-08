@@ -1,5 +1,5 @@
 <?php
-namespace SimpleCMS\Framework\Packages\AliAPI;
+namespace SimpleCMS\Framework\Packages\AliApi;
 
 use Darabonba\OpenApi\Models\Config;
 use AlibabaCloud\Tea\Exception\TeaError;
