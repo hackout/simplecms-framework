@@ -411,24 +411,19 @@ class SimpleService
                 });
             }
         }
-        $builder = $this->orderBy($prop, $order);
+        if (!$prop && !$order) {
+            if ($timestamps) {
+                $builder->orderBy($this->orderKey, $this->orderType);
+            }
+        } else {
+            if ($prop && $order) {
+                $builder->orderBy($prop, Str::remove('ending', $order));
+            }
+        }
 
         return $builder;
     }
 
-    protected function orderBy(null|Model $model, string $column = null, string $direction = null): null|Model
-    {
-        if (!$column && !$direction) {
-            if (optional($model)->timestamps) {
-                $model->orderBy($this->orderKey, $this->orderType);
-            }
-        } else {
-            if ($column && $direction) {
-                $model->orderBy($column, Str::remove('ending', $direction));
-            }
-        }
-        return $model;
-    }
 
     /**
      * 获取分页数据
