@@ -425,8 +425,10 @@ class SimpleService
                 $model->orderBy($this->orderKey,$this->orderType);
             }
         }else{
-            Str::remove('ending', $direction);
-            $model->orderBy($column ?? $this->orderKey,$direction ?? $this->orderType);
+            if($column && $direction)
+            {
+                $model->orderBy($column,Str::remove('ending', $direction));
+            }
         }
         return $model;
     }
