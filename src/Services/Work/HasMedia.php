@@ -9,12 +9,8 @@ namespace SimpleCMS\Framework\Services\Work;
  */
 class HasMedia
 {
-    public function __construct(protected mixed $model)
+    public function run(mixed $model):bool
     {
-    }
-
-    public function run():bool
-    {
-        return $this->model && method_exists($this->model, 'media');
+        return method_exists($model, 'media');
     }
 }

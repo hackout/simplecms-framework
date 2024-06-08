@@ -22,7 +22,7 @@ use function array_pad;
  * @property string $className 模型路径
  * @property string|null $primaryKey 模型主键
  * @property string|null $orderKey 排序主键 (默认$primaryKey)
- * @property string<'DESC','ASC'> $orderType 排序 (默认DESC)
+ * @property string<'desc','asc'> $orderType 排序 (默认desc)
  * 
  * @property Model|null $item 单条数据,仅在create或update后存在
  * 
@@ -70,7 +70,7 @@ class SimpleService
 
     public string $orderKey;
 
-    public string $orderType = 'DESC';
+    public string $orderType = 'desc';
 
     public null|Model $item = null;
 
@@ -410,13 +410,7 @@ class SimpleService
                 });
             }
         }
-        if ($prop && $order) {
-            $builder = $builder->orderBy($prop, str_replace('ending', '', $order));
-        } else {
-            if ($timestamps) {
-                $builder = $builder->orderBy($this->orderKey, $this->orderType);
-            }
-        }
+        $builder = Query\OrderBy::builder($builder, $prop, $order, $timestamps ? $this->orderKey : null, $timestamps ? $this->orderType : null);
 
         return $builder;
     }
@@ -511,7 +505,7 @@ class SimpleService
      */
     public function create(array $data, array $mediaFields = [])
     {
-        list($sql, $files, $multipleFiles) = app(Work\ConvertData::class, [$this->model])->run($data, $mediaFields);
+        list($sql, $files, $multipleFiles) = app(Work\ConvertData::class)->run($this->model, $data, $mediaFields);
 
         $this->item = $this->newModel();
         $this->item->fill($sql);
@@ -542,7 +536,7 @@ class SimpleService
             throw new SimpleException(trans('simplecms:not_exists'));
         }
 
-        list($sql, $files, $multipleFiles) = app(Work\ConvertData::class, [$this->model])->run($data, $mediaFields);
+        list($sql, $files, $multipleFiles) = app(Work\ConvertData::class)->run($this->model, $data, $mediaFields);
         $this->item->fill($sql);
         $result = $this->item->save();
 
@@ -604,7 +598,7 @@ class SimpleService
      */
     public function addMedia(UploadedFile|string $file, string $columnName): void
     {
-        app(Work\AddMedia::class, [$this->item])->run($file, $columnName);
+        app(Work\AddMedia::class)->run($this->item, $file, $columnName);
     }
 
     /**
@@ -630,7 +624,7 @@ class SimpleService
      */
     protected function hasMedia(): bool
     {
-        return app(Work\HasMedia::class, [$this->model])->run();
+        return app(Work\HasMedia::class)->run($this->model);
     }
 
     /**
@@ -726,7 +720,7 @@ class SimpleService
     public function findById(string|int $id)
     {
         $where = [
-            "{$this->primaryKey}" => $id
+            $this->primaryKey => $id
         ];
         return $this->find($where);
     }

@@ -13,16 +13,13 @@ use function is_array;
  */
 class ConvertData
 {
-    public function __construct(protected mixed $model)
-    {
-    }
 
-    public function run(array $data, array $mediaFields = []): array
+    public function run(mixed $model,array $data, array $mediaFields = []): array
     {
         $sql = $data;
         $files = [];
         $multipleFiles = [];
-        if (app(HasMedia::class, [$this->model])->run()) {
+        if (app(HasMedia::class)->run($model)) {
             $sql = [];
             foreach ($data as $field => $value) {
                 if ($value && ($value instanceof UploadedFile || (is_string($field) && array_key_exists($field, $mediaFields)))) {
