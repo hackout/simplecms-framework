@@ -48,6 +48,8 @@ class Menu extends Model implements HasMedia
      */
     const TYPE_FRONTEND = 2;
 
+    public array $hasOneMedia = [static::MEDIA_FILE];
+    
     protected $fillable = [
         'name',
         'url',

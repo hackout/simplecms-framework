@@ -26,6 +26,8 @@ class DictItem extends Model implements HasMedia
 
     const MEDIA_FILE = 'file';
 
+    public array $hasOneMedia = [static::MEDIA_FILE];
+
     protected $fillable = [
         'dict_id',
         'name',
@@ -59,6 +61,6 @@ class DictItem extends Model implements HasMedia
 
     public function getThumbnailAttribute()
     {
-        return $this->getFirstMediaUrl(self::MEDIA_FILE);
+        return $this->getFirstMediaUrl(static::MEDIA_FILE);
     }
 }

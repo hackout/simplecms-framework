@@ -33,6 +33,8 @@ class SystemConfig extends Model implements HasMedia
      */
     const MEDIA_FILE = 'file';
 
+    public array $hasOneMedia = [static::MEDIA_FILE];
+
     /**
      * 单行文本
      */

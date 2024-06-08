@@ -43,6 +43,12 @@ use Spatie\MediaLibrary\MediaCollections\FileAdderFactory;
  */
 trait MediaAttributeTrait
 {
+
+    /**
+     * @var array
+     */
+    public array $hasOneMedia = [];
+
     /** @var Conversion[] */
     public array $mediaConversions = [];
 
