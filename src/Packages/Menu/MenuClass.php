@@ -64,4 +64,23 @@ class MenuClass
      * @var self|null
      */
     public self|null $child;
+
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->name,
+            'url' => $this->url,
+            'is_show' => $this->is_show,
+            'current' => $this->current,
+            'sort_order' => $this->sort_order,
+            'siblings' => $this->siblings,
+            'children' => $this->children,
+            'child' => $this->child,
+        ];
+    }
+
+    public function toString(): string
+    {
+        return json_encode($this->toArray());
+    }
 }
