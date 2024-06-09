@@ -95,6 +95,7 @@ class Menu
         $menuClass = new MenuClass;
         $menuClass->name = $menu->name;
         $menuClass->url = $menu->url;
+        $menuClass->icon = $menu->icon;
         $menuClass->sort_order = $menu->sort_order;
         $menuClass->current = $current;
         $menuClass->is_show = $menu->is_show;
@@ -157,6 +158,7 @@ class Menu
             $object = new MenuClass;
             $object->name = $menu->name;
             $object->url = $menu->url;
+            $object->icon = $menu->icon;
             $object->is_show = $menu->is_show;
             $object->children = $this->checkRole($menu->getAllChildren(), $roles)->toArray();
             return $object;

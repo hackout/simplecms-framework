@@ -17,6 +17,12 @@ class MenuClass implements \JsonSerializable
     public string|null $name = null;
 
     /**
+     * 图标
+     *
+     * @var string|null
+     */
+    public string|null $icon = null;
+    /**
      * 路由
      *
      * @var array<string,string>
@@ -72,6 +78,7 @@ class MenuClass implements \JsonSerializable
             'current' => $this->current,
             'sort_order' => $this->sort_order,
             'url' => $this->url,
+            'icon' => $this->icon,
             'name' => $this->name,
             'child' => $this->child ? $this->child->toArray() : null,
             'siblings' => json_decode(json_encode($this->siblings), true),
