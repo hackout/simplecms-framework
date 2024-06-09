@@ -18,47 +18,91 @@ class Menu
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  Route      $route
-     * @param  string|null      $type
      * @return ?MenuClass
      */
-    public function getMenuTreeByRoute(Route $route, string $type = null): ?MenuClass
+    public function getMenuTreeByRoute(Route $route): ?MenuClass
     {
-        if (!$route->getName())
+        // 获取当前路由信息
+        $currentRouteName = $route->getName();
+        if (!$currentRouteName)
+        {
             return null;
-        $menu = MenuModel::where(['is_valid' => true, 'url->name' => $route->getName()]);
-        if ($type) {
-            $menu->where('type', $type == 'backend' ? MenuModel::TYPE_BACKEND : MenuModel::TYPE_FRONTEND);
         }
-        $current = $menu->first();
-        $parent = $current->parent ?? false;
-        $list = [$current];
-        while ($parent) {
-            $list[] = $parent;
-            $parent = $parent->parent ?? false;
+        $siblingList = collect([]);
+        $breadcrumbs = [];
+        $menu = MenuModel::where(['is_valid' => true, 'url->name' => $currentRouteName])->with('children')->first();
+        
+        if (!$menu) {
+            return null;
         }
-        return $this->matchRoute(array_reverse($list));
+        $current = $this->matchRoute($menu,true,true);
+        $siblingList->push($current);
+        $parent = $menu->parent;
+        if($parent)
+        {
+            /**
+             * 获取同级菜单
+             */
+            $parent->children->filter(fn(MenuModel $item) => $item->id != $menu->id)
+                             ->values()
+                             ->each(fn(MenuModel $item)=>$siblingList->push($this->matchRoute($item,false,false)));
+        }
+        $current->siblings = $siblingList->sortByDesc(fn(MenuClass $item) => $item->sort_order)->values()->toArray();
+        $breadcrumbs[] = $current;
+
+        while($parent)
+        {
+            $breadcrumbs[] = $this->matchRoute($parent,true,false);
+            $parent = $parent->parent;
+        }
+        $result = array_pop($breadcrumbs);
+        while(count($breadcrumbs) > 0){
+            $result = $this->deepMap($result,array_pop($breadcrumbs));
+        }
+        return $result;
     }
 
     /**
-     * 重组菜单
+     * 深度赋值
      *
      * @author Dennis Lui <hackout@vip.qq.com>
-     * @param  array     $menus
+     * @param  MenuClass $result
+     * @param  MenuClass $child
+     * @return MenuClass
+     */
+    protected function deepMap(MenuClass $result,MenuClass $child):MenuClass
+    {
+        if(empty($result->child))
+        {
+            $result->child = $child;
+        }else{
+            $result->child = $this->deepMap($result->child,$child);
+        }
+        return $result;
+    }
+
+    /**
+     * 转换菜单类
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  MenuModel     $menu
+     * @param  bool          $current
+     * @param  bool          $needChild
      * @return MenuClass|null
      */
-    protected function matchRoute(array $menus): ?MenuClass
+    protected function matchRoute(MenuModel $menu,bool $current = false,bool $needChild = false): ?MenuClass
     {
-        if (!$menus || empty($menus[0]))
-            return null;
-        $menu = new MenuClass;
-        $menu->name = $menus[0]->name;
-        $menu->url = $menus[0]->url;
-        $menu->is_show = $menus[0]->is_show;
-        array_shift($menus);
-        if ($menus) {
-            $menu->children = $this->matchRoute($menus);
+        $menuClass = new MenuClass;
+        $menuClass->name = $menu->name;
+        $menuClass->url = $menu->url;
+        $menuClass->sort_order = $menu->sort_order;
+        $menuClass->current = $current;
+        $menuClass->is_show = $menu->is_show;
+        if($needChild)
+        {
+            $menuClass->children = $menu->children->map(fn(MenuModel $menu) => $this->matchRoute($menu))->toArray();
         }
-        return $menu;
+        return $menuClass;
     }
 
     /**

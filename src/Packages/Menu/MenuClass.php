@@ -31,9 +31,37 @@ class MenuClass
     public bool $is_show;
 
     /**
-     * 子目录
+     * 是否当前页
      *
-     * @var array<self>|self|null
+     * @var boolean
      */
-    public array|self|null $children;
+    public bool $current;
+
+    /**
+     * 排序值
+     *
+     * @var int
+     */
+    public int $sort_order;
+
+    /**
+     * 同级
+     *
+     * @var array<self>|null
+     */
+    public array|null $siblings;
+
+    /**
+     * 下级
+     *
+     * @var array<self>|null
+     */
+    public array|null $children;
+
+    /**
+     * 下级
+     *
+     * @var self|null
+     */
+    public self|null $child;
 }
