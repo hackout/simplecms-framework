@@ -6,7 +6,7 @@ namespace SimpleCMS\Framework\Packages\Menu;
  *
  * @author Dennis Lui <hackout@vip.qq.com>
  */
-class MenuClass
+class MenuClass implements \JsonSerializable
 {
 
     /**
@@ -14,72 +14,79 @@ class MenuClass
      *
      * @var string|null
      */
-    public ?string $name;
+    public string|null $name = null;
 
     /**
      * 路由
      *
      * @var array<string,string>
      */
-    public ?array $url;
+    public array|null $url = null;
 
     /**
      * 是否显示
      *
      * @var boolean
      */
-    public bool $is_show;
+    public bool $is_show = false;
 
     /**
      * 是否当前页
      *
      * @var boolean
      */
-    public bool $current;
+    public bool $current = false;
 
     /**
      * 排序值
      *
      * @var int
      */
-    public int $sort_order;
+    public int $sort_order = 0;
 
     /**
      * 同级
      *
-     * @var array<self>|null
+     * @var array<MenuClass>|null
      */
-    public array|null $siblings;
+    public array|null $siblings = null;
 
     /**
      * 下级
      *
-     * @var array<self>|null
+     * @var array<MenuClass>|null
      */
-    public array|null $children;
+    public array|null $children = null;
 
     /**
      * 下级
      *
-     * @var self|null
+     * @var MenuClass|null
      */
-    public self|null $child;
+    public MenuClass|null $child = null;
 
     public function toArray(): array
     {
-        return [
-            'name' => $this->name,
-            'url' => $this->url,
+        $data = [
             'is_show' => $this->is_show,
             'current' => $this->current,
             'sort_order' => $this->sort_order,
-            'siblings' => $this->siblings,
-            'children' => $this->children,
-            'child' => $this->child,
+            'url' => $this->url,
+            'name' => $this->name,
+            'child' => $this->child ? $this->child->toArray() : null,
+            'siblings' => json_decode(json_encode($this->siblings), true),
+            'children' => json_decode(json_encode($this->children), true)
         ];
+
+        return $data;
     }
 
-    public function toString(): string
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
+
+    public function __toString(): string
     {
         return json_encode($this->toArray());
     }
