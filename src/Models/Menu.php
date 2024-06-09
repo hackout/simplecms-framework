@@ -19,9 +19,10 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property bool $is_valid 是否生效
  * @property bool $is_show 是否显示
  * @property ?string $icon 图标
+ * @property int $type 类型
  * @property bool $can_delete 是否允许删除
- * @property ?int $sort_order 排序
- * @property ?int $parent_id 父级ID
+ * @property int $sort_order 排序
+ * @property int $parent_id 父级ID
  * @property-read ?Collection<Media> $media 附件
  * @property-read ?string $thumbnail 附件LOGO
  * @property-read ?Collection<self> $children 子级

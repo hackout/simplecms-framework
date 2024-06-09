@@ -380,7 +380,13 @@ class SimpleService
         });
     }
 
-    public function getBuilder(): Builder
+    /**
+     * 获取Builder
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return Builder|Model|null
+     */
+    public function getBuilder()
     {
         return $this->builder();
     }

@@ -85,6 +85,20 @@ class SimpleServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__ . '/../lang', 'simplecms');
         $this->loadRoutes();
         $this->loadFacades();
+        $this->bindObservers();
+    }
+
+    /**
+     * 加载模型事件
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return void
+     */
+    protected function bindObservers(): void
+    {
+        \SimpleCMS\Framework\Models\Menu::observe(\SimpleCMS\Framework\Observers\MenuObserver::class);
+        \SimpleCMS\Framework\Models\Role::observe(\SimpleCMS\Framework\Observers\RoleObserver::class);
+        \SimpleCMS\Framework\Models\Dict::observe(\SimpleCMS\Framework\Observers\DictObserver::class);
     }
 
     /**
