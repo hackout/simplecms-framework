@@ -115,6 +115,7 @@ class Menu
             $object->url = $menu->url;
             $object->is_show = $menu->is_show;
             $object->children = $this->checkRole($menu->getAllChildren(), $roles)->toArray();
+            return $object;
         });
     }
 }
