@@ -66,9 +66,9 @@ class Menu
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  array<string>      $roles
-     * @return Collection<MenuClass>
+     * @return Collection<MenuClass>|\Illuminate\Support\Collection<MenuClass>
      */
-    public function backendMenu(array $roles = ['*']): Collection
+    public function backendMenu(array $roles = ['*'])
     {
         $menus = MenuModel::where(['type' => MenuModel::TYPE_BACKEND, 'is_valid' => true])->where(function ($query) {
             $query->whereNull('parent_id')
@@ -83,9 +83,9 @@ class Menu
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  array<string>      $roles
-     * @return Collection<MenuClass>
+     * @return Collection<MenuClass>|\Illuminate\Support\Collection<MenuClass>
      */
-    public function frontendMenu(array $roles = ['*']): Collection
+    public function frontendMenu(array $roles = ['*'])
     {
         $menus = MenuModel::where(['type' => MenuModel::TYPE_FRONTEND, 'is_valid' => true])->where(function ($query) {
             $query->whereNull('parent_id')
@@ -101,9 +101,9 @@ class Menu
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  Collection $menus
      * @param  array<string>     $roles
-     * @return Collection<MenuClass>
+     * @return Collection<MenuClass>|\Illuminate\Support\Collection<MenuClass>
      */
-    protected function checkRole(Collection $menus, array $roles): Collection
+    protected function checkRole(Collection $menus, array $roles)
     {
         return $menus->filter(function (MenuModel $menu) use ($roles) {
             if (in_array('*', $roles))
