@@ -121,7 +121,7 @@ class SimpleServiceProvider extends ServiceProvider
         $this->app->bind('system_config', \SimpleCMS\Framework\Packages\System\Config::class);
         $this->app->bind('system_info', \SimpleCMS\Framework\Packages\System\System::class);
         $this->app->bind('excel_convert', \SimpleCMS\Framework\Packages\ExcelPlus\Convert::class);
-        $this->app->bind('excel_drawing', \SimpleCMS\Framework\Packages\ExcelPlus\Drawing::class);
+        $this->app->bind('cache_manage', \SimpleCMS\Framework\Packages\System\Cache::class);
         $this->app->bind('dict', \SimpleCMS\Framework\Packages\Dict\Dict::class);
         $this->app->bind('menu', \SimpleCMS\Framework\Packages\Menu\Menu::class);
     }

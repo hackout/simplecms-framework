@@ -5,15 +5,15 @@ namespace SimpleCMS\Framework\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \SimpleCMS\Framework\Packages\ExcelPlus\Drawing
+ * @see \SimpleCMS\Framework\Packages\System\Cache
  */
-class ExcelDrawing extends Facade
+class CacheManage extends Facade
 {
     /**
      * @return string
      */
     protected static function getFacadeAccessor()
     {
-        return 'excel_drawing';
+        return 'cache_manage';
     }
 }
