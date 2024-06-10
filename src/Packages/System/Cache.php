@@ -1,9 +1,9 @@
 <?php
 namespace SimpleCMS\Framework\Packages\System;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache as BaseCache;
-use Illuminate\Support\Facades\DB;
 
 /**
  * 缓存管理
@@ -41,10 +41,7 @@ class Cache
                 $cacheData = $this->getFileSize();
                 break;
         }
-        if ($type == 'redis') {
-            return $this->getRedisSize();
-        }
-        return $this->getFileSize();
+        return $cacheData;
     }
 
     /**
