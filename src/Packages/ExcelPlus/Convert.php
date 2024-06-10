@@ -8,7 +8,6 @@ class Convert
 
     public function numberToLetter(int|float|string $number): string
     {
-
         $letters = range('A', 'Z');
         $num = count($letters);
         $maxLength = pow($num, 3);

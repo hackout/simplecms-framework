@@ -120,10 +120,10 @@ class Cache
     {
         $db = DB::connection(config('cache.stores.database.connection'))
             ->table(config('cache.stores.database.table'));
-        $size = $db->selectRaw('SUM(LENGTH(`key`) + LENGTH(`value`)+ LENGTH(`expiration`))')->first();
+        $size = $db->selectRaw('SUM(LENGTH(`key`) + LENGTH(`value`)+ LENGTH(`expiration`)) as data_length')->first();
         $total = $db->count();
         return [
-            'size' => $size,
+            'size' => $size->data_length,
             'total' => $total
         ];
     }

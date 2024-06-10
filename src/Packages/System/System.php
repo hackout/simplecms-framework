@@ -80,6 +80,7 @@ class System
             'version',
             'authors'
         ]);
+        $serverInfo['laravel'] = app()->version();
         return collect($serverInfo);
     }
 

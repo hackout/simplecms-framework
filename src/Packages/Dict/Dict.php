@@ -36,26 +36,6 @@ class Dict
     }
 
     /**
-     * 添加字典
-     *
-     * @author Dennis Lui <hackout@vip.qq.com>
-     * @param  string $name 名称
-     * @param  string $code 标识
-     * @param  array<array<string,string|int>>  $items 字典项
-     * @return void
-     */
-    public function addDict(string $name, string $code, array $items): void
-    {
-        $sql = [
-            'name' => $name,
-            'code' => $code,
-        ];
-        if ($item = DictModel::create($sql)) {
-            $item->items()->createMany($items);
-        }
-    }
-
-    /**
      * 获取字典列表
      *
      * @author Dennis Lui <hackout@vip.qq.com>
