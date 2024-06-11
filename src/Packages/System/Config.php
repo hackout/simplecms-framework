@@ -12,14 +12,6 @@ use SimpleCMS\Framework\Models\SystemConfig;
  */
 class Config
 {
-
-    protected Collection $configs;
-
-    public function __construct()
-    {
-        $this->configs = SystemConfig::get();
-    }
-
     /**
      * 获取所有设置
      *
@@ -28,14 +20,14 @@ class Config
      */
     public function getConfigs(): Collection
     {
-        return $this->configs;
+        return SystemConfig::orderBy('sort_order', 'DESC')->get();
     }
 
     public function __call(string $action, $arguments)
     {
         if (strpos($action, 'get') === 0) {
             $property = Str::snake(Str::replaceFirst('get', '', $action));
-            if ($config = $this->configs->where('code', $property)->first()) {
+            if ($config = SystemConfig::where('code', $property)->first()) {
                 return $config->value;
             }
         }

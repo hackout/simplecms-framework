@@ -19,6 +19,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property string $content 内容
  * @property string $type 类型
  * @property ?array $options 选项参数
+ * @property mixed $value 参数值
  * @property-read ?string $file 附件
  * @property-read Collection<Media> $media 附件
  */
