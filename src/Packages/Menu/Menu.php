@@ -24,40 +24,40 @@ class Menu
     {
         // 获取当前路由信息
         $currentRouteName = $route->getName();
-        if (!$currentRouteName)
-        {
+        if (!$currentRouteName) {
             return null;
         }
         $siblingList = collect([]);
         $breadcrumbs = [];
-        $menu = MenuModel::where(['is_valid' => true, 'url->name' => $currentRouteName])->with('children')->first();
-        
+        $menu = MenuModel::where(['is_valid' => true, 'url->name' => $currentRouteName])
+                         ->get()->filter(function (MenuModel $menu) {
+                                    return !$menu->children->count();
+                                })->values()->first();
+
         if (!$menu) {
             return null;
         }
-        $current = $this->matchRoute($menu,true,true);
+        $current = $this->matchRoute($menu, true, true);
         $siblingList->push($current);
         $parent = $menu->parent;
-        if($parent)
-        {
+        if ($parent) {
             /**
              * 获取同级菜单
              */
             $parent->children->filter(fn(MenuModel $item) => $item->id != $menu->id)
-                             ->values()
-                             ->each(fn(MenuModel $item)=>$siblingList->push($this->matchRoute($item,false,false)));
+                ->values()
+                ->each(fn(MenuModel $item) => $siblingList->push($this->matchRoute($item, false, false)));
         }
         $current->siblings = $siblingList->sortByDesc(fn(MenuClass $item) => $item->sort_order)->values()->toArray();
         $breadcrumbs[] = $current;
 
-        while($parent)
-        {
-            $breadcrumbs[] = $this->matchRoute($parent,true,false);
+        while ($parent) {
+            $breadcrumbs[] = $this->matchRoute($parent, true, false);
             $parent = $parent->parent;
         }
         $result = array_pop($breadcrumbs);
-        while(count($breadcrumbs) > 0){
-            $result = $this->deepMap($result,array_pop($breadcrumbs));
+        while (count($breadcrumbs) > 0) {
+            $result = $this->deepMap($result, array_pop($breadcrumbs));
         }
         return $result;
     }
@@ -70,13 +70,12 @@ class Menu
      * @param  MenuClass $child
      * @return MenuClass
      */
-    protected function deepMap(MenuClass $result,MenuClass $child):MenuClass
+    protected function deepMap(MenuClass $result, MenuClass $child): MenuClass
     {
-        if(empty($result->child))
-        {
+        if (empty($result->child)) {
             $result->child = $child;
-        }else{
-            $result->child = $this->deepMap($result->child,$child);
+        } else {
+            $result->child = $this->deepMap($result->child, $child);
         }
         return $result;
     }
@@ -90,7 +89,7 @@ class Menu
      * @param  bool          $needChild
      * @return MenuClass|null
      */
-    protected function matchRoute(MenuModel $menu,bool $current = false,bool $needChild = false): ?MenuClass
+    protected function matchRoute(MenuModel $menu, bool $current = false, bool $needChild = false): ?MenuClass
     {
         $menuClass = new MenuClass;
         $menuClass->name = $menu->name;
@@ -99,8 +98,7 @@ class Menu
         $menuClass->sort_order = $menu->sort_order;
         $menuClass->current = $current;
         $menuClass->is_show = $menu->is_show;
-        if($needChild)
-        {
+        if ($needChild) {
             $menuClass->children = $menu->children->map(fn(MenuModel $menu) => $this->matchRoute($menu))->toArray();
         }
         return $menuClass;
