@@ -31,37 +31,12 @@ class Config
         return $this->configs;
     }
 
-    protected function convertContent(SystemConfig $systemConfig)
-    {
-        switch ($systemConfig->type) {
-            case 'switch':
-                $content = $systemConfig->content == 1;
-                break;
-            case 'list':
-            case 'checkbox':
-                $content = json_decode($systemConfig->content, true);
-                break;
-            case 'radio':
-            case 'select':
-                $content = intval($systemConfig->content);
-                break;
-            case 'file':
-            case 'image':
-                $content = $systemConfig->file;
-                break;
-            default:
-                $content = $systemConfig->content;
-                break;
-        }
-        return $content;
-    }
-
     public function __call(string $action, $arguments)
     {
         if (strpos($action, 'get') === 0) {
             $property = Str::snake(Str::replaceFirst('get', '', $action));
             if ($config = $this->configs->where('code', $property)->first()) {
-                return $this->convertContent($config);
+                return $config->value;
             }
         }
     }

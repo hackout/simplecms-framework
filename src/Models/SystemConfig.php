@@ -103,7 +103,7 @@ class SystemConfig extends Model implements HasMedia
         'sort_order' => 'integer',
         'options' => 'array'
     ];
-    
+
     public $appends = ['file', 'value'];
 
     public $hidden = ['media'];
@@ -121,7 +121,7 @@ class SystemConfig extends Model implements HasMedia
                 break;
             case 'list':
             case 'checkbox':
-                $content = json_decode($this->content, true);
+                $content = json_decode($this->content, true) ?? [];
                 break;
             case 'radio':
             case 'select':
