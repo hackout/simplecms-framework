@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->integer("content")->default(0)->comment("键值");
             $table->integer("sort_order")->default(0)->comment("排序");
             $table->timestamps();
+            $table->comment = "字典项键值表";
         });
     }
 

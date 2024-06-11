@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('type',['input','textarea','editor','file','image','radio','switch','checkbox','list','select'])->default('input')->comment('类型');
             $table->json('options')->nullable()->comment('选项');
             $table->timestamps();
+            $table->comment = "系统设置表";
         });
     }
 

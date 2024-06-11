@@ -106,11 +106,11 @@ class SystemConfig extends Model implements HasMedia
 
     public $appends = ['file', 'value'];
 
-    public $hidden = ['media'];
+    public $hidden = ['media','content','created_at','updated_at'];
 
     public function getFileAttribute()
     {
-        return $this->getFirstMediaUrl();
+        return $this->getFirstMediaUrl(static::MEDIA_FILE);
     }
 
     public function getValueAttribute()
