@@ -26,6 +26,10 @@ class SystemConfig extends Model implements HasMedia
 {
     use MediaAttributeTrait;
 
+    protected $primaryKey = 'code';
+
+    protected $keyType = 'string';
+
     public $incrementing = false;
 
     /**
@@ -99,12 +103,7 @@ class SystemConfig extends Model implements HasMedia
         'sort_order' => 'integer',
         'options' => 'array'
     ];
-
-    public function getKeyType()
-    {
-        return 'string';
-    }
-
+    
     public $appends = ['file', 'value'];
 
     public $hidden = ['media'];
