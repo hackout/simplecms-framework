@@ -96,7 +96,8 @@ class SystemConfig extends Model implements HasMedia
     ];
 
     public $casts = [
-        'sort_order' => 'integer'
+        'sort_order' => 'integer',
+        'options' => 'array'
     ];
 
     public function getKeyType()
@@ -104,7 +105,7 @@ class SystemConfig extends Model implements HasMedia
         return 'string';
     }
 
-    public $appends = ['file'];
+    public $appends = ['file', 'value'];
 
     public $hidden = ['media'];
 
@@ -112,4 +113,30 @@ class SystemConfig extends Model implements HasMedia
     {
         return $this->getFirstMediaUrl();
     }
+
+    public function getValueAttribute()
+    {
+        switch ($this->type) {
+            case 'switch':
+                $content = $this->content == 1;
+                break;
+            case 'list':
+            case 'checkbox':
+                $content = json_decode($this->content, true);
+                break;
+            case 'radio':
+            case 'select':
+                $content = intval($this->content);
+                break;
+            case 'file':
+            case 'image':
+                $content = $this->file;
+                break;
+            default:
+                $content = $this->content;
+                break;
+        }
+        return $content;
+    }
+
 }
