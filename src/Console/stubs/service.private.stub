@@ -6,7 +6,7 @@ use {{ modelNamespace }}\{{ modelName }};
 use SimpleCMS\Framework\Services\SimpleService;
 use App\Enums\{{ modelName }} as {{ modelName }}Enum;
 
-class {{ class }}Service extends SimpleService
+class {{ class }} extends SimpleService
 {
     public ?string $className = {{modelName}}::class;
     
