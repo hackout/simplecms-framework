@@ -145,7 +145,7 @@ class {{ class }} extends BaseController
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  string         $id
      * @param  Request         $request
-     * @param  CommitInlineService $commitInlineService
+     * @param  {{ storeService }} $service
      * @return JsonResponse
      */
      #[ApiName(name:'{{ class }}-删除信息')]
@@ -163,7 +163,7 @@ class {{ class }} extends BaseController
         if ($validator->fails()) {
             return $this->error($validator->errors()->first());
         }
-        $service->delete($id,$data);
+        $service->delete($id);
         return $this->success();
     }
     
