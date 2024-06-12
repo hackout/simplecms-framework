@@ -43,7 +43,6 @@ class SimpleServiceProvider extends ServiceProvider
             RouteMakeCommand::class,
             SimpleCMSInitCommand::class,
         ]);
-        $this->bindCaptcha();
         $this->registerMiddleware();
     }
 
@@ -124,21 +123,6 @@ class SimpleServiceProvider extends ServiceProvider
         $this->app->bind('cache_manage', \SimpleCMS\Framework\Packages\System\Cache::class);
         $this->app->bind('dict', \SimpleCMS\Framework\Packages\Dict\Dict::class);
         $this->app->bind('menu', \SimpleCMS\Framework\Packages\Menu\Menu::class);
-    }
-
-    protected function bindCaptcha(): void
-    {
-
-        // Bind captcha
-        $this->app->bind('captcha', function ($app) {
-            return new Captcha(
-                $app['Illuminate\Filesystem\Filesystem'],
-                $app['Illuminate\Contracts\Config\Repository'],
-                $app['Illuminate\Session\Store'],
-                $app['Illuminate\Hashing\BcryptHasher'],
-                $app['Illuminate\Support\Str']
-            );
-        });
     }
 
     /**
