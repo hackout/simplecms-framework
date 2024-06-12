@@ -14,7 +14,7 @@ function load_routes(string $path): void
     $allRoutes = scandir(base_path($path));
     foreach ($allRoutes as $routeFile) {
         if (strstr($routeFile, '.php')) {
-            Route::group(['prefix' => str_replace('.php', '', $routeFile)], base_path($path . $routeFile));
+            Route::group(['prefix' => str_replace('.php', '', $routeFile)], base_path($path .'/'. $routeFile));
         }
     }
 }
