@@ -30,11 +30,23 @@ use function array_pad;
  * 
  * @method self setModel(string $className)
  * @method self setQuery(callable|null|array $query)
+ * @method self appendQuery(callable|null|array $query)
+ * @method callable|null|array getQuery()
  * @method self listQuery(array $data = null, array $keys, array $sqlList = [])
  * @method self setWith(callable|null|array $with)
  * @method self setHas(null|array $has)
  * @method self setGroup(array|string|null $group)
  * @method self setSelect(callable|null|array $select)
+ * @method self setSelectRaw(callable|null|array $select)
+ * @method self appendWith(callable|null|array $with)
+ * @method self appendHas(null|array $has)
+ * @method self appendGroup(array|string|null $group)
+ * @method self appendSelect(callable|null|array $select)
+ * @method callable|null|array getWith()
+ * @method null|array getHas()
+ * @method array|string|null getGroup()
+ * @method callable|null|array getSelect()
+ * @method callable|null|array getSelectRaw()
  * @method self clearAddons()
  * @method Collection|null getAll(array $fieldList = [])
  * @method array|null list(array $fieldList = [])
@@ -52,7 +64,7 @@ use function array_pad;
 class SimpleService
 {
     use Macroable;
-    
+
     public ?string $className = null;
 
     protected $query;
@@ -64,6 +76,8 @@ class SimpleService
     protected $group;
 
     protected $select;
+
+    protected $selectRaw;
 
     protected $cacheName;
 
@@ -168,6 +182,40 @@ class SimpleService
     }
 
     /**
+     * 设置查询参数
+     *
+     * @param callable|null|array $query
+     * 
+     * @return self
+     */
+    public function appendQuery(callable|null|array $query)
+    {
+        if (is_array($this->query)) {
+            $this->query = array_merge($this->query, $query);
+        }
+        if (is_callable($this->query)) {
+            $this->query[] = [$this->query];
+            $this->query = array_merge($this->query, $query);
+        }
+        if(!$this->query)
+        {
+            $this->query = $query;
+        }
+        return $this;
+    }
+
+    /**
+     * 获取请求查询
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return mixed
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
      * 进阶搜索
      * 
      * @param  ?array $data 查询条件
@@ -244,6 +292,40 @@ class SimpleService
         return $this;
     }
 
+    /**
+     * 追加Group
+     *
+     * @param callable|null|array $group
+     * 
+     * @return self
+     */
+    public function appendGroup(array|string|null $group)
+    {
+        if (is_array($this->group)) {
+            $this->group = array_merge($this->group, $group);
+        }
+        if (is_string($this->group)) {
+            $this->group[] = [$this->group];
+            $this->group = array_merge($this->group, $group);
+        }
+        if(!$this->group)
+        {
+            $this->group = $group;
+        }
+        return $this;
+    }
+
+    /**
+     * 获取请求查询
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return mixed
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
 
     /**
      * 清除附加请求
@@ -261,6 +343,29 @@ class SimpleService
     }
 
     /**
+     * 设置SelectRaw
+     *
+     * @param string|null $selectRaw
+     * 
+     * @return self
+     */
+    public function setSelectRaw(string|null $selectRaw)
+    {
+        $this->selectRaw = $selectRaw;
+        return $this;
+    }
+
+    /**
+     * 获取SelectRaw
+     * 
+     * @return string|null
+     */
+    public function getSelectRaw()
+    {
+        return $this->selectRaw;
+    }
+
+    /**
      * 设置Select
      *
      * @param callable|null|array $select
@@ -271,6 +376,40 @@ class SimpleService
     {
         $this->select = $select;
         return $this;
+    }
+
+    /**
+     * 追加Select
+     *
+     * @param callable|null|array $select
+     * 
+     * @return self
+     */
+    public function appendSelect(array|string|null $select)
+    {
+        if (is_array($this->select)) {
+            $this->select = array_merge($this->select, $select);
+        }
+        if (is_callable($this->select)) {
+            $this->select[] = [$this->select];
+            $this->select = array_merge($this->select, $select);
+        }
+        if(!$this->select)
+        {
+            $this->select = $select;
+        }
+        return $this;
+    }
+
+    /**
+     * 获取请求查询
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return mixed
+     */
+    public function getSelect()
+    {
+        return $this->select;
     }
 
     /**
@@ -287,6 +426,40 @@ class SimpleService
     }
 
     /**
+     * 追加With
+     *
+     * @param callable|null|array $with
+     * 
+     * @return self
+     */
+    public function appendWith(array|string|null $with)
+    {
+        if (is_array($this->with)) {
+            $this->with = array_merge($this->with, $with);
+        }
+        if (is_callable($this->with)) {
+            $this->with[] = [$this->with];
+            $this->with = array_merge($this->with, $with);
+        }
+        if(!$this->with)
+        {
+            $this->with = $with;
+        }
+        return $this;
+    }
+
+    /**
+     * 获取请求查询
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return mixed
+     */
+    public function getWith()
+    {
+        return $this->with;
+    }
+
+    /**
      * 设置has
      *
      * @param null|array $has
@@ -297,6 +470,37 @@ class SimpleService
     {
         $this->has = $has;
         return $this;
+    }
+
+
+    /**
+     * 追加Has
+     *
+     * @param null|array $has
+     * 
+     * @return self
+     */
+    public function appendHas(null|array $has)
+    {
+        if (is_array($this->has)) {
+            $this->has = array_merge($this->has, $has);
+        }
+        if(!$this->has)
+        {
+            $this->has = $has;
+        }
+        return $this;
+    }
+
+    /**
+     * 获取请求查询
+     *
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @return mixed
+     */
+    public function getHas()
+    {
+        return $this->has;
     }
 
     /**
@@ -411,6 +615,9 @@ class SimpleService
         }
         if ($this->select) {
             $builder = $builder->select($this->select);
+        }
+        if ($this->selectRaw) {
+            $builder = $builder->selectRaw($this->selectRaw);
         }
         if ($this->has) {
             foreach ($this->has as $key => $value) {
