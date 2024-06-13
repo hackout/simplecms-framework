@@ -30,9 +30,9 @@ class Menu
         $siblingList = collect([]);
         $breadcrumbs = [];
         $menu = MenuModel::where(['is_valid' => true, 'url->name' => $currentRouteName])
-                         ->get()->filter(function (MenuModel $menu) {
-                                    return !$menu->children->count();
-                                })->values()->first();
+            ->get()->filter(function (MenuModel $menu) {
+                return !$menu->children->count();
+            })->values()->first();
 
         if (!$menu) {
             return null;
@@ -158,7 +158,7 @@ class Menu
             $object->url = $menu->url;
             $object->icon = $menu->icon;
             $object->is_show = $menu->is_show;
-            $object->children = $this->checkRole($menu->getAllChildren(), $roles)->toArray();
+            $object->children = $this->checkRole($menu->getChildren(), $roles)->toArray();
             return $object;
         });
     }
