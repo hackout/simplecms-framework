@@ -6,6 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Traits\Macroable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use SimpleCMS\Framework\Exceptions\SimpleException;
@@ -50,7 +51,8 @@ use function array_pad;
  */
 class SimpleService
 {
-
+    use Macroable;
+    
     public ?string $className = null;
 
     protected $query;
