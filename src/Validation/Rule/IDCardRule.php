@@ -12,6 +12,11 @@ use SimpleCMS\Framework\Validation\IDCard;
 class IDCardRule implements Rule
 {
 
+    public function validate($attribute, $value, $parameters)
+    {
+        return $this->passes($attribute,$value);
+    }
+    
     /**
      * Determine if the validation rule passes.
      *

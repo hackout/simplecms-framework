@@ -13,6 +13,11 @@ use SimpleCMS\Framework\Validation\Telephone;
 class PhoneRule implements Rule
 {
 
+    public function validate($attribute, $value, $parameters)
+    {
+        return $this->passes($attribute,$value);
+    }
+    
     /**
      * Determine if the validation rule passes.
      *
