@@ -6,7 +6,7 @@
 
 ## 环境配置要求
 
-1. PHP 8.1+
+1. PHP 8.0+
 2. Imagick 7+
 3. FFmpeg
 
@@ -31,7 +31,10 @@ php artisan create:migration #同php artisan make:migration
 
 ## 辅助函数
 
-Continue...
+```php
+//验证码API校验
+captcha_api_check(string $value, string $key, string $config = 'default')
+```
 
 ## Facades
 
@@ -59,7 +62,3 @@ use SystemInfo; #系统环境参数
 
 服务及控制器等使用请参考IDE提示。
 更多文档请自行查阅代码
-
-## 借鉴
-
-验证码借鉴： mews/captcha
