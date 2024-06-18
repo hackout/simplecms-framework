@@ -957,6 +957,7 @@ class SimpleService
             $where = $this->query;
         }
         $builder = $this->model->where($where);
+        $builder = (new Work\MakeSelect)->run($this->model,$builder,$this->select);
         return $this->getCacheData([$builder->toRawSql()], fn() => $this->model->where($where)->first());
     }
 
