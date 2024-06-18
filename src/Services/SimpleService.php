@@ -665,6 +665,8 @@ class SimpleService
      */
     protected function getCacheData(array $array, callable $function): mixed
     {
+        if (!(new Work\CanCache)->run($this->model))
+            return $function();
         $cacheKeyName = $this->cacheName . '_' . $this->getCacheKey($array);
         $cacheName = $this->cacheName;
         return Cache::rememberForever($cacheKeyName, function () use ($function, $cacheName, $cacheKeyName) {
