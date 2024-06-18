@@ -58,6 +58,15 @@ use SystemInfo; #系统环境参数
 })
 ```
 
+## 服务扩展
+
+```php
+SimpleService::macro('customMethod', function ($simpleService,...$parameters) {
+    $newService = new newClassService;
+    return $newService->customMethod($simpleService,...$parameters);
+});
+```
+
 ## 其他说明
 
 服务及控制器等使用请参考IDE提示。

@@ -6,7 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Traits\Macroable;
+use SimpleCMS\Framework\Traits\Macroable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use SimpleCMS\Framework\Exceptions\SimpleException;
@@ -197,8 +197,7 @@ class SimpleService
             $this->query[] = [$this->query];
             $this->query = array_merge($this->query, $query);
         }
-        if(!$this->query)
-        {
+        if (!$this->query) {
             $this->query = $query;
         }
         return $this;
@@ -308,8 +307,7 @@ class SimpleService
             $this->group[] = [$this->group];
             $this->group = array_merge($this->group, $group);
         }
-        if(!$this->group)
-        {
+        if (!$this->group) {
             $this->group = $group;
         }
         return $this;
@@ -394,8 +392,7 @@ class SimpleService
             $this->select[] = [$this->select];
             $this->select = array_merge($this->select, $select);
         }
-        if(!$this->select)
-        {
+        if (!$this->select) {
             $this->select = $select;
         }
         return $this;
@@ -441,8 +438,7 @@ class SimpleService
             $this->with[] = [$this->with];
             $this->with = array_merge($this->with, $with);
         }
-        if(!$this->with)
-        {
+        if (!$this->with) {
             $this->with = $with;
         }
         return $this;
@@ -485,8 +481,7 @@ class SimpleService
         if (is_array($this->has)) {
             $this->has = array_merge($this->has, $has);
         }
-        if(!$this->has)
-        {
+        if (!$this->has) {
             $this->has = $has;
         }
         return $this;
