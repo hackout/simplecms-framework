@@ -1,4 +1,5 @@
 <?php
+
 namespace SimpleCMS\Framework\Traits;
 
 use Illuminate\Database\Eloquent\Collection;

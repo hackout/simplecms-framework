@@ -31,9 +31,6 @@ class SimpleServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        if (!$this->app->configurationIsCached()) {
-            $this->mergeConfigFrom(__DIR__ . '/../config/cms.php', 'cms');
-        }
         $this->commands([
             SeederMakeCommand::class,
             MigrateMakeCommand::class,
