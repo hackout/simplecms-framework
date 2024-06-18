@@ -1,4 +1,5 @@
 <?php
+
 namespace SimpleCMS\Framework\Services;
 
 use Illuminate\Support\Str;
@@ -59,6 +60,11 @@ use function array_pad;
  * @method Model|null find(callable|null|array $where = null)
  * @method bool setValue(string|int|array $id, string $field, string|float|array $value)
  * @method bool quick(array $data)
+ * 
+ * 
+ * @method self queryDistance(float $lat,float $lng,float $maxDistance,string $geoColumn)
+ * @method self selectDistance(float $lat,float $lng,string $geoColumn,string $alias)
+ * @see \SimpleCMS\Region\Services\DistanceService
  * 
  */
 class SimpleService
@@ -592,7 +598,7 @@ class SimpleService
         return $this->builder();
     }
 
-    private function builder(?string $prop = null, ?string $order = null, )
+    private function builder(?string $prop = null, ?string $order = null,)
     {
         $builder = $this->model;
         $timestamps = $builder->timestamps;
@@ -647,7 +653,7 @@ class SimpleService
         $prop = request()->get('prop', null);
         $order = request()->get('order', null);
         $builder = $this->builder($prop, $order);
-        $data = $this->getCacheData([$builder->toRawSql(), $limit, 'page', $page], fn() => $builder->paginate($limit, ['*'], 'page', $page));
+        $data = $this->getCacheData([$builder->toRawSql(), $limit, 'page', $page], fn () => $builder->paginate($limit, ['*'], 'page', $page));
         $items = $this->filterData(collect($data->items()), $fieldList);
         return [
             'items' => $items,
@@ -957,8 +963,8 @@ class SimpleService
             $where = $this->query;
         }
         $builder = $this->model->where($where);
-        $builder = (new Work\MakeSelect)->run($this->model,$builder,$this->select);
-        return $this->getCacheData([$builder->toRawSql()], fn() => $this->model->where($where)->first());
+        $builder = (new Work\MakeSelect)->run($this->model, $builder, $this->select);
+        return $this->getCacheData([$builder->toRawSql()], fn () => $this->model->where($where)->first());
     }
 
     /**
@@ -1005,5 +1011,4 @@ class SimpleService
         }
         return $result;
     }
-
 }
