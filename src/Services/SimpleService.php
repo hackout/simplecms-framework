@@ -608,9 +608,6 @@ class SimpleService
         if ($this->group && !is_array($this->group)) {
             $builder = $builder->groupBy($this->group);
         }
-        if ($this->select) {
-            $builder = (new Work\MakeSelect)->run($this->model, $builder, $this->select);
-        }
         if ($this->selectRaw) {
             $builder = $builder->selectRaw($this->selectRaw);
         }
@@ -621,6 +618,7 @@ class SimpleService
                 });
             }
         }
+        $builder = (new Work\MakeSelect)->run($this->model, $builder, $this->select);
         if (!$prop && !$order) {
             if ($timestamps) {
                 $builder->orderBy($this->orderKey, $this->orderType);
