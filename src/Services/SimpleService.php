@@ -609,7 +609,7 @@ class SimpleService
             $builder = $builder->groupBy($this->group);
         }
         if ($this->select) {
-            $builder = $builder->select($this->select);
+            $builder = (new Work\MakeSelect)->run($this->model, $builder, $this->select);
         }
         if ($this->selectRaw) {
             $builder = $builder->selectRaw($this->selectRaw);
