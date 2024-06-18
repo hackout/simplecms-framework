@@ -21,7 +21,7 @@ class MakeSelect
             $selectArr = [];
             $selectList->each(function ($field) use ($casts, &$selectArr) {
                 if (array_key_exists($field, $casts)) {
-                    if (class_exists($casts[$field])) {
+                    if (class_exists($casts[$field]) && strpos($casts[$field], 'Casts') !== false) {
                         $selectArr[] = (new $casts[$field])->select($field);
                     } else {
                         $selectArr[] = $field;
