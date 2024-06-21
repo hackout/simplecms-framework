@@ -15,15 +15,19 @@ class MakeSelect
     {
         $selectList = collect($select ? $select : $model->getFillable());
         $casts = $model->getCasts();
+        $primaryKey = $model->getKeyName();
         $defaultSelect = [
             'deleted_at',
             'created_at',
             'updated_at'
         ];
         if (!$select) {
+            if ($primaryKey && !in_array($primaryKey, $selectList->toArray())) {
+                $selectList->push($primaryKey);
+            }
             foreach ($defaultSelect as $defaultField) {
                 if (array_key_exists($defaultField, $casts)) {
-                    $selectList[] = $defaultField;
+                    $selectList->push($defaultField);
                 }
             }
         }
