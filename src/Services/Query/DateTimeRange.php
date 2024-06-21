@@ -31,6 +31,7 @@ class DateTimeRange
         }
         return [
             function (Builder $query) use ($values, $fields, $isFull) {
+                $condition = 'between';
                 $data = $values;
                 if (head($values) === null) {
                     $condition = '<';
@@ -41,7 +42,6 @@ class DateTimeRange
                     $data = \is_string(head($values)) ? Carbon::parse(head($values)) : head($values);
                 }
                 if (is_array($data)) {
-                    $condition = 'between';
                     if (!(head($data) instanceof Carbon)) {
                         $data[0] = Carbon::parse(head($data));
                     }
@@ -49,14 +49,32 @@ class DateTimeRange
                         $data[1] = Carbon::parse(last($data));
                     }
                 }
-                foreach ($fields as $key => $field) {
-                    if ($isFull) {
-                        $query->where($field, $condition, $data);
-                    } else {
-                        if (!$key) {
-                            $query->where($field, $condition, $data);
-                        } else {
-                            $query->orWhere($field, $condition, $data);
+                foreach($fields as $key=>$field)
+                {
+                    if($condition != 'between')
+                    {
+                        if($isFull)
+                        {
+                            $query->where($field,$condition,$data);
+                        }else{
+                            if($key)
+                            {
+                                $query->orWhere($field,$condition,$data);
+                            }else{
+                                $query->where($field,$condition,$data);
+                            }
+                        }
+                    }else{
+                        if($isFull)
+                        {
+                            $query->whereBetween($field,$data);
+                        }else{
+                            if($key)
+                            {
+                                $query->orWhereBetween($field,$data);
+                            }else{
+                                $query->whereBetween($field,$data);
+                            }
                         }
                     }
                 }

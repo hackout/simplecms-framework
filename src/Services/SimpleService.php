@@ -243,12 +243,12 @@ class SimpleService
                 }
 
                 if ($action == 'datetime_range' && array_key_exists($key, $data) && $data[$key]) {
-                    tap(Query\DateTimeRange::builder($data[$key], $extra ?? false), function (array $_sql) use (&$sql) {
+                    tap(Query\DateTimeRange::builder($data[$key], $fields, $extra ?? false), function (array $_sql) use (&$sql) {
                         $sql[] = $_sql;
                     });
                 }
                 if ($action == 'range' && array_key_exists($key, $data) && $data[$key]) {
-                    tap(Query\Range::builder($data[$key], $extra ?? false), function (array $_sql) use (&$sql) {
+                    tap(Query\Range::builder($data[$key], $fields, $extra ?? false), function (array $_sql) use (&$sql) {
                         $sql[] = $_sql;
                     });
                 }
