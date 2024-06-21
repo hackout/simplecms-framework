@@ -1,11 +1,10 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -26,7 +25,7 @@ return new class extends Migration
             $table->integer('role_id')->comment("角色ID");
             $table->string("model_id")->comment("关联ID");
             $table->string("model_type")->nullable()->comment("关联类");
-            $table->primary(['role_id','model_id'],'role_more');
+            $table->primary(['role_id', 'model_id'], 'role_more');
             $table->comment = "角色关联表";
         });
     }

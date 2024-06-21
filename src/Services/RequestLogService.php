@@ -45,7 +45,7 @@ class RequestLogService extends SimpleService
 
                 parent::create($sql);
             } catch (\Exception $exception) {
-                 error_log($exception->getMessage());
+                error_log($exception->getMessage());
             }
         }
     }

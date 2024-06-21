@@ -9,7 +9,7 @@ namespace SimpleCMS\Framework\Services\Work;
  */
 class HasMedia
 {
-    public function run(mixed $model):bool
+    public function run(mixed $model): bool
     {
         return method_exists($model, 'media');
     }

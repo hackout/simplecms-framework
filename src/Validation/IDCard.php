@@ -148,7 +148,7 @@ class IDCard
      * @author Dennis Lui <hackout@vip.qq.com>
      * @return string
      */
-    public function getProvince():string
+    public function getProvince(): string
     {
         if (!$this->code) {
             $this->province = substr($this->id, 0, 2);

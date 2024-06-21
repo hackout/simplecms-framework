@@ -25,8 +25,7 @@ class Range
         if (!is_array($fields))
             $fields = [$fields];
         $values = array_slice($value, 0, 2);
-        if(head($values) === null && last($values) === null)
-        {
+        if (head($values) === null && last($values) === null) {
             return false;
         }
         return [
@@ -36,17 +35,15 @@ class Range
                     $method = 'whereAll';
                 $condition = 'between';
                 $data = $values;
-                if(head($values) === null)
-                {
+                if (head($values) === null) {
                     $condition = '<';
                     $data = last($values);
                 }
-                if(last($values) === null)
-                {
+                if (last($values) === null) {
                     $condition = '>=';
                     $data = head($values);
                 }
-                $query->$method($fields, $condition,$data);
+                $query->$method($fields, $condition, $data);
             }
         ];
     }

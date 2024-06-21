@@ -22,14 +22,12 @@ class In
             $fields = [$fields];
         return [
             function (Builder $query) use ($values, $fields) {
-                foreach($fields as $index => $field)
-                {
+                foreach ($fields as $index => $field) {
                     $method = 'whereIn';
-                    if($index)
-                    {
+                    if ($index) {
                         $method = 'orWhereIn';
                     }
-                    $query->$method($field,$values);
+                    $query->$method($field, $values);
                 }
             }
         ];

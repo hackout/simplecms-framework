@@ -1,11 +1,10 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -17,7 +16,7 @@ return new class extends Migration
             $table->string('description')->nullable()->comment('介绍文');
             $table->string('sort_order')->default(0)->comment('排序');
             $table->longText('content')->nullable()->comment('内容');
-            $table->enum('type',['input','textarea','editor','file','image','radio','switch','checkbox','list','select'])->default('input')->comment('类型');
+            $table->enum('type', ['input', 'textarea', 'editor', 'file', 'image', 'radio', 'switch', 'checkbox', 'list', 'select'])->default('input')->comment('类型');
             $table->json('options')->nullable()->comment('选项');
             $table->timestamps();
             $table->comment = "系统设置表";

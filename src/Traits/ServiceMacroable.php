@@ -1,12 +1,12 @@
 <?php
 namespace SimpleCMS\Framework\Traits;
 
-use BadMethodCallException;
 use Closure;
 use ReflectionClass;
 use ReflectionMethod;
+use BadMethodCallException;
 
-trait Macroable
+trait ServiceMacroable
 {
     /**
      * The registered string macros.

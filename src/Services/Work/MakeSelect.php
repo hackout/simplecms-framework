@@ -15,6 +15,18 @@ class MakeSelect
     {
         $selectList = collect($select ? $select : $model->getFillable());
         $casts = $model->getCasts();
+        $defaultSelect = [
+            'deleted_at',
+            'created_at',
+            'updated_at'
+        ];
+        if (!$select) {
+            foreach ($defaultSelect as $defaultField) {
+                if (array_key_exists($defaultField, $casts)) {
+                    $selectList[] = $defaultField;
+                }
+            }
+        }
         $selectArr = [];
         $selectList->each(function ($field) use ($casts, &$selectArr) {
             if (array_key_exists($field, $casts)) {

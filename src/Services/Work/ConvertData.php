@@ -1,9 +1,9 @@
 <?php
 namespace SimpleCMS\Framework\Services\Work;
 
-use Illuminate\Http\UploadedFile;
-use function is_string;
 use function is_array;
+use function is_string;
+use Illuminate\Http\UploadedFile;
 
 /**
  * 请求更新数据转换
@@ -14,7 +14,7 @@ use function is_array;
 class ConvertData
 {
 
-    public function run(mixed $model,array $data, array $mediaFields = []): array
+    public function run(mixed $model, array $data, array $mediaFields = []): array
     {
         $sql = $data;
         $files = [];

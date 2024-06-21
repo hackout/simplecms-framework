@@ -30,6 +30,6 @@ class Dict extends Model
 
     public function items()
     {
-        return $this->hasMany(DictItem::class)->orderBy('sort_order','DESC');
+        return $this->hasMany(DictItem::class)->orderBy('sort_order', 'DESC');
     }
 }

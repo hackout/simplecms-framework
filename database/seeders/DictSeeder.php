@@ -27,29 +27,29 @@ class DictSeeder extends Seeder
                 'name' => '菜单类型',
                 'code' => 'menu_type',
                 'children' => [
-                        [
-                            'name' => '后台菜单',
-                            'content' => 1,
-                        ],
-                        [
-                            'name' => '前台菜单',
-                            'content' => 2,
-                        ]
+                    [
+                        'name' => '后台菜单',
+                        'content' => 1,
+                    ],
+                    [
+                        'name' => '前台菜单',
+                        'content' => 2,
                     ]
+                ]
             ],
             [
                 'name' => '角色类型',
                 'code' => 'role_type',
                 'children' => [
-                        [
-                            'name' => '后台角色',
-                            'content' => 1,
-                        ],
-                        [
-                            'name' => '前台角色',
-                            'content' => 2,
-                        ]
+                    [
+                        'name' => '后台角色',
+                        'content' => 1,
+                    ],
+                    [
+                        'name' => '前台角色',
+                        'content' => 2,
                     ]
+                ]
             ]
         ];
     }

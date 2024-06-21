@@ -28,8 +28,7 @@ class TreeCollection extends Collection
             if (array_key_exists($parentKey, $collection)) {
                 $collection[$parentKey]->children[] = $model;
                 $nestedKeys[] = $model->getKey();
-            }
-            elseif ($removeOrphans) {
+            } elseif ($removeOrphans) {
                 $nestedKeys[] = $model->getKey();
             }
         }
@@ -59,8 +58,7 @@ class TreeCollection extends Collection
             foreach ($items as $item) {
                 if ($key !== null) {
                     $result[$item->{$key}] = $indentString . $item->{$value};
-                }
-                else {
+                } else {
                     $result[] = $indentString . $item->{$value};
                 }
 

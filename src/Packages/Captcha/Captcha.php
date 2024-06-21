@@ -13,8 +13,8 @@ use Illuminate\Session\Store as Session;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Hashing\BcryptHasher as Hasher;
 use Intervention\Image\Interfaces\ImageInterface;
-use Intervention\Image\Geometry\Factories\LineFactory;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Geometry\Factories\LineFactory;
 use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 
 /**

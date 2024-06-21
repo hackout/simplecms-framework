@@ -80,7 +80,7 @@ class ModelMakeCommand extends GeneratorCommand
         $name = Str::studly(class_basename($this->argument('name')));
 
         $this->call('make:enum', [
-            'name' => $name,
+            'name' => $name . 'Enum',
             '-i'
         ]);
     }

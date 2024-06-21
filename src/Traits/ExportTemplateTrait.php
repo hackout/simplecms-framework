@@ -1,9 +1,9 @@
 <?php
 namespace SimpleCMS\Framework\Traits;
 
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * 数据导出快捷方式

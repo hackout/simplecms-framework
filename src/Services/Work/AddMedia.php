@@ -1,11 +1,11 @@
 <?php
 namespace SimpleCMS\Framework\Services\Work;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\UploadedFile;
-
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use function is_string;
+use Illuminate\Support\Str;
+
+use Illuminate\Http\UploadedFile;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * 上传附件类

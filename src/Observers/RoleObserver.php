@@ -7,7 +7,6 @@ use SimpleCMS\Framework\Models\Role;
 
 class RoleObserver
 {
-    
 
     /**
      * Handle the Role "deleted" event.

@@ -3,8 +3,8 @@
 namespace SimpleCMS\Framework\Http\Controllers;
 
 use Exception;
-use Illuminate\Routing\Controller as BaseController;
 use SimpleCMS\Framework\Packages\Captcha\Captcha;
+use Illuminate\Routing\Controller as BaseController;
 
 class CaptchaController extends BaseController
 {

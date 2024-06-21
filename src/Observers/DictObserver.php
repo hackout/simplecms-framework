@@ -6,7 +6,7 @@ use SimpleCMS\Framework\Models\Dict;
 
 class DictObserver
 {
-    
+
 
     /**
      * Handle the Dict "deleted" event.

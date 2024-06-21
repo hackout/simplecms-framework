@@ -19,7 +19,7 @@ class LoadLanguage
     public function handle(Request $request, Closure $next)
     {
         if (!$locale = $request->header('X-Accept-Language')) {
-            $locale = $request->header('Accept-Language',config('app.locale'));
+            $locale = $request->header('Accept-Language', config('app.locale'));
         }
         App::setLocale($locale);
         return $next($request);

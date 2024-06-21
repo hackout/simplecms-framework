@@ -2,20 +2,20 @@
 
 namespace SimpleCMS\Framework\Services;
 
+use function is_array;
+use function array_pad;
+use function is_string;
+use function is_numeric;
 use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
-use SimpleCMS\Framework\Traits\Macroable;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use SimpleCMS\Framework\Traits\ServiceMacroable;
 use SimpleCMS\Framework\Exceptions\SimpleException;
-
-use function is_numeric;
-use function is_string;
-use function is_array;
-use function array_pad;
 
 /**
  * 基础服务类
@@ -69,7 +69,7 @@ use function array_pad;
  */
 class SimpleService
 {
-    use Macroable;
+    use ServiceMacroable;
 
     public ?string $className = null;
 
@@ -598,7 +598,7 @@ class SimpleService
         return $this->builder();
     }
 
-    private function builder(?string $prop = null, ?string $order = null,)
+    private function builder(?string $prop = null, ?string $order = null, )
     {
         $builder = $this->model;
         $timestamps = $builder->timestamps;
@@ -653,7 +653,7 @@ class SimpleService
         $prop = request()->get('prop', null);
         $order = request()->get('order', null);
         $builder = $this->builder($prop, $order);
-        $data = $this->getCacheData([$builder->toRawSql(), $limit, 'page', $page], fn () => $builder->paginate($limit, ['*'], 'page', $page));
+        $data = $this->getCacheData([$builder->toRawSql(), $limit, 'page', $page], fn() => $builder->paginate($limit, ['*'], 'page', $page));
         $items = $this->filterData(collect($data->items()), $fieldList);
         return [
             'items' => $items,
@@ -964,7 +964,7 @@ class SimpleService
         }
         $builder = $this->model->where($where);
         $builder = (new Work\MakeSelect)->run($this->model, $builder, $this->select);
-        return $this->getCacheData([$builder->toRawSql()], fn () => $this->model->where($where)->first());
+        return $this->getCacheData([$builder->toRawSql()], fn() => $this->model->where($where)->first());
     }
 
     /**
