@@ -30,10 +30,7 @@ class Menu
         $siblingList = collect([]);
         $breadcrumbs = [];
         $menu = MenuModel::where(['is_valid' => true, 'url->name' => $currentRouteName])
-            ->get()->filter(function (MenuModel $menu) {
-                return !$menu->children->count();
-            })->values()->first();
-
+            ->where('parent_id', '!=', 0)->first();
         if (!$menu) {
             return null;
         }
