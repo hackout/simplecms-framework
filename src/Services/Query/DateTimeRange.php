@@ -31,10 +31,6 @@ class DateTimeRange
         }
         return [
             function (Builder $query) use ($values, $fields, $isFull) {
-                $method = 'whereAny';
-                if ($isFull)
-                    $method = 'whereAll';
-                $condition = 'between';
                 $data = $values;
                 if (head($values) === null) {
                     $condition = '<';
@@ -45,6 +41,7 @@ class DateTimeRange
                     $data = \is_string(head($values)) ? Carbon::parse(head($values)) : head($values);
                 }
                 if (is_array($data)) {
+                    $condition = 'between';
                     if (!(head($data) instanceof Carbon)) {
                         $data[0] = Carbon::parse(head($data));
                     }
@@ -52,7 +49,17 @@ class DateTimeRange
                         $data[1] = Carbon::parse(last($data));
                     }
                 }
-                $query->$method($fields, $condition, $data);
+                foreach ($fields as $key => $field) {
+                    if ($isFull) {
+                        $query->where($field, $condition, $data);
+                    } else {
+                        if (!$key) {
+                            $query->where($field, $condition, $data);
+                        } else {
+                            $query->orWhere($field, $condition, $data);
+                        }
+                    }
+                }
             }
         ];
     }
