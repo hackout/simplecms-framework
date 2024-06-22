@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\File;
  */
 function image_to_base64(string $path): string
 {
-    $path = public_path($path);
     $type = File::mimeType($path);
     $file = File::get($path);
     $base64 = 'data:' . $type . ';base64,' . base64_encode($file);
