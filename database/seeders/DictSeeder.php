@@ -14,8 +14,10 @@ class DictSeeder extends Seeder
     {
         $data = $this->getList();
         foreach ($data as $sql) {
-            if ($dict = Dict::create(['name' => $sql['name'], 'code' => $sql['code']])) {
-                $dict->items()->createMany($sql['children']);
+            if (!Dict::where('code', $sql['code'])->first()) {
+                if ($dict = Dict::create(['name' => $sql['name'], 'code' => $sql['code']])) {
+                    $dict->items()->createMany($sql['children']);
+                }
             }
         }
     }
