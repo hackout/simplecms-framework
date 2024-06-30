@@ -41,6 +41,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 trait SimpleTreeTrait
 {
 
+    public static function bootSimpleTreeTrait()
+    {
+        static::deleting(function ($model) {
+            $model->children->each(fn($child) => $child->delete());
+        });
+    }
+
     /**
      * 上级
      *

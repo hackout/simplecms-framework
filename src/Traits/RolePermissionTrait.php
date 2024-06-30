@@ -1,38 +1,34 @@
 <?php
 namespace SimpleCMS\Framework\Traits;
 
+use SimpleCMS\Framework\HasRole;
 use SimpleCMS\Framework\Models\Role;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * 简易树型结构
  *
  * @author Dennis Lui <hackout@vip.qq.com>
- *
- * Usage:
- *
- * Model table must have parent_id table column.
- * In the model class definition:
- *
- *   use \SimpleCMS\Framework\Traits\SimpleTree;
- *
- * General access methods:
- *
- *   $model->getChildren(); // Returns children of this node
- *   $model->getChildCount(); // Returns number of all children.
- *   $model->getAllChildren(); // Returns all children of this node
- *   $model->getAllRoot(); // Returns all root level nodes (eager loaded)
- *   $model->getAll(); // Returns everything in correct order.
- *
- * Query builder methods:
- *
- *   $query->listsNested(); // Returns an indented array of key and value columns.
- *
+ * 
  * 你可以定义超管的字段:
  *
  *   const SUPER_ID = 'my_is_super';
  */
 trait RolePermissionTrait
 {
+
+    public static function bootRolePermissionTrait()
+    {
+        static::deleting(function (HasRole $model) {
+            $model->roles && $model->roles->detach();
+        });
+    }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'roles_more', 'model_id', 'role_id')->wherePivot('model_type', get_class($this));
+    }
+
     /**
      * 检查权限
      *
@@ -55,6 +51,11 @@ trait RolePermissionTrait
                 return true;
         }
         return false;
+    }
+
+    public function isSuper(): bool
+    {
+        return $this->{$this->getSuperColumnName()} == true;
     }
 
     protected function getSuperColumnName(): string

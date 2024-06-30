@@ -54,7 +54,7 @@ trait MediaAttributeTrait
 
     protected array $unAttachedMediaLibraryItems = [];
 
-    public static function bootInteractsWithMedia()
+    public static function bootMediaAttributeTrait()
     {
         static::deleting(function (HasMedia $model) {
             if ($model->shouldDeletePreservingMedia()) {
