@@ -514,12 +514,9 @@ class SimpleService
     public function getAll(array $fieldList = [])
     {
         $builder = $this->builder();
-        $result = $builder->get();
 
-        if (!$result) {
-            return null;
-        }
-
+        $builder = (new Work\MakeSelect)->run($this->model, $builder, $this->select);
+        $result = $this->getCacheData([$builder->toRawSql(), 'all'], fn() => $builder->get());
         return $this->filterData($result, $fieldList);
     }
 
@@ -959,15 +956,117 @@ class SimpleService
      */
     public function find(callable|null|array $where = null)
     {
-        if (!$where && $this->query) {
-            $where = $this->query;
+        $builder = $this->model;
+        if ($this->query) {
+            $builder = $builder->where($this->query);
         }
-        $builder = $this->model->where($where);
         if ($this->with) {
             $builder = $builder->with($this->with);
         }
         $builder = (new Work\MakeSelect)->run($this->model, $builder, $this->select);
-        return $this->getCacheData([$builder->toRawSql()], fn() => $this->model->where($where)->first());
+        return $this->getCacheData([$builder->toRawSql(), 'first'], fn() => $builder->first());
+    }
+
+    /**
+     * Retrieve the "count" result of the query.
+     *
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $columns
+     * @return int
+     */
+    public function count($columns = '*'): int
+    {
+        $builder = $this->model;
+        if ($this->query) {
+            $builder = $builder->where($this->query);
+        }
+        if ($this->with) {
+            $builder = $builder->with($this->with);
+        }
+        return $this->getCacheData([$builder->toRawSql(), 'count', $columns], fn() => $builder->count($columns));
+    }
+
+    /**
+     * Retrieve the minimum value of a given column.
+     *
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
+     * @return mixed
+     */
+    public function min($column)
+    {
+        $builder = $this->model;
+        if ($this->query) {
+            $builder = $builder->where($this->query);
+        }
+        if ($this->with) {
+            $builder = $builder->with($this->with);
+        }
+        return $this->getCacheData([$builder->toRawSql(), 'min', $column], fn() => $builder->min($column));
+    }
+
+    /**
+     * Retrieve the maximum value of a given column.
+     *
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
+     * @return mixed
+     */
+    public function max($column)
+    {
+        $builder = $this->model;
+        if ($this->query) {
+            $builder = $builder->where($this->query);
+        }
+        if ($this->with) {
+            $builder = $builder->with($this->with);
+        }
+        return $this->getCacheData([$builder->toRawSql(), 'max', $column], fn() => $builder->max($column));
+    }
+
+    /**
+     * Retrieve the sum of the values of a given column.
+     *
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
+     * @return mixed
+     */
+    public function sum($column)
+    {
+        $builder = $this->model;
+        if ($this->query) {
+            $builder = $builder->where($this->query);
+        }
+        if ($this->with) {
+            $builder = $builder->with($this->with);
+        }
+        return $this->getCacheData([$builder->toRawSql(), 'sum', $column], fn() => $builder->sum($column) ?: 0);
+
+    }
+
+    /**
+     * Retrieve the average of the values of a given column.
+     *
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
+     * @return mixed
+     */
+    public function avg($column)
+    {
+        $builder = $this->model;
+        if ($this->query) {
+            $builder = $builder->where($this->query);
+        }
+        if ($this->with) {
+            $builder = $builder->with($this->with);
+        }
+        return $this->getCacheData([$builder->toRawSql(), 'avg', $column], fn() => $builder->avg($column));
+    }
+
+    /**
+     * Alias for the "avg" method.
+     *
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
+     * @return mixed
+     */
+    public function average($column)
+    {
+        return $this->avg($column);
     }
 
     /**
