@@ -281,6 +281,10 @@ class SimpleServiceProvider extends ServiceProvider
         if (!is_dir(base_path('routes/frontend'))) {
             @mkdir(base_path('routes/frontend'), 0755);
         }
+        
+        if (!is_dir(base_path('routes/console'))) {
+            @mkdir(base_path('routes/console'), 0755);
+        }
     }
 
 
