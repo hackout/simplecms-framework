@@ -6,7 +6,7 @@
         "framework",
         "simplecms"
     ],
-    "version": "1.0.6",
+    "version": "1.0.7",
     "license": "MIT",
     "autoload": {
         "psr-4": {
@@ -27,7 +27,8 @@
         "maatwebsite/excel": "^3.1",
         "spatie/laravel-medialibrary": "^11.5",
         "intervention/image": "^3.6",
-        "php-ffmpeg/php-ffmpeg": "^1.2"
+        "php-ffmpeg/php-ffmpeg": "^1.2",
+        "jenssegers/agent": "^2.6"
     },
     "extra": {
         "laravel": {
@@ -41,7 +42,8 @@
                 "ExcelDrawing": "SimpleCMS\\Framework\\Facades\\ExcelDrawing",
                 "Captcha": "SimpleCMS\\Framework\\Facades\\Captcha",
                 "Dict": "SimpleCMS\\Framework\\Facades\\Dict",
-                "Menu": "SimpleCMS\\Framework\\Facades\\Menu"
+                "Menu": "SimpleCMS\\Framework\\Facades\\Menu",
+                "Finger": "SimpleCMS\\Framework\\Facades\\Finger"
             }
         }
     }

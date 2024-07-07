@@ -120,6 +120,7 @@ class SimpleServiceProvider extends ServiceProvider
         $this->app->bind('cache_manage', \SimpleCMS\Framework\Packages\System\Cache::class);
         $this->app->bind('dict', \SimpleCMS\Framework\Packages\Dict\Dict::class);
         $this->app->bind('menu', \SimpleCMS\Framework\Packages\Menu\Menu::class);
+        $this->app->bind('finger', \SimpleCMS\Framework\Packages\Finger\Finger::class);
     }
 
     /**
@@ -281,7 +282,7 @@ class SimpleServiceProvider extends ServiceProvider
         if (!is_dir(base_path('routes/frontend'))) {
             @mkdir(base_path('routes/frontend'), 0755);
         }
-        
+
         if (!is_dir(base_path('routes/console'))) {
             @mkdir(base_path('routes/console'), 0755);
         }

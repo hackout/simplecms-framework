@@ -46,6 +46,7 @@ use ExcelDrawing; #Excel提取图片
 use Menu; #菜单 
 use SystemConfig; #系统设置 
 use SystemInfo; #系统环境参数
+use Finger; #设备指纹
 ```
 
 ## Middleware
