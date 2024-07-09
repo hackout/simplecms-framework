@@ -960,11 +960,14 @@ class SimpleService
         if ($this->query) {
             $builder = $builder->where($this->query);
         }
+        if ($where) {
+            $builder = $builder->where($where);
+        }
         if ($this->with) {
             $builder = $builder->with($this->with);
         }
         $builder = (new Work\MakeSelect)->run($this->model, $builder, $this->select);
-        return $this->getCacheData([$builder->toRawSql(), 'first'], fn() => $builder->first());
+        return $this->getCacheData([$builder->toRawSql(), 'first', $where], fn() => $builder->first());
     }
 
     /**
