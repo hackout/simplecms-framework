@@ -43,9 +43,6 @@ class CarNumber
      */
     public function isValid(): bool
     {
-        if (strlen($this->carNumber) != 18) {
-            return false;
-        }
         return preg_match($this->regex, $this->carNumber);
     }
 

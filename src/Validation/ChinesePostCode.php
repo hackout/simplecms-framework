@@ -43,9 +43,6 @@ class ChinesePostCode
      */
     public function isValid(): bool
     {
-        if (strlen($this->chinesePostCode) != 18) {
-            return false;
-        }
         return preg_match($this->regex, $this->chinesePostCode);
     }
 

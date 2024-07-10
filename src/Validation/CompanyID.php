@@ -43,9 +43,6 @@ class CompanyID
      */
     public function isValid(): bool
     {
-        if (strlen($this->companyId) != 18) {
-            return false;
-        }
         return preg_match($this->regex, $this->companyId);
     }
 
