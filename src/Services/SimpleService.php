@@ -29,44 +29,8 @@ use SimpleCMS\Framework\Exceptions\SimpleException;
  * 
  * @property Model|null $item 单条数据,仅在create或update后存在
  * 
- * @method self setModel(string $className)
- * @method self setQuery(callable|null|array $query)
- * @method self appendQuery(callable|null|array $query)
- * @method callable|null|array getQuery()
- * @method self listQuery(array $data = null, array $keys, array $sqlList = [])
- * @method self setWith(callable|null|array $with)
- * @method self setHas(null|array $has)
- * @method self setGroup(array|string|null $group)
- * @method self setSelect(callable|null|array $select)
- * @method self setSelectRaw(callable|null|array $select)
- * @method self appendWith(callable|null|array $with)
- * @method self appendHas(null|array $has)
- * @method self appendGroup(array|string|null $group)
- * @method self appendSelect(callable|null|array $select)
- * @method callable|null|array getWith()
- * @method null|array getHas()
- * @method array|string|null getGroup()
- * @method callable|null|array getSelect()
- * @method callable|null|array getSelectRaw()
- * @method self clearAddons()
- * @method Collection|null getAll(array $fieldList = [])
- * @method array|null list(array $fieldList = [])
- * @method bool create(array $data)
- * @method bool update(string|int $id, array $data)
- * @method bool delete(string|int $id)
- * @method void clean()
- * @method bool batch_delete(array $ids)
- * @method Model|null findById(string|int $id)
- * @method Model|null find(callable|null|array $where = null)
- * @method bool setValue(string|int|array $id, string $field, string|float|array $value)
- * @method bool quick(array $data)
- * 
- * 
- * @method self queryDistance(float $lat,float $lng,float $maxDistance,string $geoColumn)
- * @method self selectDistance(float $lat,float $lng,string $geoColumn,string $alias)
- * @see \SimpleCMS\Region\Services\DistanceService
- * 
  */
+
 class SimpleService
 {
     use ServiceMacroable;
@@ -907,6 +871,17 @@ class SimpleService
             $this->clearCacheData();
         }
         return $result;
+    }
+
+    /**
+     * DB请求
+     * 
+     * @param ?string $tableName
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function db(string $tableName = null): \Illuminate\Database\Query\Builder
+    {
+        return DB::table($tableName ? $tableName : $this->model->getTable());
     }
 
     /**
