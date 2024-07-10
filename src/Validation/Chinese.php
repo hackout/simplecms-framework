@@ -2,51 +2,30 @@
 namespace SimpleCMS\Framework\Validation;
 
 /**
- * 中文
- *
- * @author Dennis Lui <hackout@vip.qq.com>
+ * 校验中文
  */
 class Chinese
 {
     protected string $chinese;
+    protected string $regex = '/^[\x{4e00}-\x{9fa5}]+$/u';
 
-    protected $regex = '^[\u4e00-\u9fa5]{0,}$';
-
-    /**
-     * IDCard constructor.
-     * @param string $chinese
-     */
     public function __construct(string $chinese)
     {
         $this->setChinese($chinese);
     }
 
-    /**
-     * Get Chinese
-     */
     public function getChinese()
     {
         return (string) $this->chinese;
     }
 
-    /**
-     * @param mixed $chinese
-     */
     public function setChinese(string $chinese)
     {
-        $this->chinese = (string) trim(strtoupper($chinese));
+        $this->chinese = (string) trim($chinese);
     }
 
-    /**
-     * 中文是否有效
-     * @return bool
-     */
     public function isValid(): bool
     {
-        if (strlen($this->chinese) != 18) {
-            return false;
-        }
-        return preg_match($this->regex, $this->chinese);
+        return preg_match($this->regex, $this->chinese) === 1;
     }
-
 }
