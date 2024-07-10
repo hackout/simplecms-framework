@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use {{ controllerNamespace }};
 
-Route::get('/list',[{{controllerName}}::class,'list'])->name('frontend.{{prefixName}}.list');
+Route::get('/',[{{controllerName}}::class,'list'])->name('frontend.{{prefixName}}.list');
 Route::get('/{id}',[{{controllerName}}::class,'detail'])->name('frontend.{{prefixName}}.detail')->where(['id'=>uuid_regex()]);
 Route::post('/',[{{controllerName}}::class,'create'])->name('frontend.{{prefixName}}.create');
 Route::put('/{id}',[{{controllerName}}::class,'update'])->name('frontend.{{prefixName}}.update')->where(['id'=>uuid_regex()]);

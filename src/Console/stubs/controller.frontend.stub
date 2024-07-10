@@ -22,7 +22,7 @@ class {{ class }} extends BaseController
      * @return JsonResponse
      */
      #[ApiName(name:'{{ class }}-获取列表')]
-    public function index({{ storeRequest }} $request,{{storeService}} $service):JsonResponse
+    public function list({{ storeRequest }} $request,{{storeService}} $service):JsonResponse
     {
         $rules = [
             'keyword' => 'sometimes|nullable|max:250'
@@ -141,9 +141,6 @@ class {{ class }} extends BaseController
         if ($validator->fails()) {
             return $this->error($validator->errors()->first());
         }
-        $data = $validator->safe()->only([
-            //Todo..
-        ]);
         $service->delete($id);
         return $this->success();
     }
