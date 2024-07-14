@@ -763,10 +763,10 @@ class SimpleService
         if ($multipleFiles) {
 
             if (!$mediaFields) {
-                $mediaColumn = $this->getMediaColumn() ?? head(array_keys($files));
-                $this->addMultipleMedia(head($files), $mediaColumn);
+                $mediaColumn = $this->getMediaColumn() ?? head(array_keys($multipleFiles));
+                $this->addMultipleMedia(head($multipleFiles), $mediaColumn);
             } else {
-                foreach ($files as $field => $file) {
+                foreach ($multipleFiles as $field => $file) {
                     if (array_key_exists($field, $mediaFields) && $mediaFields[$field]) {
                         $this->addMultipleMedia($file, $mediaFields[$field]);
                     }
