@@ -9,7 +9,7 @@ use SimpleCMS\Framework\Services\SimpleService;
 
 class RequestLogService extends SimpleService
 {
-    public ?string $className = RequestLog::class;
+    protected string $className = RequestLog::class;
 
     public function makeLog(Request $request, bool $status): void
     {
