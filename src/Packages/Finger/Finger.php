@@ -1,6 +1,8 @@
 <?php
 namespace SimpleCMS\Framework\Packages\Finger;
 
+use function strlen;
+use function is_string;
 use Jenssegers\Agent\Agent;
 
 /**
@@ -25,7 +27,7 @@ class Finger
         }
         if (!static::checkFingerValid($finger))
             return static::makeFinger();
-        return $finger;
+        return is_string($finger) ? $finger : static::makeFinger();
     }
 
     /**

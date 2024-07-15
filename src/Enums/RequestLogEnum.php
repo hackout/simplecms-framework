@@ -4,6 +4,7 @@ namespace SimpleCMS\Framework\Enums;
 
 enum RequestLogEnum: int
 {
+    case OPTION = 0;
     case GET = 1;
     case POST = 2;
     case PUT = 3;
@@ -19,6 +20,18 @@ enum RequestLogEnum: int
             4 => self::PATCH,
             5 => self::DELETE,
             default => self::GET
+        };
+    }
+
+    public static function getValue(string $case): self
+    {
+        return match (strtoupper($case)) {
+            'GET' => static::GET,
+            'POST' => static::POST,
+            'PUT' => static::PUT,
+            'PATCH' => static::PATCH,
+            'DELETE' => static::DELETE,
+            default => static::OPTION
         };
     }
 }

@@ -1,12 +1,14 @@
 <?php
 
 /**
- * 判断是否Mobile访问
+ * 判断是否为移动设备访问
  *
+ * @param string $useragent 用户代理字符串
  * @return bool
  */
 function is_mobile(string $useragent): bool
 {
+    // 定义移动设备关键词数组
     $clientKEY = [
         'nokia',
         'sony',
@@ -45,5 +47,7 @@ function is_mobile(string $useragent): bool
         'mobile',
         'Weixin'
     ];
-    return preg_match("/(" . implode('|', $clientKEY) . ")/i", strtolower(request()->userAgent()));
+
+    // 使用正则表达式匹配用户代理字符串是否包含移动设备关键词
+    return (bool) preg_match("/(" . implode('|', $clientKEY) . ")/i", strtolower($useragent));
 }

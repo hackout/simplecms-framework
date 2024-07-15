@@ -53,12 +53,7 @@ class ControllerMakeCommand extends GeneratorCommand
     protected function buildClass($name)
     {
 
-        $replace = [];
-
-
-        if ($this->option('model')) {
-            $replace = $this->buildModelReplacements($replace);
-        }
+        $replace = $this->option('model') ? $this->buildModelReplacements() : [];
 
         $class = str_replace(
             array_keys($replace),
@@ -73,19 +68,18 @@ class ControllerMakeCommand extends GeneratorCommand
     /**
      * Build the model replacement values.
      *
-     * @param  array  $replace
      * @return array
      */
-    protected function buildModelReplacements(array $replace)
+    protected function buildModelReplacements()
     {
         $storeService = $this->parseServiceName($this->option('model'));
         $serviceClass = $this->parseService($storeService);
         $table = Str::snake(Str::pluralStudly(class_basename($this->option('model'))));
 
         [$namespace, $storeRequestClass, $updateRequestClass] = [
-            'Illuminate\\Http',
-            'Request',
-            'Request',
+            'SimpleCMS\\Framework\\Http\\Requests\\SimpleRequest',
+            'SimpleRequest',
+            'SimpleRequest',
         ];
         $namespacedRequests = $namespace . '\\' . $storeRequestClass . ';';
 

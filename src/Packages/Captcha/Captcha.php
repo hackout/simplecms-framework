@@ -2,6 +2,8 @@
 
 namespace SimpleCMS\Framework\Packages\Captcha;
 
+use function str_split;
+use function is_string;
 use Illuminate\Support\Str;
 use Intervention\Image\Image;
 use Illuminate\Support\HtmlString;
@@ -60,7 +62,7 @@ class Captcha
     protected $canvas;
 
     /**
-     * @var Image
+     * @var Image|ImageInterface
      */
     protected $image;
 
@@ -105,12 +107,12 @@ class Captcha
     protected $lines = 3;
 
     /**
-     * @var string
+     * @var string|array
      */
     protected $characters;
 
     /**
-     * @var array
+     * @var array|string
      */
     protected $text;
 
@@ -279,8 +281,8 @@ class Captcha
         return $api ? [
             'sensitive' => $generator['sensitive'],
             'key' => $generator['key'],
-            'img' => $this->image->toJpg($this->quality)->toDataUri()
-        ] : response($this->image->toJpg($this->quality), '200', ['Content-Type' => 'image/jpeg']);
+            'img' => $this->image->toJpeg($this->quality)->toDataUri()
+        ] : response($this->image->toJpeg($this->quality), '200', ['Content-Type' => 'image/jpeg']);
     }
 
     /**

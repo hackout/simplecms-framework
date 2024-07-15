@@ -35,10 +35,10 @@ class Telephone
      */
     public function isValid(): bool
     {
-        if (!in_array(strlen($this->telephone),[10,11,12])) {
+        if (!in_array(strlen($this->telephone), [10, 11, 12])) {
             return false;
         }
-        return preg_match($this->regex, $this->telephone);
+        return (bool) preg_match($this->regex, $this->telephone);
     }
 
 }

@@ -12,7 +12,7 @@ class MenuObserver
     public function saved(Menu $menu): void
     {
         if ($menu->getOriginal('type') != $menu->type) {
-            $menu->children->each(fn(Menu $menu) => $menu->update(['type' => $menu->type]));
+            $menu->children && $menu->children->each(fn(Menu $menu) => $menu->update(['type' => $menu->type]));
         }
     }
 
@@ -23,7 +23,7 @@ class MenuObserver
     public function updated(Menu $menu): void
     {
         if ($menu->getOriginal('type') != $menu->type) {
-            $menu->children->each(fn(Menu $menu) => $menu->update(['type' => $menu->type]));
+            $menu->children && $menu->children->each(fn(Menu $menu) => $menu->update(['type' => $menu->type]));
         }
     }
 
@@ -32,8 +32,7 @@ class MenuObserver
      */
     public function deleted(Menu $menu): void
     {
-
-        $menu->children->each(fn(Menu $menu) => $menu->delete());
+        $menu->children && $menu->children->each(fn(Menu $menu) => $menu->delete());
     }
 
 }

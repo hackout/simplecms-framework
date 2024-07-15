@@ -38,7 +38,7 @@ class Mobile
         if (strlen($this->mobile) != 11) {
             return false;
         }
-        return preg_match($this->regex, $this->mobile);
+        return (bool) preg_match($this->regex, $this->mobile);
     }
 
 }

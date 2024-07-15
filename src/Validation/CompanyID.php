@@ -43,7 +43,7 @@ class CompanyID
      */
     public function isValid(): bool
     {
-        return preg_match($this->regex, $this->companyId);
+        return (bool) preg_match($this->regex, $this->companyId);
     }
 
 }

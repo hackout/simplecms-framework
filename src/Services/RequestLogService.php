@@ -36,7 +36,7 @@ class RequestLogService extends SimpleService
                     'name' => $name,
                     'user_agent' => $request->userAgent(),
                     'ip_address' => $request->getClientIp(),
-                    'method' => collect(RequestLogEnum::cases())->where('name', $request->getMethod())->value('value'),
+                    'method' => RequestLogEnum::getValue($request->getMethod())->value,
                     'url' => $request->route()->uri,
                     'parameters' => $request->all(),
                     'route_name' => $request->route()->getName(),

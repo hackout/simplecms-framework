@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use SimpleCMS\Framework\Console\ModelMakeCommand;
 use SimpleCMS\Framework\Console\RouteMakeCommand;
+use SimpleCMS\Framework\Exceptions\SimpleException;
 use SimpleCMS\Framework\Packages\Captcha\Captcha;
 use SimpleCMS\Framework\Console\SeederMakeCommand;
 use SimpleCMS\Framework\Validation\Rule\PhoneRule;
@@ -191,7 +192,7 @@ class SimpleServiceProvider extends ServiceProvider
         );
         Validator::extend(
             'captcha',
-            function ($attribute, $value, $parameters) {
+            function ($attribute, $value) {
                 return config('cms.captcha.disable') || ($value && captcha_check($value));
             }
         );
@@ -258,33 +259,37 @@ class SimpleServiceProvider extends ServiceProvider
      */
     protected function bootDefaultDisk(): void
     {
-        if (!is_dir(app_path('Services'))) {
-            @mkdir(app_path('Services'), 0755);
-        }
-        if (!is_dir(app_path('Http/Controllers/Backend'))) {
-            @mkdir(app_path('Http/Controllers/Backend'), 0755);
-        }
-        if (!is_dir(app_path('Http/Controllers/Frontend'))) {
-            @mkdir(app_path('Http/Controllers/Frontend'), 0755);
-        }
-        if (!is_dir(app_path('Services/Backend'))) {
-            @mkdir(app_path('Services/Backend'), 0755);
-        }
-        if (!is_dir(app_path('Services/Frontend'))) {
-            @mkdir(app_path('Services/Frontend'), 0755);
-        }
-        if (!is_dir(app_path('Services/Private'))) {
-            @mkdir(app_path('Services/Private'), 0755);
-        }
-        if (!is_dir(base_path('routes/backend'))) {
-            @mkdir(base_path('routes/backend'), 0755);
-        }
-        if (!is_dir(base_path('routes/frontend'))) {
-            @mkdir(base_path('routes/frontend'), 0755);
-        }
+        try {
+            if (!is_dir(app_path('Services'))) {
+                mkdir(app_path('Services'), 0755);
+            }
+            if (!is_dir(app_path('Http/Controllers/Backend'))) {
+                mkdir(app_path('Http/Controllers/Backend'), 0755);
+            }
+            if (!is_dir(app_path('Http/Controllers/Frontend'))) {
+                mkdir(app_path('Http/Controllers/Frontend'), 0755);
+            }
+            if (!is_dir(app_path('Services/Backend'))) {
+                mkdir(app_path('Services/Backend'), 0755);
+            }
+            if (!is_dir(app_path('Services/Frontend'))) {
+                mkdir(app_path('Services/Frontend'), 0755);
+            }
+            if (!is_dir(app_path('Services/Private'))) {
+                mkdir(app_path('Services/Private'), 0755);
+            }
+            if (!is_dir(base_path('routes/backend'))) {
+                mkdir(base_path('routes/backend'), 0755);
+            }
+            if (!is_dir(base_path('routes/frontend'))) {
+                mkdir(base_path('routes/frontend'), 0755);
+            }
 
-        if (!is_dir(base_path('routes/console'))) {
-            @mkdir(base_path('routes/console'), 0755);
+            if (!is_dir(base_path('routes/console'))) {
+                mkdir(base_path('routes/console'), 0755);
+            }
+        } catch (\Throwable $th) {
+            throw new SimpleException("No operation permission for this directory");
         }
     }
 

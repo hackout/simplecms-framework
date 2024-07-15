@@ -3,6 +3,7 @@ namespace SimpleCMS\Framework\Packages\System;
 
 use Illuminate\Support\Number;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -23,13 +24,12 @@ class System
     protected function getServiceInfo(): Collection
     {
         $serverInfo = [];
-
         // 获取服务器信息
         $serverInfo['server'] = collect([
-            'name' => $_SERVER['SERVER_NAME'] ?? null,
-            'software' => $_SERVER['SERVER_SOFTWARE'] ?? null,
-            'ip' => $_SERVER['SERVER_ADDR'] ?? null,
-            'port' => $_SERVER['SERVER_PORT'] ?? null,
+            'name' => Request::server('SERVER_NAME'),
+            'software' => Request::server('SERVER_SOFTWARE'),
+            'ip' => Request::server('SERVER_ADDR'),
+            'port' => Request::server('SERVER_PORT'),
         ]);
 
         // 获取 PHP 版本信息

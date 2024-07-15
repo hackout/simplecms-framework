@@ -1,7 +1,7 @@
 <?php
 namespace SimpleCMS\Framework\Validation\Rule;
 
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use SimpleCMS\Framework\Validation\ChinesePostCode;
 
 /**
@@ -9,21 +9,22 @@ use SimpleCMS\Framework\Validation\ChinesePostCode;
  *
  * @author Dennis Lui <hackout@vip.qq.com>
  */
-class ChinesePostCodeRule implements Rule
+class ChinesePostCodeRule implements ValidationRule
 {
-    public function validate($attribute, $value, $parameters)
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        return $this->passes($attribute, $value);
+        if (!$this->passes($value)) {
+            $fail($this->message($attribute));
+        }
     }
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value)
+    public function passes($value)
     {
         return (new ChinesePostCode($value))->isValid();
     }
@@ -31,10 +32,10 @@ class ChinesePostCodeRule implements Rule
     /**
      * Get the validation error message.
      *
-     * @return string|array
+     * @return string
      */
-    public function message()
+    public function message(string $attribute)
     {
-        return 'The Post Code Number is incorrect.';
+        return "The {$attribute} is incorrect.";
     }
 }

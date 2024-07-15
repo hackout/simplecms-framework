@@ -1,11 +1,11 @@
 <?php
 namespace SimpleCMS\Framework\Packages\ExcelPlus;
 
-use File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use SimpleCMS\Framework\Exceptions\SimpleException;
 use PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -38,49 +38,17 @@ class Drawing
         $obj = $objRead->load($this->uploadedFile);
         $currSheet = $obj->getActiveSheet();
         $array = [];
+        $this->checkPath();
         foreach ($currSheet->getDrawingCollection() as $drawing) {
             if ($drawing instanceof MemoryDrawing) {
-                ob_start();
-                call_user_func(
-                    $drawing->getRenderingFunction(),
-                    $drawing->getImageResource()
-                );
-                $imageContents = ob_get_contents();
-                ob_end_clean();
-                switch ($drawing->getMimeType()) {
-                    case MemoryDrawing::MIMETYPE_PNG:
-                        $extension = 'png';
-                        break;
-                    case MemoryDrawing::MIMETYPE_GIF:
-                        $extension = 'gif';
-                        break;
-                    case MemoryDrawing::MIMETYPE_JPEG:
-                        $extension = 'jpg';
-                        break;
-                }
+                list($imageContents, $extension) = ObMemory::convert($drawing);
+            } elseif ($drawing->getIsURL()) {
+                list($imageContents, $extension) = Url::convert($drawing);
             } else {
-                if ($drawing->getPath()) {
-                    if ($drawing->getIsURL()) {
-                        $imageContents = file_get_contents($drawing->getPath());
-                        $filePath = tempnam(sys_get_temp_dir(), 'Drawing');
-                        file_put_contents($filePath, $imageContents);
-                        $mimeType = mime_content_type($filePath);
-                        $extension = File::mime2ext($mimeType);
-                        unlink($filePath);
-                    } else {
-                        $zipReader = fopen($drawing->getPath(), 'r');
-                        $imageContents = '';
-                        while (!feof($zipReader)) {
-                            $imageContents .= fread($zipReader, 1024);
-                        }
-                        fclose($zipReader);
-                        $extension = $drawing->getExtension();
-                    }
-                }
+                list($imageContents, $extension) = Zip::convert($drawing);
             }
-            $path = Storage::path('public/imports/');
-            if (!is_dir($path)) {
-                @mkdir($path);
+            if (!$imageContents || !$extension) {
+                continue;
             }
             $fileName = Storage::path('public/imports/' . Str::Uuid() . '.' . $extension);
             file_put_contents($fileName, $imageContents);
@@ -99,4 +67,20 @@ class Drawing
         return $array;
     }
 
+    /**
+     * Check the path
+     * @throws \SimpleCMS\Framework\Exceptions\SimpleException
+     * @return void
+     */
+    protected function checkPath(): void
+    {
+        $path = Storage::path('public/imports/');
+        if (!is_dir($path)) {
+            try {
+                mkdir($path);
+            } catch (\Throwable $th) {
+                throw new SimpleException("No operation permission for this directory");
+            }
+        }
+    }
 }

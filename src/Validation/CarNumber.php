@@ -43,7 +43,7 @@ class CarNumber
      */
     public function isValid(): bool
     {
-        return preg_match($this->regex, $this->carNumber);
+        return (bool) preg_match($this->regex, $this->carNumber);
     }
 
 }

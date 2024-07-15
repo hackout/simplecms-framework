@@ -43,7 +43,7 @@ class ChinesePostCode
      */
     public function isValid(): bool
     {
-        return preg_match($this->regex, $this->chinesePostCode);
+        return (bool) preg_match($this->regex, $this->chinesePostCode);
     }
 
 }

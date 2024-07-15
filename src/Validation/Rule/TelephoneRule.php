@@ -1,7 +1,7 @@
 <?php
 namespace SimpleCMS\Framework\Validation\Rule;
 
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use SimpleCMS\Framework\Validation\Telephone;
 
 /**
@@ -9,32 +9,34 @@ use SimpleCMS\Framework\Validation\Telephone;
  *
  * @author Dennis Lui <hackout@vip.qq.com>
  */
-class TelephoneRule implements Rule
+class TelephoneRule implements ValidationRule
 {
-    public function validate($attribute, $value, $parameters)
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        return $this->passes($attribute, $value);
+        if (!$this->passes($value)) {
+            $fail($this->message($attribute));
+        }
     }
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value)
+    public function passes($value)
     {
         return (new Telephone($value))->isValid();
     }
 
+
     /**
      * Get the validation error message.
      *
-     * @return string|array
+     * @return string
      */
-    public function message()
+    public function message(string $attribute)
     {
-        return 'The Telephone Number is incorrect.';
+        return "The {$attribute} is incorrect.";
     }
 }

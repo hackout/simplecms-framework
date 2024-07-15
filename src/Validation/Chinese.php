@@ -26,6 +26,6 @@ class Chinese
 
     public function isValid(): bool
     {
-        return preg_match($this->regex, $this->chinese) === 1;
+        return (bool) preg_match($this->regex, $this->chinese) === 1;
     }
 }

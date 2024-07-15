@@ -20,7 +20,7 @@ class Dict
      */
     public function getList(): Collection
     {
-        return DictModel::select(['name', 'code'])->orderBy('sort_order')->get();
+        return DictModel::select(['name', 'code'])->get()->sortBy([['sort_order', 'desc']]);
     }
 
     /**
@@ -46,7 +46,7 @@ class Dict
     {
         $dict = DictModel::where('code', $code)->first();
         if (!$dict)
-            return collect([]);
+            return collect();
         return $dict->items->map(fn(DictItem $dictItem) => [
             'name' => $dictItem->name,
             'value' => $dictItem->value

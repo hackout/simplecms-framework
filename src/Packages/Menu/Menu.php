@@ -27,7 +27,7 @@ class Menu
         if (!$currentRouteName) {
             return null;
         }
-        $siblingList = collect([]);
+        $siblingList = collect();
         $breadcrumbs = [];
         $menu = MenuModel::where(['is_valid' => true, 'url->name' => $currentRouteName])
             ->where('parent_id', '!=', 0)->first();
@@ -41,9 +41,11 @@ class Menu
             /**
              * 获取同级菜单
              */
-            $parent->children->filter(fn(MenuModel $item) => $item->id != $menu->id)
-                ->values()
-                ->each(fn(MenuModel $item) => $siblingList->push($this->matchRoute($item, false, false)));
+            if ($parent->children && $parent->children->count()) {
+                $parent->children->filter(fn(MenuModel $item) => $item->id != $menu->id)
+                    ->values()
+                    ->each(fn(MenuModel $item) => $siblingList->push($this->matchRoute($item, false, false)));
+            }
         }
         $current->siblings = $siblingList->sortByDesc(fn(MenuClass $item) => $item->sort_order)->values()->toArray();
         $breadcrumbs[] = $current;
@@ -95,7 +97,7 @@ class Menu
         $menuClass->sort_order = $menu->sort_order;
         $menuClass->current = $current;
         $menuClass->is_show = $menu->is_show;
-        if ($needChild) {
+        if ($needChild && $menu->children && $menu->children->count()) {
             $menuClass->children = $menu->children->map(fn(MenuModel $menu) => $this->matchRoute($menu))->toArray();
         }
         return $menuClass;

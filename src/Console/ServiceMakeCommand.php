@@ -63,7 +63,7 @@ class ServiceMakeCommand extends GeneratorCommand
         foreach ($searches as $search) {
             $stub = str_replace(
                 $search,
-                [$this->getNamespace($name), $this->modelNamespace(), $this->modelName($name)],
+                [$this->getNamespace($name), $this->modelNamespace(), $this->modelName()],
                 $stub
             );
         }
@@ -102,7 +102,7 @@ class ServiceMakeCommand extends GeneratorCommand
      *
      * @return string
      */
-    protected function modelName($name)
+    protected function modelName()
     {
         return class_basename($this->option('model'));
     }

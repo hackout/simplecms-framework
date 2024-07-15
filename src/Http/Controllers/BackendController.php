@@ -32,11 +32,10 @@ class BackendController extends BaseController
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param string $message
-     * @param integer $code
      * @param array|string|null|bool|Collection $data
      * @return JsonResponse
      */
-    public function error(string $message = 'error', $code = 500, array|string|null|bool|Collection $data = null): JsonResponse
+    public function error(string $message = 'error', array|string|null|bool|Collection $data = null): JsonResponse
     {
         (new RequestLogService())->makeLog(request(), false);
         return json_error($message, $data);
