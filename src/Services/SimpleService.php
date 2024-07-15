@@ -6,23 +6,24 @@ use function is_array;
 use function array_pad;
 use function is_string;
 use function is_numeric;
-use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
-
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use SimpleCMS\Framework\Traits\ServiceMacroable;
+use SimpleCMS\Framework\Contracts\CacheInterface;
+use SimpleCMS\Framework\Contracts\BuilderInterface;
 use SimpleCMS\Framework\Exceptions\SimpleException;
+use Illuminate\Support\Collection as BaseCollection;
+use SimpleCMS\Framework\Contracts\RetrieveInterface;
 
 /**
  * SimpleService for Based service
  */
 
-class SimpleService extends CacheService implements CacheInterface
+class SimpleService extends BaseService implements CacheInterface, BuilderInterface, RetrieveInterface
 {
-    use ServiceMacroable;
+    use ServiceMacroable, CacheServiceTrait, BuilderServiceTrait, RetrieveServiceTrait;
 
     /**
      * 上传文件/图片/视频
@@ -35,6 +36,17 @@ class SimpleService extends CacheService implements CacheInterface
         return new SimpleUploadService;
     }
 
+    private function convertCondition(array $data, array $conditions): BaseCollection
+    {
+        $result = new BaseCollection();
+        foreach ($conditions as $key => $value) {
+            if (isset($data[$key])) {
+                $result->put($key, $value);
+            }
+        }
+        return $result;
+    }
+
     /**
      * 进阶搜索
      * 
@@ -43,55 +55,33 @@ class SimpleService extends CacheService implements CacheInterface
      * @param  ?array      $otherConditions 附加条件
      * @return self
      */
-    public function listQuery(array $data = null, array $conditions, array $otherConditions = [])
+    public function listQuery(array|null $data = null, array $conditions, array $otherConditions = [])
     {
         if ($data) {
             $sql = $otherConditions ?: [];
-            foreach ($conditions as $key => $value) {
+            $newConditions = $this->convertCondition($data, $conditions);
+            $newConditions->each(function ($value, $key) use ($data, &$sql) {
                 $values = is_array($value) ? $value : [$value];
                 list($action, $fields, $extra) = array_pad($values, 3, null);
                 if (!$fields)
                     $fields = $key;
-                if ($action == 'search' && array_key_exists($key, $data) && trim($data[$key])) {
-                    $keyword = trim($data[$key]);
-                    $sql[] = Query\Search::builder($keyword, $fields, $extra ?? false);
+                $queryModel = match ($action) {
+                    'search' => Query\Search::class,
+                    'datetime_range' => Query\DateTimeRange::class,
+                    'range' => Query\Range::class,
+                    'datetime' => Query\DateTime::class,
+                    'date' => Query\Date::class,
+                    'year' => Query\Year::class,
+                    'month' => Query\Month::class,
+                    'day' => Query\Day::class,
+                    'in' => Query\In::class,
+                    'like' => Query\Like::class,
+                    default => Query\Eq::class,
+                };
+                if ($_sql = $queryModel::builder($data[$key], $fields, $extra)) {
+                    $sql[] = $_sql;
                 }
-
-                if ($action == 'datetime_range' && array_key_exists($key, $data) && $data[$key]) {
-                    tap(Query\DateTimeRange::builder($data[$key], $fields, $extra ?? false), function (array $_sql) use (&$sql) {
-                        $sql[] = $_sql;
-                    });
-                }
-                if ($action == 'range' && array_key_exists($key, $data) && $data[$key]) {
-                    tap(Query\Range::builder($data[$key], $fields, $extra ?? false), function (array $_sql) use (&$sql) {
-                        $sql[] = $_sql;
-                    });
-                }
-                if ($action == 'datetime' && array_key_exists($key, $data) && $data[$key]) {
-                    $sql[] = Query\Search::builder($data[$key], $fields, $extra ?? false);
-                }
-                if ($action == 'date' && array_key_exists($key, $data) && $data[$key]) {
-                    $sql[] = Query\Date::builder($data[$key], $fields, $extra ?? false);
-                }
-                if ($action == 'year' && array_key_exists($key, $data) && $data[$key]) {
-                    $sql[] = Query\Year::builder($data[$key], $fields, $extra ?? false);
-                }
-                if ($action == 'month' && array_key_exists($key, $data) && $data[$key]) {
-                    $sql[] = Query\Month::builder($data[$key], $fields, $extra ?? false);
-                }
-                if ($action == 'day' && array_key_exists($key, $data) && $data[$key]) {
-                    $sql[] = Query\Day::builder($data[$key], $fields, $extra ?? false);
-                }
-                if ($action == 'in' && array_key_exists($key, $data) && $data[$key]) {
-                    $sql[] = Query\In::builder($data[$key], $fields);
-                }
-                if ($action == 'eq' && array_key_exists($key, $data) && $data[$key] !== null) {
-                    $sql[] = Query\Eq::builder($data[$key], $fields);
-                }
-                if ($action == 'like' && array_key_exists($key, $data) && $data[$key] !== null) {
-                    $sql[] = Query\Like::builder($data[$key], $fields);
-                }
-            }
+            });
             if ($sql) {
                 $this->setQuery($sql);
             }
@@ -108,122 +98,9 @@ class SimpleService extends CacheService implements CacheInterface
      */
     public function getAll(array $fieldList = [])
     {
-        $builder = $this->builder();
-
-        $builder = (new Work\MakeSelect)->run($this->model, $builder, $this->select);
+        $builder = $this->getBuilder();
         $result = $this->getCacheData([$builder->toRawSql(), 'all'], fn() => $builder->get());
-        return $this->filterData($result, $fieldList);
-    }
-
-
-    /**
-     * 过滤数据
-     *
-     * @param Collection|\Illuminate\Support\Collection $data
-     * @param array $fieldList
-     * @return Collection|\Illuminate\Support\Collection
-     */
-    private function filterData(Collection|\Illuminate\Support\Collection $data, $fieldList)
-    {
-        return $data->map(function (Model $item) use ($fieldList) {
-            if (!$fieldList)
-                return $item;
-            $newItem = collect();
-            foreach ($fieldList as $value) {
-                list($key, $val) = array_pad(explode(' as ', strtolower($value)), 2, null);
-                list($relation, $key1) = array_pad(explode('.', strtolower($key)), 2, null);
-                $key1 = $key1 ?: $relation;
-                $val = $val ?: $key1;
-                if ($relation === $key) {
-                    if (strpos($relation, ':') === false) {
-                        $newItem->put($val, $item->{$key});
-                    } else {
-                        list($relation, $relationColumnString) = explode(':', $relation);
-                        list($val, $valColumnString) = array_pad(explode(':', $val), 2, null);
-                        if (!$relationColumnString) {
-                            throw new SimpleException(trans('simplecms:range_valid'));
-                        }
-                        $valColumns = $valColumnString ? explode(',', $valColumnString) : null;
-                        $relationColumns = explode(',', $relationColumnString);
-                        $newItem->put($val, optional($item->{$relation})->map(function ($item) use ($relationColumns, $valColumns) {
-                            $newItem = [];
-                            foreach ($relationColumns as $index => $key) {
-                                $newItem[array_key_exists($index, $valColumns) ? $valColumns[$index] : $key] = $item->{$key};
-                            }
-                            return $newItem;
-                        }));
-                    }
-                } else {
-                    if (strpos($relation, ':') === false) {
-                        $newItem->put($val, optional($item->{$relation})->{$key1});
-                    } else {
-                        list($relation, $relationColumnString) = explode(':', $relation);
-                        list($val, $valColumnString) = array_pad(explode(':', $val), 2, null);
-                        if (!$relationColumnString) {
-                            throw new SimpleException(trans('simplecms:range_valid'));
-                        }
-                        $valColumns = $valColumnString ? explode(',', $valColumnString) : null;
-                        $relationColumns = explode(',', $relationColumnString);
-                        $newItem->put($val, optional($item->{$relation})->map(function ($item) use ($relationColumns, $valColumns) {
-                            $newItem = [];
-                            foreach ($relationColumns as $index => $key) {
-                                $newItem[array_key_exists($index, $valColumns) ? $valColumns[$index] : $key] = $item->{$key};
-                            }
-                            return $newItem;
-                        }));
-                    }
-                }
-            }
-            return $newItem;
-        });
-    }
-
-    /**
-     * 获取Builder
-     *
-     * @author Dennis Lui <hackout@vip.qq.com>
-     * @return Builder|Model|null
-     */
-    public function getBuilder()
-    {
-        return $this->builder();
-    }
-
-    private function builder(?string $prop = null, ?string $order = null, )
-    {
-        $builder = $this->model;
-        $timestamps = $builder->timestamps;
-        if ($this->query) {
-            $builder = $builder->where($this->query);
-        }
-        if ($this->with) {
-            $builder = $builder->with($this->with);
-        }
-        if ($this->group && is_array($this->group)) {
-            $builder = $builder->groupByRaw(implode(',', $this->group));
-        }
-        if ($this->group && !is_array($this->group)) {
-            $builder = $builder->groupBy($this->group);
-        }
-        if ($this->has) {
-            foreach ($this->has as $key => $value) {
-                $builder = $builder->whereHas($key, function ($q) use ($value) {
-                    $q->where($value);
-                });
-            }
-        }
-        $builder = (new Work\MakeSelect)->run($this->model, $builder, $this->select);
-        if (!$prop && !$order) {
-            if ($timestamps) {
-                $builder->orderBy($this->orderKey, $this->orderType);
-            }
-        } else {
-            if ($prop && $order) {
-                $builder->orderBy($prop, Str::remove('ending', $order));
-            }
-        }
-
-        return $builder;
+        return Work\FilterData::run($result, $fieldList);
     }
 
 
@@ -240,9 +117,9 @@ class SimpleService extends CacheService implements CacheInterface
         $limit = request()->get('limit', 10);
         $prop = request()->get('prop', null);
         $order = request()->get('order', null);
-        $builder = $this->builder($prop, $order);
+        $builder = $this->getBuilder($prop, $order);
         $data = $this->getCacheData([$builder->toRawSql(), $limit, 'page', $page], fn() => $builder->paginate($limit, ['*'], 'page', $page));
-        $items = $this->filterData(collect($data->items()), $fieldList);
+        $items = Work\FilterData::run(collect($data->items()), $fieldList);
         return [
             'items' => $items,
             'total' => $data->total(),
@@ -260,16 +137,17 @@ class SimpleService extends CacheService implements CacheInterface
      */
     public function create(array $data, array $mediaFields = [])
     {
-        list($sql, $files, $multipleFiles) = app(Work\ConvertData::class)->run($this->model, $data, $mediaFields);
+        list($sql, $files, $multipleFiles) = Work\ConvertData::run($this->getModel(), $data, $mediaFields);
 
-        $this->item = $this->newModel();
-        $this->item->fill($sql);
-        $result = $this->item->save();
+        $item = $this->newModel();
+        $item->fill($sql);
+        $result = $item->save();
         if ($result) {
+            $this->setItem($item);
             if ($this->hasMedia()) {
                 $this->updateMedia($files, $multipleFiles, $mediaFields);
             }
-            $this->clearCacheData();
+            $this->clearCache();
         }
 
         return $result;
@@ -285,21 +163,20 @@ class SimpleService extends CacheService implements CacheInterface
      */
     public function update(string|int $id, array $data, array $mediaFields = [])
     {
-        $this->item = $this->model->where($this->primaryKey, $id)->first();
-
-        if (!$this->item) {
+        $this->setItem($this->findById($id));
+        if (!$item = $this->getItem()) {
             throw new SimpleException(trans('simplecms:not_exists'));
         }
 
-        list($sql, $files, $multipleFiles) = app(Work\ConvertData::class)->run($this->model, $data, $mediaFields);
-        $this->item->fill($sql);
-        $result = $this->item->save();
+        list($sql, $files, $multipleFiles) = Work\ConvertData::run($this->getModel(), $data, $mediaFields);
+        $item->fill($sql);
+        $result = $item->save();
 
         if ($result) {
             if ($this->hasMedia()) {
                 $this->updateMedia($files, $multipleFiles, $mediaFields);
             }
-            $this->clearCacheData();
+            $this->clearCache();
         }
 
         return $result;
@@ -353,7 +230,7 @@ class SimpleService extends CacheService implements CacheInterface
      */
     public function addMedia(UploadedFile|string $file, string $columnName): void
     {
-        app(Work\AddMedia::class)->run($this->item, $file, $columnName);
+        Work\AddMedia::run($this->getItem(), $file, $columnName);
     }
 
     /**
@@ -379,7 +256,7 @@ class SimpleService extends CacheService implements CacheInterface
      */
     protected function hasMedia(): bool
     {
-        return app(Work\HasMedia::class)->run($this->model);
+        return Work\HasMedia::run($this->getModel());
     }
 
     /**
@@ -401,23 +278,26 @@ class SimpleService extends CacheService implements CacheInterface
     public function updateV2(array $where, array $data)
     {
         DB::beginTransaction();
+        $result = false;
         try {
-            $primaryKeyList = $this->model->lockForUpdate()->where($where)->select($this->primaryKey)->get()->pluck($this->primaryKey)->all();
-            if ($primaryKeyList) {
-                foreach ($primaryKeyList as $primaryKey) {
-                    if ($item = $this->model->find($primaryKey)) {
-                        $item->update($data);
+            $model = $this->getModel();
+            if ($model) {
+                $primaryKeyList = $model->lockForUpdate()->where($where)->select($this->primaryKey)->get()->pluck($this->primaryKey)->all();
+                if ($primaryKeyList) {
+                    foreach ($primaryKeyList as $primaryKey) {
+                        if ($item = $model->find($primaryKey)) {
+                            $item->update($data);
+                        }
                     }
                 }
+                $result = true;
             }
-            $result = true;
         } catch (\Exception $e) {
-            $result = false;
             DB::rollBack();
         }
         DB::commit();
         if ($result) {
-            $this->clearCacheData();
+            $this->clearCache();
         }
         return $result;
     }
@@ -430,27 +310,16 @@ class SimpleService extends CacheService implements CacheInterface
      */
     public function delete(string|int $id)
     {
-        $this->item = $this->model->where($this->primaryKey, $id)->first();
-        if (!$this->item) {
+        $this->setItem($this->findById($id));
+        if (!$item = $this->getItem()) {
             throw new SimpleException(trans('simplecms:delete_failed'));
         }
-        $result = $this->item->delete();
-        if ($result) {
-            $this->clearCacheData();
+        if ($result = $item->delete()) {
+            $this->clearCache();
         }
         return $result;
     }
 
-    /**
-     * DB请求
-     * 
-     * @param ?string $tableName
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public function db(string $tableName = null): \Illuminate\Database\Query\Builder
-    {
-        return DB::table($tableName ? $tableName : $this->model->getTable());
-    }
 
     /**
      * 清空数据
@@ -459,22 +328,23 @@ class SimpleService extends CacheService implements CacheInterface
      */
     public function clean()
     {
-        $this->model->truncate();
+        optional($this->getModel())->truncate();
+        $this->clearCache();
     }
 
     /**
      * 删除多条数据
      *
-     * @param  array   $ids
+     * @param  array<int,string|int>   $ids
      * @return boolean
      */
     public function batch_delete(array $ids)
     {
-        $result = $this->model->destroy($ids);
+        $result = optional($this->getModel())->destroy($ids);
         if ($result) {
-            $this->clearCacheData();
+            $this->clearCache();
         }
-        return $result;
+        return (bool) $result;
     }
 
     /**
@@ -486,7 +356,7 @@ class SimpleService extends CacheService implements CacheInterface
     public function findById(string|int $id)
     {
         $where = [
-            $this->primaryKey => $id
+            $this->getPrimaryKey() => $id
         ];
         return $this->find($where);
     }
@@ -499,120 +369,11 @@ class SimpleService extends CacheService implements CacheInterface
      */
     public function find(callable|null|array $where = null)
     {
-        $builder = $this->model;
-        if ($this->query) {
-            $builder = $builder->where($this->query);
+        if ($where !== null) {
+            $this->setQuery($where);
         }
-        if ($where) {
-            $builder = $builder->where($where);
-        }
-        if ($this->with) {
-            $builder = $builder->with($this->with);
-        }
-        $builder = (new Work\MakeSelect)->run($this->model, $builder, $this->select);
+        $builder = $this->getBuilder();
         return $this->getCacheData([$builder->toRawSql(), 'first', $where], fn() => $builder->first());
-    }
-
-    /**
-     * Retrieve the "count" result of the query.
-     *
-     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $columns
-     * @return int
-     */
-    public function count($columns = '*'): int
-    {
-        $builder = $this->model;
-        if ($this->query) {
-            $builder = $builder->where($this->query);
-        }
-        if ($this->with) {
-            $builder = $builder->with($this->with);
-        }
-        return $this->getCacheData([$builder->toRawSql(), 'count', $columns], fn() => $builder->count($columns));
-    }
-
-    /**
-     * Retrieve the minimum value of a given column.
-     *
-     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
-     * @return mixed
-     */
-    public function min($column)
-    {
-        $builder = $this->model;
-        if ($this->query) {
-            $builder = $builder->where($this->query);
-        }
-        if ($this->with) {
-            $builder = $builder->with($this->with);
-        }
-        return $this->getCacheData([$builder->toRawSql(), 'min', $column], fn() => $builder->min($column));
-    }
-
-    /**
-     * Retrieve the maximum value of a given column.
-     *
-     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
-     * @return mixed
-     */
-    public function max($column)
-    {
-        $builder = $this->model;
-        if ($this->query) {
-            $builder = $builder->where($this->query);
-        }
-        if ($this->with) {
-            $builder = $builder->with($this->with);
-        }
-        return $this->getCacheData([$builder->toRawSql(), 'max', $column], fn() => $builder->max($column));
-    }
-
-    /**
-     * Retrieve the sum of the values of a given column.
-     *
-     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
-     * @return mixed
-     */
-    public function sum($column)
-    {
-        $builder = $this->model;
-        if ($this->query) {
-            $builder = $builder->where($this->query);
-        }
-        if ($this->with) {
-            $builder = $builder->with($this->with);
-        }
-        return $this->getCacheData([$builder->toRawSql(), 'sum', $column], fn() => $builder->sum($column) ?: 0);
-
-    }
-
-    /**
-     * Retrieve the average of the values of a given column.
-     *
-     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
-     * @return mixed
-     */
-    public function avg($column)
-    {
-        $builder = $this->model;
-        if ($this->query) {
-            $builder = $builder->where($this->query);
-        }
-        if ($this->with) {
-            $builder = $builder->with($this->with);
-        }
-        return $this->getCacheData([$builder->toRawSql(), 'avg', $column], fn() => $builder->avg($column));
-    }
-
-    /**
-     * Alias for the "avg" method.
-     *
-     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
-     * @return mixed
-     */
-    public function average($column)
-    {
-        return $this->avg($column);
     }
 
     /**
@@ -625,12 +386,16 @@ class SimpleService extends CacheService implements CacheInterface
      */
     public function setValue(string|int|array|callable $id, string $field, string|float|array $value = null)
     {
+        $model = $this->getModel();
+        $result = false;
+        if (!$model)
+            return $result;
         if (!is_numeric($id) && !is_string($id)) {
-            return $this->model->where($id)->update(["{$field}" => $value]);
+            return $model->where($id)->update(["{$field}" => $value]);
         }
-        $result = $this->model->where('id', $id)->update(["{$field}" => $value]);
+        $result = $model->where('id', $id)->update(["{$field}" => $value]);
         if ($result) {
-            $this->clearCacheData();
+            $this->clearCache();
         }
         return $result;
     }
@@ -645,17 +410,17 @@ class SimpleService extends CacheService implements CacheInterface
      */
     public function quick(string $field, array $data)
     {
-        $primaryKey = $this->model->getKeyName();
+        $primaryKey = $this->getPrimaryKey();
         $keys = [];
         $where = [];
         foreach ($data as $key => $value) {
             $keys[] = "'" . $key . "'";
             $where[] = "WHEN '$key' THEN '$value'";
         }
-        $sql = "UPDATE `" . $this->model->getTable() . "` SET `$field` = CASE `$primaryKey` " . implode(" ", $where) . " ELSE $field END WHERE `$primaryKey` IN (" . implode(",", $keys) . ")";
+        $sql = "UPDATE `" . $this->getTableName() . "` SET `$field` = CASE `$primaryKey` " . implode(" ", $where) . " ELSE $field END WHERE `$primaryKey` IN (" . implode(",", $keys) . ")";
         $result = DB::update($sql);
         if ($result) {
-            $this->clearCacheData();
+            $this->clearCache();
         }
         return $result;
     }

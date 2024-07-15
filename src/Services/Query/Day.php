@@ -2,6 +2,8 @@
 namespace SimpleCMS\Framework\Services\Query;
 
 use Carbon\Carbon;
+use function is_array;
+use function array_pad;
 use Illuminate\Database\Query\Builder;
 
 class Day
@@ -19,11 +21,14 @@ class Day
      * @param  bool               $isFull 
      * @return array
      */
-    public static function builder(array|string $value, array|string $fields, bool $isFull = false): array
+    public static function builder(...$params): array
     {
+        list($value, $fields, $isFull) = array_pad($params, 3, null);
         $values = !is_array($value) ? [trim($value)] : $value;
-        if (!is_array($fields))
+        if (!is_array($fields)) {
             $fields = [$fields];
+        }
+        $isFull = !empty($isFull);
         return [
             function (Builder $query) use ($values, $fields, $isFull) {
                 foreach ($values as $index => $value) {

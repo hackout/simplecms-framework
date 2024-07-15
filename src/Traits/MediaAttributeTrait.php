@@ -315,15 +315,11 @@ trait MediaAttributeTrait
 
     public function getRegisteredMediaCollections(): Collection
     {
-        $this->registerMediaCollections();
-
         return collect($this->mediaCollections);
     }
 
     public function getMediaCollection(string $collectionName = 'default'): ?MediaCollection
     {
-        $this->registerMediaCollections();
-
         return collect($this->mediaCollections)
             ->first(fn(MediaCollection $collection) => $collection->name === $collectionName);
     }
@@ -636,14 +632,8 @@ trait MediaAttributeTrait
         }
     }
 
-    public function registerMediaCollections(): void
-    {
-    }
-
     public function registerAllMediaConversions(?Media $media = null): void
     {
-        $this->registerMediaCollections();
-
         collect($this->mediaCollections)->each(function (MediaCollection $mediaCollection) use ($media) {
             $actualMediaConversions = $this->mediaConversions;
 

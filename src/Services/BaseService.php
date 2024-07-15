@@ -81,6 +81,15 @@ class BaseService
     }
 
     /**
+     * 获取模型
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    public function getModel(): Model|null
+    {
+        return $this->model;
+    }
+
+    /**
      * 检测sort_order
      *
      * @author Dennis Lui <hackout@vip.qq.com>
@@ -92,6 +101,14 @@ class BaseService
             return 'sort_order';
         }
         return 'created_at';
+    }
+
+    /**
+     * @return string
+     */
+    public function getClassName():string
+    {
+        return $this->className;
     }
 
     /**
@@ -257,7 +274,7 @@ class BaseService
      * 
      * @return self
      */
-    public function clearAddons(): self
+    public function clearCondition(): self
     {
         $this->group = [];
         $this->query = [];

@@ -10,9 +10,8 @@ namespace SimpleCMS\Framework\Services\Work;
  */
 class CanCache
 {
-    public function run(mixed $model): mixed
+    public static function run(string $model): mixed
     {
-        $className = get_class($model);
-        return defined($className . '::SERVICE_CACHE') ? $className::SERVICE_CACHE : true;
+        return defined($model . '::SERVICE_CACHE') ? $model::SERVICE_CACHE : true;
     }
 }

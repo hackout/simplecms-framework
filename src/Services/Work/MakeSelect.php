@@ -1,7 +1,7 @@
 <?php
 namespace SimpleCMS\Framework\Services\Work;
 
-use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 /**
  * 绑定Select
@@ -11,9 +11,14 @@ use Illuminate\Support\Arr;
  */
 class MakeSelect
 {
-    public function run(mixed $model, mixed $builder, $select = []): mixed
+    /**
+     * @param mixed $model
+     * @param mixed $select
+     * @return mixed
+     */
+    public function run(mixed $model, $select = []): mixed
     {
-        $selectList = collect($select ? $select : $model->getFillable());
+        $selectList = new Collection($select ? $select : $model->getFillable());
         $casts = $model->getCasts();
         $primaryKey = $model->getKeyName();
         $defaultSelect = [
@@ -43,7 +48,6 @@ class MakeSelect
                 $selectArr[] = $field;
             }
         });
-        $builder = $builder->selectRaw(Arr::join($selectArr, ','));
-        return $builder;
+        return $selectArr;
     }
 }

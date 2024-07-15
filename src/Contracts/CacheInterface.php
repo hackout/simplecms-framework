@@ -1,16 +1,19 @@
 <?php
 
-namespace SimpleCMS\Framework\Services;
+namespace SimpleCMS\Framework\Contracts;
 
 
-abstract class CacheAbstract extends BaseService
+/**
+ * @mixin \SimpleCMS\Framework\Services\BaseService
+ */
+interface CacheInterface
 {
 
     /**
      * @param array|null $array
      * @return string
      */
-    abstract function getCacheName(array|null $array = null): string;
+    protected function getCacheName(array|null $array = null): string;
 
     /**
      * 读取数据缓存
@@ -20,7 +23,7 @@ abstract class CacheAbstract extends BaseService
      * @param  callable $function
      * @return mixed
      */
-    abstract function getCacheData(array $array, callable $function): mixed;
+    protected function getCacheData(array $array, callable $function): mixed;
 
     /**
      * 清空缓存标记
@@ -28,7 +31,7 @@ abstract class CacheAbstract extends BaseService
      * @author Dennis Lui <hackout@vip.qq.com>
      * @return void
      */
-    abstract function clearCacheData();
+    protected function clearCacheData();
 
     /**
      * 清空缓存数据
@@ -36,11 +39,11 @@ abstract class CacheAbstract extends BaseService
      * @author Dennis Lui <hackout@vip.qq.com>
      * @return void
      */
-    abstract function clearCache();
+    public function clearCache();
 
     /**
      * @param  array  $array
      * @return string
      */
-    abstract function getCacheKey(array $array): string;
+    protected function getCacheKey(array $array): string;
 }

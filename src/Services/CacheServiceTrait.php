@@ -4,13 +4,16 @@ namespace SimpleCMS\Framework\Services;
 
 use Illuminate\Support\Facades\Cache;
 
-class CacheService extends CacheAbstract
+/**
+ * @use BaseService
+ */
+trait CacheServiceTrait
 {
     /**
      * @param array|null $array
      * @return string
      */
-    public function getCacheName(array|null $array = null): string
+    protected function getCacheName(array|null $array = null): string
     {
         $cacheName = $this->getTableName();
         if ($array) {
@@ -27,9 +30,9 @@ class CacheService extends CacheAbstract
      * @param  callable $function
      * @return mixed
      */
-    public function getCacheData(array $array, callable $function): mixed
+    protected function getCacheData(array $array, callable $function): mixed
     {
-        if (!(new Work\CanCache)->run($this->model))
+        if (!Work\CanCache::run($this->getClassName()))
             return $function();
         $cacheKeyName = $this->getCacheName($array);
         $cacheName = $this->getCacheName();
@@ -47,7 +50,7 @@ class CacheService extends CacheAbstract
      * @author Dennis Lui <hackout@vip.qq.com>
      * @return void
      */
-    public function clearCacheData()
+    protected function clearCacheData()
     {
         $cacheName = $this->getCacheName();
         $cache = Cache::get($cacheName, []);
@@ -68,7 +71,7 @@ class CacheService extends CacheAbstract
         $this->clearCacheData();
     }
 
-    public function getCacheKey(array $array): string
+    protected function getCacheKey(array $array): string
     {
         return md5(json_encode($array));
     }

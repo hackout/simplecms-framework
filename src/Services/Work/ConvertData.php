@@ -14,7 +14,7 @@ use Illuminate\Http\UploadedFile;
 class ConvertData
 {
 
-    public function run(mixed $model, array $data, array $mediaFields = []): array
+    public static function run(mixed $model, array $data, array $mediaFields = []): array
     {
         $sql = $data;
         $files = [];
@@ -22,9 +22,9 @@ class ConvertData
         if (app(HasMedia::class)->run($model)) {
             $sql = [];
             foreach ($data as $field => $value) {
-                if ($value && ($value instanceof UploadedFile || (is_string($field) && array_key_exists($field, $mediaFields)))) {
+                if ($value && ($value instanceof UploadedFile || (is_string($field) && isset($mediaFields[$field])))) {
                     $files[$field] = $value;
-                } elseif (is_array($value) && $value && (head($value) instanceof UploadedFile || array_key_exists($field, $mediaFields))) {
+                } elseif (is_array($value) && $value && (head($value) instanceof UploadedFile || isset($mediaFields[$field]))) {
                     $multipleFiles[$field] = $value;
                 } else {
                     $sql[$field] = $value;

@@ -3,8 +3,8 @@ namespace SimpleCMS\Framework\Services\Work;
 
 use function is_string;
 use Illuminate\Support\Str;
-
 use Illuminate\Http\UploadedFile;
+use SimpleCMS\Framework\Contracts\SimpleMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
@@ -21,8 +21,9 @@ class AddMedia
      * @param  string              $columnName
      * @return void
      */
-    public function run(mixed $model, UploadedFile|string $file, string $columnName): void
+    public static function run(mixed $model, UploadedFile|string $file, string $columnName): void
     {
+        if($model instanceof SimpleMedia)
         if ($model->getHasOneMedia() && in_array($columnName, $model->getHasOneMedia())) {
             $model->getMedia($columnName)->each(fn(Media $media) => $media->delete());
         }

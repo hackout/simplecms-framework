@@ -1,7 +1,6 @@
 <?php
 namespace SimpleCMS\Framework\Services\Set;
 
-use function is_array;
 use function is_string;
 use function is_callable;
 use Illuminate\Support\Arr;

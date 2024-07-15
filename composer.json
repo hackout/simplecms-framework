@@ -6,7 +6,7 @@
         "framework",
         "simplecms"
     ],
-    "version": "1.0.12",
+    "version": "1.0.13",
     "license": "MIT",
     "autoload": {
         "psr-4": {

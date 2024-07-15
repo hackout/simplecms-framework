@@ -1,6 +1,8 @@
 <?php
 namespace SimpleCMS\Framework\Services\Query;
 
+use function is_array;
+use function array_pad;
 use Illuminate\Database\Query\Builder;
 
 class In
@@ -15,11 +17,13 @@ class In
      * @param  array|string       $fields
      * @return array
      */
-    public static function builder(array|string $value, array|string $fields): array
+    public static function builder(...$params): array
     {
+        list($value, $fields) = array_pad($params, 2, null);
         $values = !is_array($value) ? [trim($value)] : $value;
-        if (!is_array($fields))
+        if (!is_array($fields)) {
             $fields = [$fields];
+        }
         return [
             function (Builder $query) use ($values, $fields) {
                 foreach ($fields as $index => $field) {

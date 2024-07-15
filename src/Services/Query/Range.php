@@ -1,6 +1,9 @@
 <?php
 namespace SimpleCMS\Framework\Services\Query;
 
+use function is_array;
+use function array_pad;
+use function array_slice;
 use Illuminate\Database\Query\Builder;
 
 class Range
@@ -16,17 +19,22 @@ class Range
      * @param  array|string       $value
      * @param  array|string       $fields
      * @param  bool               $isFull 
-     * @return array|bool
+     * @return array
      */
-    public static function builder(array|string $value, array|string $fields, bool $isFull = false): array|bool
+    public static function builder(...$params): array
     {
-        if (!is_array($value))
+        list($value, $fields, $isFull) = array_pad($params, 3, null);
+        if (!is_array($value)) {
             $value = [trim($value), null];
-        if (!is_array($fields))
+        }
+        if (!is_array($fields)) {
             $fields = [$fields];
+        }
+        $isFull = !empty($isFull);
+
         $values = array_slice($value, 0, 2);
         if (head($values) === null && last($values) === null) {
-            return false;
+            return [];
         }
         return [
             function (Builder $query) use ($values, $fields, $isFull) {
