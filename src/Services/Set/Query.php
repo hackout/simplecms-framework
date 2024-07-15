@@ -25,11 +25,13 @@ class Query
         $result = [];
         if (is_callable($value)) {
             $result[] = [$value];
-        }
+        }else
         if (is_string($value)) {
             $result[] = [new QueryRaw($value)];
-        }
-        if (is_array($value)) {
+        }else
+        if ($value instanceof Expression) {
+            $result[] = [$value];
+        }else {
             if (!Arr::isList($value)) {
                 foreach ($value as $key => $val) {
                     $result[] = [$key, '=', $val];
@@ -39,9 +41,6 @@ class Query
             } else {
                 $result = $value;
             }
-        }
-        if ($value instanceof Expression) {
-            $result[] = [$value];
         }
         return $result;
     }

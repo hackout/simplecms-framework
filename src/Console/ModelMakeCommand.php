@@ -63,7 +63,7 @@ class ModelMakeCommand extends GeneratorCommand
      */
     protected function createMigration()
     {
-        $table = Str::snake(Str::pluralStudly(class_basename($this->argument('name'))));
+        $table = Str::snake(Str::pluralStudly(class_basename((string) $this->argument('name'))));
 
         $this->call('create:migration', [
             'name' => "create_{$table}_table"
@@ -77,7 +77,7 @@ class ModelMakeCommand extends GeneratorCommand
      */
     protected function createEnums()
     {
-        $name = Str::studly(class_basename($this->argument('name')));
+        $name = Str::studly(class_basename((string) $this->argument('name')));
 
         $this->call('make:enum', [
             'name' => $name . 'Enum',
@@ -91,7 +91,7 @@ class ModelMakeCommand extends GeneratorCommand
      */
     protected function createSeeder()
     {
-        $seeder = Str::studly(class_basename($this->argument('name')));
+        $seeder = Str::studly(class_basename((string) $this->argument('name')));
         $modelName = $this->qualifyClass($this->getNameInput());
 
         $this->call('create:seeder', [
@@ -107,7 +107,7 @@ class ModelMakeCommand extends GeneratorCommand
      */
     protected function createBackendRoute()
     {
-        $route = Str::studly(class_basename($this->argument('name')));
+        $route = Str::studly(class_basename((string) $this->argument('name')));
 
         $this->call('create:route', array_filter([
             'name' => "{$route}",
@@ -121,7 +121,7 @@ class ModelMakeCommand extends GeneratorCommand
      */
     protected function createFrontendRoute()
     {
-        $route = Str::studly(class_basename($this->argument('name')));
+        $route = Str::studly(class_basename((string) $this->argument('name')));
 
         $this->call('create:route', array_filter([
             'name' => "{$route}",
@@ -135,7 +135,7 @@ class ModelMakeCommand extends GeneratorCommand
      */
     protected function createBackendController()
     {
-        $controller = Str::studly(class_basename($this->argument('name')));
+        $controller = Str::studly(class_basename((string) $this->argument('name')));
 
         $modelName = $this->qualifyClass($this->getNameInput());
 
@@ -153,7 +153,7 @@ class ModelMakeCommand extends GeneratorCommand
      */
     protected function createFrontendController()
     {
-        $controller = Str::studly(class_basename($this->argument('name')));
+        $controller = Str::studly(class_basename((string) $this->argument('name')));
 
         $modelName = $this->qualifyClass($this->getNameInput());
 
@@ -170,7 +170,7 @@ class ModelMakeCommand extends GeneratorCommand
      */
     protected function createBackendService()
     {
-        $service = Str::studly(class_basename($this->argument('name')));
+        $service = Str::studly(class_basename((string) $this->argument('name')));
 
         $modelName = $this->qualifyClass($this->getNameInput());
 
@@ -187,7 +187,7 @@ class ModelMakeCommand extends GeneratorCommand
      */
     protected function createFrontendService()
     {
-        $service = Str::studly(class_basename($this->argument('name')));
+        $service = Str::studly(class_basename((string) $this->argument('name')));
 
         $modelName = $this->qualifyClass($this->getNameInput());
 
@@ -204,7 +204,7 @@ class ModelMakeCommand extends GeneratorCommand
      */
     protected function createPrivateService()
     {
-        $service = Str::studly(class_basename($this->argument('name')));
+        $service = Str::studly(class_basename((string) $this->argument('name')));
 
         $modelName = $this->qualifyClass($this->getNameInput());
 

@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->boolean("is_show")->default(true)->comment("是否显示");
             $table->integer("sort_order")->default(0)->comment("排序");
             $table->integer("parent_id")->nullable()->comment("父级ID");
-            $table->comment = "菜单信息表";
+            $table->comment("菜单信息表");
         });
     }
 

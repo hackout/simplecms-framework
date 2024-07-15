@@ -19,14 +19,14 @@ return new class extends Migration {
             $table->json("extra")->nullable()->comment("附加角色");
             $table->integer("sort_order")->default(0)->comment("排序");
             $table->timestamps();
-            $table->comment = "角色信息表";
+            $table->comment("角色信息表");
         });
         Schema::create('roles_more', function (Blueprint $table) {
             $table->integer('role_id')->comment("角色ID");
             $table->string("model_id")->comment("关联ID");
             $table->string("model_type")->nullable()->comment("关联类");
             $table->primary(['role_id', 'model_id'], 'role_more');
-            $table->comment = "角色关联表";
+            $table->comment("角色关联表");
         });
     }
 

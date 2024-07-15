@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->string("route_name")->nullable()->comment("路由别名");
             $table->boolean('status')->default(true)->comment("请求状态");
             $table->timestamps();
-            $table->comment = "请求日志表";
+            $table->comment("请求日志表");
         });
     }
 

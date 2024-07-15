@@ -169,8 +169,8 @@ class ControllerMakeCommand extends GeneratorCommand
      */
     protected function getPath($name)
     {
-        $name = class_basename($this->argument('name'));
-        $type = Str::studly(class_basename($this->option('type')));
+        $name = class_basename($name);
+        $type = Str::studly(class_basename((string) $this->option('type')));
         return $this->laravel->basePath() . '/App/Http/Controllers/' . $type . '/' . $name . '.php';
     }
 
