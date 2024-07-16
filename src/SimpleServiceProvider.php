@@ -2,17 +2,20 @@
 
 namespace SimpleCMS\Framework;
 
+use function mkdir;
+use function is_dir;
+use function is_writable;
 use Illuminate\Support\Str;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use SimpleCMS\Framework\Console\ModelMakeCommand;
 use SimpleCMS\Framework\Console\RouteMakeCommand;
-use SimpleCMS\Framework\Exceptions\SimpleException;
 use SimpleCMS\Framework\Packages\Captcha\Captcha;
 use SimpleCMS\Framework\Console\SeederMakeCommand;
 use SimpleCMS\Framework\Validation\Rule\PhoneRule;
 use SimpleCMS\Framework\Console\MigrateMakeCommand;
 use SimpleCMS\Framework\Console\ServiceMakeCommand;
+use SimpleCMS\Framework\Exceptions\SimpleException;
 use SimpleCMS\Framework\Validation\Rule\IDCardRule;
 use SimpleCMS\Framework\Validation\Rule\MobileRule;
 use SimpleCMS\Framework\Validation\Rule\ChineseRule;
@@ -259,37 +262,34 @@ class SimpleServiceProvider extends ServiceProvider
      */
     protected function bootDefaultDisk(): void
     {
-        try {
-            if (!is_dir(app_path('Services'))) {
-                mkdir(app_path('Services'), 0755);
+        $pathList = [
+            app_path() => [
+                'Services',
+                'Services/Backend',
+                'Services/Frontend',
+                'Services/Private'
+            ],
+            app_path('Http/Controllers') => [
+                'Backend',
+                'Frontend'
+            ],
+            base_path('routes') => [
+                'backend',
+                'frontend',
+                'console'
+            ]
+        ];
+        foreach ($pathList as $dirName => $dirs) {
+            if (is_writable($dirName)) {
+                foreach ($dirs as $dir) {
+                    $path = $dirName . '/' . $dir;
+                    if (!is_dir($path)) {
+                        mkdir($path, 0755);
+                    }
+                }
+            } else {
+                logger("No operation permission for $dirName directory");
             }
-            if (!is_dir(app_path('Http/Controllers/Backend'))) {
-                mkdir(app_path('Http/Controllers/Backend'), 0755);
-            }
-            if (!is_dir(app_path('Http/Controllers/Frontend'))) {
-                mkdir(app_path('Http/Controllers/Frontend'), 0755);
-            }
-            if (!is_dir(app_path('Services/Backend'))) {
-                mkdir(app_path('Services/Backend'), 0755);
-            }
-            if (!is_dir(app_path('Services/Frontend'))) {
-                mkdir(app_path('Services/Frontend'), 0755);
-            }
-            if (!is_dir(app_path('Services/Private'))) {
-                mkdir(app_path('Services/Private'), 0755);
-            }
-            if (!is_dir(base_path('routes/backend'))) {
-                mkdir(base_path('routes/backend'), 0755);
-            }
-            if (!is_dir(base_path('routes/frontend'))) {
-                mkdir(base_path('routes/frontend'), 0755);
-            }
-
-            if (!is_dir(base_path('routes/console'))) {
-                mkdir(base_path('routes/console'), 0755);
-            }
-        } catch (\Throwable $th) {
-            throw new SimpleException("No operation permission for this directory");
         }
     }
 

@@ -3,13 +3,14 @@ namespace SimpleCMS\Framework\Traits;
 
 
 use DateTimeInterface;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\File;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use SimpleCMS\Framework\Contracts\SimpleMedia;
 use Spatie\MediaLibrary\Conversions\Conversion;
 use Spatie\MediaLibrary\MediaCollections\FileAdder;
 use Spatie\MediaLibrary\Conversions\ImageGenerators;
@@ -57,13 +58,13 @@ trait MediaAttributeTrait
 
     public static function bootMediaAttributeTrait()
     {
-        static::deleting(function (HasMedia $model) {
+        static::deleting(function (SimpleMedia $model) {
             if ($model->shouldDeletePreservingMedia()) {
                 return;
             }
 
             if (in_array(SoftDeletes::class, class_uses_recursive($model))) {
-                if (!$model->forceDeleting) {
+                if (!$model->isForceDeleting()) {
                     return;
                 }
             }
@@ -421,7 +422,7 @@ trait MediaAttributeTrait
         }
     }
 
-    public function clearMediaCollection(string $collectionName = 'default'): HasMedia
+    public function clearMediaCollection(string $collectionName = 'default'): SimpleMedia
     {
         $this
             ->getMedia($collectionName)
@@ -439,12 +440,13 @@ trait MediaAttributeTrait
     public function clearMediaCollectionExcept(
         string $collectionName = 'default',
         array|Collection|Media $excludedMedia = []
-    ): HasMedia {
+    ): SimpleMedia {
         if ($excludedMedia instanceof Media) {
             $excludedMedia = collect()->push($excludedMedia);
         }
-
-        $excludedMedia = collect($excludedMedia);
+        if (is_array($excludedMedia)) {
+            $excludedMedia = collect($excludedMedia);
+        }
 
         if ($excludedMedia->isEmpty()) {
             return $this->clearMediaCollection($collectionName);

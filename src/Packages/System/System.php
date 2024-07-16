@@ -1,6 +1,7 @@
 <?php
 namespace SimpleCMS\Framework\Packages\System;
 
+use function phpversion;
 use Illuminate\Support\Number;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
@@ -23,39 +24,63 @@ class System
 
     protected function getServiceInfo(): Collection
     {
-        $serverInfo = [];
+        $serverInfo = collect();
         // 获取服务器信息
-        $serverInfo['server'] = collect([
-            'name' => Request::server('SERVER_NAME'),
-            'software' => Request::server('SERVER_SOFTWARE'),
-            'ip' => Request::server('SERVER_ADDR'),
-            'port' => Request::server('SERVER_PORT'),
-        ]);
+        $server = collect();
+        $server->put('name', (string) Request::server('SERVER_NAME'));
+        $server->put('software', (string) Request::server('SERVER_SOFTWARE'));
+        $server->put('ip', (string) Request::server('SERVER_ADDR'));
+        $server->put('port', (string) Request::server('SERVER_PORT'));
+        $serverInfo->put('server', $server);
 
         // 获取 PHP 版本信息
-        $serverInfo['php'] = phpversion();
+        $serverInfo->put('php', phpversion());
 
         // 获取数据库信息（需要先配置数据库连接）
         $dbInfo = DB::connection()->getPdo()->getAttribute(\PDO::ATTR_SERVER_VERSION);
-        ;
-        $serverInfo['database'] = $dbInfo;
+
+        $serverInfo->put('database', $dbInfo);
 
         // 获取服务器的 CPU 信息
-        if (!$cpuInfo = shell_exec('cat /proc/cpuinfo|grep "model name" && cat /proc/cpuinfo |grep "cache size"')) {
-            $cpuInfo = [
-                'name' => 'Unknown',
-                'core' => 'Unknown',
-                'size' => 'Unknown',
-                'used' => 'Unknown'
-            ];
-        } else {
-            $cpu = explode(PHP_EOL, $cpuInfo);
-            $cpuInfo = [
-                'name' => null,
-                'core' => 0,
-                'size' => 0,
-                'used' => $this->getCpuUsagePercentage()
-            ];
+        $serverInfo->put('cpu', $this->getCpuInfo());
+
+        // 获取服务器的系统版本信息
+        $systemVersion = php_uname('a');
+        $serverInfo->put('system', $systemVersion);
+
+        $serverInfo->put('framework', $this->getFramework());
+        $serverInfo->put('laravel', app()->/** @scrutinizer ignore-call */ version());
+        return $serverInfo;
+    }
+
+    private function getFramework(): array
+    {
+        $framework = [
+            'name' => 'Unknown',
+            'version' => 'Unknown',
+            'authors' => 'DennisLui<Cdiantong.Com>'
+        ];
+        $data = json_decode(file_get_contents(__DIR__ . '/../../../composer.json'), true);
+        if (isset($data['name']))
+            $framework['name'] = $data['name'];
+        if (isset($data['version']))
+            $framework['version'] = $data['version'];
+        if (isset($data['authors']))
+            $framework['authors'] = $data['authors'];
+        return $framework;
+    }
+
+    private function getCpuInfo(): array
+    {
+        $cpuInfo = [
+            'name' => 'Unknown',
+            'core' => 0,
+            'size' => 0,
+            'used' => 0
+        ];
+        if ($cpuCmd = shell_exec('cat /proc/cpuinfo|grep "model name" && cat /proc/cpuinfo |grep "cache size"')) {
+            $cpu = explode(PHP_EOL, $cpuCmd);
+            $cpuInfo['used'] = $this->getCpuUsagePercentage();
             foreach ($cpu as $rs) {
                 if (strpos($rs, 'model name') === 0) {
                     if (!$cpuInfo['name']) {
@@ -69,19 +94,7 @@ class System
             }
             $cpuInfo['size'] = Number::fileSize($cpuInfo['size'] * 1024 * 1024);
         }
-        $serverInfo['cpu'] = $cpuInfo;
-
-        // 获取服务器的系统版本信息
-        $systemVersion = php_uname('a');
-        $serverInfo['system'] = $systemVersion;
-
-        $serverInfo['framework'] = collect(json_decode(file_get_contents(__DIR__ . '/../../../composer.json'), true))->only([
-            'name',
-            'version',
-            'authors'
-        ]);
-        $serverInfo['laravel'] = app()->version();
-        return collect($serverInfo);
+        return $cpuInfo;
     }
 
 

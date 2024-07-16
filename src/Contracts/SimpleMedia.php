@@ -16,6 +16,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * @property bool $registerMediaConversionsUsingModelInstance
  * @property ?\Spatie\MediaLibrary\MediaCollections\MediaCollection $mediaCollections
+ * 
+ * @use \Illuminate\Database\Eloquent\Model
+ * @abstract \Illuminate\Database\Eloquent\Model
  */
 interface SimpleMedia
 {

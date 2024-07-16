@@ -2,9 +2,9 @@
 
 namespace SimpleCMS\Framework\Models;
 
-use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use SimpleCMS\Framework\Contracts\SimpleMedia;
 use SimpleCMS\Framework\Traits\SimpleTreeTrait;
 use SimpleCMS\Framework\Traits\MediaAttributeTrait;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -29,7 +29,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property-read ?self $parent 上级
  */
 
-class Menu extends Model implements HasMedia
+class Menu extends Model implements SimpleMedia
 {
     use SimpleTreeTrait, MediaAttributeTrait;
     public $timestamps = false;

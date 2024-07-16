@@ -2,7 +2,6 @@
 namespace SimpleCMS\Framework\Services\Set;
 
 use function is_array;
-use function is_string;
 use Illuminate\Contracts\Database\Query\Expression;
 
 class Select
@@ -20,13 +19,11 @@ class Select
     private static function valueToArray(array|Expression|string $value = null): array
     {
         $result = [];
-        if (is_string($value)) {
-            $result[] = $value;
-        }
         if (is_array($value)) {
             $result = $value;
-        }
-        if ($value instanceof Expression) {
+        } elseif ($value instanceof Expression) {
+            $result[] = $value;
+        } else {
             $result[] = $value;
         }
         return $result;

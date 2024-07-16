@@ -25,7 +25,7 @@ trait ExportTemplateTrait
      */
     public function export(array $data = []): string
     {
-        if (method_exists($this, 'getList') && $data) {
+        if (method_exists($this, 'getList') && !empty($data)) {
             $resultData = $this->getList($data)['items'];
         } else {
             $resultData = parent::getAll();

@@ -2,9 +2,9 @@
 
 namespace SimpleCMS\Framework\Models;
 
-use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use SimpleCMS\Framework\Contracts\SimpleMedia;
 use SimpleCMS\Framework\Traits\MediaAttributeTrait;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -23,7 +23,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property-read ?string $file 附件
  * @property-read Collection<Media> $media 附件
  */
-class SystemConfig extends Model implements HasMedia
+class SystemConfig extends Model implements SimpleMedia
 {
     use MediaAttributeTrait;
 
