@@ -21,9 +21,8 @@ class AddMedia
      * @param  string              $columnName
      * @return void
      */
-    public static function run(mixed $model, UploadedFile|string $file, string $columnName): void
+    public static function run(SimpleMedia $model, UploadedFile|string $file, string $columnName): void
     {
-        if($model instanceof SimpleMedia)
         if ($model->getHasOneMedia() && in_array($columnName, $model->getHasOneMedia())) {
             $model->getMedia($columnName)->each(fn(Media $media) => $media->delete());
         }

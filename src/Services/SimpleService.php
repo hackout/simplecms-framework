@@ -2,8 +2,6 @@
 
 namespace SimpleCMS\Framework\Services;
 
-use function is_array;
-use function array_pad;
 use function is_string;
 use function is_numeric;
 use Illuminate\Http\UploadedFile;
@@ -61,23 +59,7 @@ class SimpleService extends BaseService implements CacheInterface, BuilderInterf
             $sql = $otherConditions ?: [];
             $newConditions = $this->convertCondition($data, $conditions);
             $newConditions->each(function ($value, $key) use ($data, &$sql) {
-                $values = is_array($value) ? $value : [$value];
-                list($action, $fields, $extra) = array_pad($values, 3, null);
-                if (!$fields)
-                    $fields = $key;
-                $queryModel = match ($action) {
-                    'search' => Query\Search::class,
-                    'datetime_range' => Query\DateTimeRange::class,
-                    'range' => Query\Range::class,
-                    'datetime' => Query\DateTime::class,
-                    'date' => Query\Date::class,
-                    'year' => Query\Year::class,
-                    'month' => Query\Month::class,
-                    'day' => Query\Day::class,
-                    'in' => Query\In::class,
-                    'like' => Query\Like::class,
-                    default => Query\Eq::class,
-                };
+                list($queryModel, $fields, $extra) = Work\ConvertQueryParam::run($value, $key);
                 if ($_sql = $queryModel::builder($data[$key], $fields, $extra)) {
                     $sql[] = $_sql;
                 }
@@ -277,28 +259,28 @@ class SimpleService extends BaseService implements CacheInterface, BuilderInterf
      */
     public function updateV2(array $where, array $data)
     {
-        DB::beginTransaction();
+        $model = $this->getModel();
         $result = false;
+        if (!$model) {
+            return $result;
+        }
+        DB::beginTransaction();
         try {
-            $model = $this->getModel();
-            if ($model) {
-                $primaryKeyList = $model->lockForUpdate()->where($where)->select($this->primaryKey)->get()->pluck($this->primaryKey)->all();
-                if ($primaryKeyList) {
-                    foreach ($primaryKeyList as $primaryKey) {
-                        if ($item = $model->find($primaryKey)) {
-                            $item->update($data);
-                        }
-                    }
-                }
+            $primaryKeyList = $model->lockForUpdate()->where($where)->pluck($this->primaryKey)->all();
+            if (!empty($primaryKeyList)) {
+                $model->whereIn($this->primaryKey, $primaryKeyList)->update($data);
                 $result = true;
             }
+            DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            logger($e->getMessage());
         }
-        DB::commit();
+
         if ($result) {
             $this->clearCache();
         }
+
         return $result;
     }
 

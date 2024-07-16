@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Storage;
  * 数据导出快捷方式
  *
  * @author Dennis Lui <hackout@vip.qq.com>
+ * 
+ * @use \SimpleCMS\Framework\Services\SimpleService
+ * @abstract \SimpleCMS\Framework\Services\SimpleService
  */
 trait ExportTemplateTrait
 {

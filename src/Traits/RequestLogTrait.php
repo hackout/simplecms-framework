@@ -15,6 +15,10 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  *   use \SimpleCMS\Framework\Traits\RequestLogTrait;
  * 
  * @property-read Collection<RequestLog> $request_logs 请求日志
+ * 
+ * @use \Illuminate\Database\Eloquent\Model
+ * @abstract \Illuminate\Database\Eloquent\Model
+ *
  */
 trait RequestLogTrait
 {

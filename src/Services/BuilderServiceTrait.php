@@ -11,6 +11,7 @@ use Illuminate\Database\Query\Builder as DatabaseBuilder;
 
 /**
  * @use BaseService
+ * @abstract BaseService
  */
 trait BuilderServiceTrait
 {
@@ -26,7 +27,7 @@ trait BuilderServiceTrait
      */
     public function getBuilder(?string $prop = null, ?string $order = null)
     {
-        return $this->builder();
+        return $this->builder($prop, $order);
     }
 
     private function builderQuery(): void
@@ -63,7 +64,7 @@ trait BuilderServiceTrait
     private function builderSelect(): void
     {
         if ($select = $this->getSelect()) {
-            $this->builder->selectRaw(Arr::join(',', $select));
+            $this->builder->selectRaw(Arr::join($select, ','));
         }
     }
 

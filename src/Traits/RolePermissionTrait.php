@@ -13,6 +13,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * 你可以定义超管的字段:
  *
  *   const SUPER_ID = 'my_is_super';
+ * 
+ * @use \Illuminate\Database\Eloquent\Model
+ * @abstract \Illuminate\Database\Eloquent\Model
+ *
  */
 trait RolePermissionTrait
 {

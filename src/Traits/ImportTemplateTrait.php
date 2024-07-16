@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  * 增加导出导入及模板
  *
  * @author Dennis Lui <hackout@vip.qq.com>
+ * 
+ * @use \SimpleCMS\Framework\Services\SimpleService
+ * @abstract \SimpleCMS\Framework\Services\SimpleService
  */
 trait ImportTemplateTrait
 {

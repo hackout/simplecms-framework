@@ -37,6 +37,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *   const PARENT_ID = 'my_parent_column';
  * @property-read mixed $parent 上级
  * @property-read mixed $children 下级
+ * 
+ * @use \Illuminate\Database\Eloquent\Model
+ * @abstract \Illuminate\Database\Eloquent\Model
+ *
  */
 trait SimpleTreeTrait
 {

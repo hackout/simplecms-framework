@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
  * 变更自增ID为UUID
  *
  * @author Dennis Lui <hackout@vip.qq.com>
+ * 
+ *
  */
 trait PrimaryKeyUuidTrait
 {

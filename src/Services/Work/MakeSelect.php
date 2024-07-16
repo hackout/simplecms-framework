@@ -18,7 +18,7 @@ class MakeSelect
      */
     public function run(mixed $model, $select = []): mixed
     {
-        $selectList = new Collection($select ? $select : $model->getFillable());
+        $selectList = new Collection($select ? $select : (array) $model->getFillable());
         $casts = $model->getCasts();
         $primaryKey = $model->getKeyName();
         $defaultSelect = [

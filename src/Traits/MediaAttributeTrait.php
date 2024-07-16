@@ -37,8 +37,9 @@ use Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection as M
  * 模块class中引用:
  *
  *   use \SimpleCMS\Framework\Traits\MediaAttributeTrait;
- *
- * @see Spatie\MediaLibrary\InteractsWithMedia
+ * 
+ * @use \Illuminate\Database\Eloquent\Model
+ * @abstract \Illuminate\Database\Eloquent\Model
  *
  */
 trait MediaAttributeTrait

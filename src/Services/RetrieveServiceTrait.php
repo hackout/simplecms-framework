@@ -4,7 +4,7 @@ namespace SimpleCMS\Framework\Services;
 
 /**
  * @use BaseService
- * @use BuilderInterface
+ * @abstract BaseService
  */
 trait RetrieveServiceTrait
 {

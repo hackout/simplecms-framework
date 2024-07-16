@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Cache;
 
 /**
  * @use BaseService
+ * @abstract BaseService
  */
 trait CacheServiceTrait
 {
