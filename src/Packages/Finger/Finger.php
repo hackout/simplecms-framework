@@ -25,7 +25,7 @@ class Finger
         if (!$finger = request()->header('X-Device-Finger')) {
             $finger = request()->header('Device-Finger', static::makeFinger());
         }
-        if (!static::checkFingerValid($finger))
+        if (!static::checkFingerValid((string) $finger))
             return static::makeFinger();
         return is_string($finger) ? $finger : static::makeFinger();
     }

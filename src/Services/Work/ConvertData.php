@@ -22,7 +22,7 @@ class ConvertData
         if (app(HasMedia::class)->run($model)) {
             $sql = [];
             foreach ($data as $field => $value) {
-                if ($value && ($value instanceof UploadedFile || (is_string($field) && isset($mediaFields[$field])))) {
+                if (!empty($value) && ($value instanceof UploadedFile || (is_string($field) && isset($mediaFields[$field])))) {
                     $files[$field] = $value;
                 } elseif (is_array($value) && $value && (head($value) instanceof UploadedFile || isset($mediaFields[$field]))) {
                     $multipleFiles[$field] = $value;

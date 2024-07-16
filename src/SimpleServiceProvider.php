@@ -2,6 +2,7 @@
 
 namespace SimpleCMS\Framework;
 
+use Illuminate\Support\Facades\Storage;
 use function mkdir;
 use function is_dir;
 use function is_writable;
@@ -15,7 +16,6 @@ use SimpleCMS\Framework\Console\SeederMakeCommand;
 use SimpleCMS\Framework\Validation\Rule\PhoneRule;
 use SimpleCMS\Framework\Console\MigrateMakeCommand;
 use SimpleCMS\Framework\Console\ServiceMakeCommand;
-use SimpleCMS\Framework\Exceptions\SimpleException;
 use SimpleCMS\Framework\Validation\Rule\IDCardRule;
 use SimpleCMS\Framework\Validation\Rule\MobileRule;
 use SimpleCMS\Framework\Validation\Rule\ChineseRule;
@@ -277,6 +277,9 @@ class SimpleServiceProvider extends ServiceProvider
                 'backend',
                 'frontend',
                 'console'
+            ],
+            Storage::path('public') => [
+                'exports'
             ]
         ];
         foreach ($pathList as $dirName => $dirs) {

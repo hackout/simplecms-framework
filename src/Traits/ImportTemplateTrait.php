@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  * 
  * @use \SimpleCMS\Framework\Services\SimpleService
  * @abstract \SimpleCMS\Framework\Services\SimpleService
+ * 
+ * @static class-string IMPORT_NAME
  */
 trait ImportTemplateTrait
 {

@@ -9,8 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * 系统环境信息
- *
+ * 
  * @author Dennis Lui <hackout@vip.qq.com>
+ * 
+ * @template TKey
+ * @template TValue
  */
 class System
 {
@@ -27,29 +30,29 @@ class System
         $serverInfo = collect();
         // 获取服务器信息
         $server = collect();
-        $server->put('name', (string) Request::server('SERVER_NAME'));
-        $server->put('software', (string) Request::server('SERVER_SOFTWARE'));
-        $server->put('ip', (string) Request::server('SERVER_ADDR'));
-        $server->put('port', (string) Request::server('SERVER_PORT'));
-        $serverInfo->put('server', $server);
+        $server->put(toKey('name'), toValue((string) Request::server('SERVER_NAME')));
+        $server->put(toKey('software'), toValue((string) Request::server('SERVER_SOFTWARE')));
+        $server->put(toKey('ip'), toValue((string) Request::server('SERVER_ADDR')));
+        $server->put(toKey('port'), toValue((string) Request::server('SERVER_PORT')));
+        $serverInfo->put(toKey('server'), toValue($server));
 
         // 获取 PHP 版本信息
-        $serverInfo->put('php', phpversion());
+        $serverInfo->put(toKey('php'), toValue(phpversion()));
 
         // 获取数据库信息（需要先配置数据库连接）
         $dbInfo = DB::connection()->getPdo()->getAttribute(\PDO::ATTR_SERVER_VERSION);
 
-        $serverInfo->put('database', $dbInfo);
+        $serverInfo->put(toKey('database'), toValue($dbInfo));
 
         // 获取服务器的 CPU 信息
-        $serverInfo->put('cpu', $this->getCpuInfo());
+        $serverInfo->put(toKey('cpu'), toValue($this->getCpuInfo()));
 
         // 获取服务器的系统版本信息
         $systemVersion = php_uname('a');
-        $serverInfo->put('system', $systemVersion);
+        $serverInfo->put(toKey('system'), toValue($systemVersion));
 
-        $serverInfo->put('framework', $this->getFramework());
-        $serverInfo->put('laravel', app()->/** @scrutinizer ignore-call */ version());
+        $serverInfo->put(toKey('framework'), toValue($this->getFramework()));
+        $serverInfo->put(toKey('laravel'), toValue(app()->/** @scrutinizer ignore-call */ version()));
         return $serverInfo;
     }
 
@@ -133,4 +136,5 @@ class System
         $cpuCount = shell_exec("cat /proc/cpuinfo | grep processor | wc -l");
         return ($load / $cpuCount) * 100;
     }
+
 }

@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * 
  * @use \Illuminate\Database\Eloquent\Model
  * @abstract \Illuminate\Database\Eloquent\Model
+ * 
+ * @static string SUPER_ID
  *
  */
 trait RolePermissionTrait
@@ -48,7 +50,7 @@ trait RolePermissionTrait
         $roleList = explode(',', $role);
         if (in_array('*', $roleList))
             return true;
-        if (!$roleList)
+        if (empty($roleList))
             return false;
         foreach ($roleList as $_role) {
             if (in_array($_role, $allRoles))

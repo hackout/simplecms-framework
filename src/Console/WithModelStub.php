@@ -5,6 +5,10 @@ namespace SimpleCMS\Framework\Console;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
+/**
+ * @use \Illuminate\Console\GeneratorCommand
+ * @abstract \Illuminate\Console\GeneratorCommand
+ */
 trait WithModelStub
 {
     /**

@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
  * 
  * @use \SimpleCMS\Framework\Services\SimpleService
  * @abstract \SimpleCMS\Framework\Services\SimpleService
+ * 
+ * @static class-string EXPORT_NAME
  */
 trait ExportTemplateTrait
 {
@@ -29,10 +31,6 @@ trait ExportTemplateTrait
             $resultData = $this->getList($data)['items'];
         } else {
             $resultData = parent::getAll();
-        }
-        $path = Storage::path('public/exports/');
-        if (!is_dir($path)) {
-            @mkdir($path);
         }
         $fileName = 'exports/' . Str::uuid() . '.xlsx';
         $exportName = $this->getExportClassName();

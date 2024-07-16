@@ -2,13 +2,13 @@
 
 namespace SimpleCMS\Framework\Services;
 
-use function is_string;
-use function is_numeric;
+use function is_array;
+use function is_callable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Traits\Macroable;
 use Illuminate\Database\Eloquent\Collection;
-use SimpleCMS\Framework\Traits\ServiceMacroable;
 use SimpleCMS\Framework\Contracts\CacheInterface;
 use SimpleCMS\Framework\Contracts\BuilderInterface;
 use SimpleCMS\Framework\Exceptions\SimpleException;
@@ -21,7 +21,7 @@ use SimpleCMS\Framework\Contracts\RetrieveInterface;
 
 class SimpleService extends BaseService implements CacheInterface, BuilderInterface, RetrieveInterface
 {
-    use ServiceMacroable, CacheServiceTrait, BuilderServiceTrait, RetrieveServiceTrait;
+    use Macroable, CacheServiceTrait, BuilderServiceTrait, RetrieveServiceTrait;
 
     /**
      * 上传文件/图片/视频
@@ -175,8 +175,8 @@ class SimpleService extends BaseService implements CacheInterface, BuilderInterf
      */
     protected function updateMedia(array $files, array $multipleFiles, array $mediaFields): void
     {
-        if ($files) {
-            if (!$mediaFields) {
+        if (!empty($files)) {
+            if (empty($mediaFields)) {
                 $mediaColumn = $this->getMediaColumn() ?? head(array_keys($files));
                 $this->addMedia(head($files), $mediaColumn);
             } else {
@@ -187,9 +187,9 @@ class SimpleService extends BaseService implements CacheInterface, BuilderInterf
                 }
             }
         }
-        if ($multipleFiles) {
+        if (!empty($multipleFiles)) {
 
-            if (!$mediaFields) {
+            if (empty($mediaFields)) {
                 $mediaColumn = $this->getMediaColumn() ?? head(array_keys($multipleFiles));
                 $this->addMultipleMedia(head($multipleFiles), $mediaColumn);
             } else {
@@ -372,10 +372,10 @@ class SimpleService extends BaseService implements CacheInterface, BuilderInterf
         $result = false;
         if (!$model)
             return $result;
-        if (!is_numeric($id) && !is_string($id)) {
-            return $model->where($id)->update(["{$field}" => $value]);
+        if (is_array($id) || is_callable($id)) {
+            return (bool) $model->where($id)->update(["{$field}" => $value]);
         }
-        $result = $model->where('id', $id)->update(["{$field}" => $value]);
+        $result = (bool) $model->where('id', $id)->update(["{$field}" => $value]);
         if ($result) {
             $this->clearCache();
         }

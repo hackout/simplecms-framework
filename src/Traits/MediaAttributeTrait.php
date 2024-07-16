@@ -3,7 +3,6 @@ namespace SimpleCMS\Framework\Traits;
 
 
 use DateTimeInterface;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\File;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -83,11 +82,13 @@ trait MediaAttributeTrait
      */
     public function addMedia(string|UploadedFile $file): FileAdder
     {
+        $this->checkSelfIsModel();
         return app(FileAdderFactory::class)->create($this, $file);
     }
 
     public function addMediaFromRequest(string $key): FileAdder
     {
+        $this->checkSelfIsModel();
         return app(FileAdderFactory::class)->createFromRequest($this, $key);
     }
 
@@ -96,6 +97,7 @@ trait MediaAttributeTrait
      */
     public function addMediaFromDisk(string $key, ?string $disk = null): FileAdder
     {
+        $this->checkSelfIsModel();
         return app(FileAdderFactory::class)->createFromDisk($this, $key, $disk ?: config('filesystems.default'));
     }
 
@@ -108,6 +110,7 @@ trait MediaAttributeTrait
      */
     public function addMultipleMediaFromRequest(array $keys): Collection
     {
+        $this->checkSelfIsModel();
         return app(FileAdderFactory::class)->createMultipleFromRequest($this, $keys);
     }
 
@@ -118,6 +121,7 @@ trait MediaAttributeTrait
      */
     public function addAllMediaFromRequest(): Collection
     {
+        $this->checkSelfIsModel();
         return app(FileAdderFactory::class)->createAllFromRequest($this);
     }
 
@@ -130,6 +134,7 @@ trait MediaAttributeTrait
      */
     public function addMediaFromUrl(string $url, array|string ...$allowedMimeTypes): FileAdder
     {
+        $this->checkSelfIsModel();
         if (!Str::startsWith($url, ['http://', 'https://'])) {
             throw InvalidUrl::doesNotStartWithProtocol($url);
         }
@@ -152,7 +157,7 @@ trait MediaAttributeTrait
 
         return app(FileAdderFactory::class)
             ->create($this, $temporaryFile)
-            ->usingName(pathinfo($filename, PATHINFO_FILENAME))
+            ->usingName((string) pathinfo($filename, PATHINFO_FILENAME))
             ->usingFileName($filename);
     }
 
@@ -163,6 +168,7 @@ trait MediaAttributeTrait
      */
     public function addMediaFromString(string $text): FileAdder
     {
+        $this->checkSelfIsModel();
         $tmpFile = tempnam(sys_get_temp_dir(), 'media-library');
 
         file_put_contents($tmpFile, $text);
@@ -183,6 +189,7 @@ trait MediaAttributeTrait
      */
     public function addMediaFromBase64(string $base64data, array|string ...$allowedMimeTypes): FileAdder
     {
+        $this->checkSelfIsModel();
         // strip out data uri scheme information (see RFC 2397)
         if (str_contains($base64data, ';base64')) {
             [$_, $base64data] = explode(';', $base64data);
@@ -217,6 +224,7 @@ trait MediaAttributeTrait
      */
     public function addMediaFromStream($stream): FileAdder
     {
+        $this->checkSelfIsModel();
         $tmpFile = tempnam(sys_get_temp_dir(), 'media-library');
 
         file_put_contents($tmpFile, $stream);
@@ -261,7 +269,7 @@ trait MediaAttributeTrait
 
     public function getMediaModel(): string
     {
-        return config('media-library.media_model');
+        return config('media-library.media_model', Media::class);
     }
 
     public function getFirstMedia(string $collectionName = 'default', $filters = []): ?Media
@@ -317,13 +325,16 @@ trait MediaAttributeTrait
 
     public function getRegisteredMediaCollections(): Collection
     {
-        return collect($this->mediaCollections);
+        $result = new Collection();
+        foreach ($this->mediaCollections as $key => $value) {
+            $result->put(toKey($key), toValue($value));
+        }
+        return $result;
     }
 
     public function getMediaCollection(string $collectionName = 'default'): ?MediaCollection
     {
-        return collect($this->mediaCollections)
-            ->first(fn(MediaCollection $collection) => $collection->name === $collectionName);
+        return $this->getRegisteredMediaCollections()->first(fn(MediaCollection $collection) => $collection->name === $collectionName);
     }
 
     public function getFallbackMediaUrl(string $collectionName = 'default', string $conversionName = ''): string
@@ -378,31 +389,34 @@ trait MediaAttributeTrait
         $mediaClass = $this->getMediaModel();
         $mediaInstance = new $mediaClass();
         $keyName = $mediaInstance->getKeyName();
+        $newCollection = new Collection();
+        foreach ($newMediaArray as $key => $value) {
+            $newCollection->put(toKey($key), toValue($value));
+        }
 
-        return collect($newMediaArray)
-            ->map(function (array $newMediaItem) use ($collectionName, $mediaClass, $keyName) {
-                static $orderColumn = 1;
+        return $newCollection->map(function (array $newMediaItem) use ($collectionName, $mediaClass, $keyName) {
+            static $orderColumn = 1;
 
-                $currentMedia = $mediaClass::findOrFail($newMediaItem[$keyName]);
+            $currentMedia = $mediaClass::findOrFail($newMediaItem[$keyName]);
 
-                if ($currentMedia->collection_name !== $collectionName) {
-                    throw MediaCannotBeUpdated::doesNotBelongToCollection($collectionName, $currentMedia);
-                }
+            if ($currentMedia->collection_name !== $collectionName) {
+                throw MediaCannotBeUpdated::doesNotBelongToCollection($collectionName, $currentMedia);
+            }
 
-                if (array_key_exists('name', $newMediaItem)) {
-                    $currentMedia->name = $newMediaItem['name'];
-                }
+            if (array_key_exists('name', $newMediaItem)) {
+                $currentMedia->name = $newMediaItem['name'];
+            }
 
-                if (array_key_exists('custom_properties', $newMediaItem)) {
-                    $currentMedia->custom_properties = $newMediaItem['custom_properties'];
-                }
+            if (array_key_exists('custom_properties', $newMediaItem)) {
+                $currentMedia->custom_properties = $newMediaItem['custom_properties'];
+            }
 
-                $currentMedia->order_column = $orderColumn++;
+            $currentMedia->order_column = $orderColumn++;
 
-                $currentMedia->save();
+            $currentMedia->save();
 
-                return $currentMedia;
-            });
+            return $currentMedia;
+        });
     }
 
     protected function removeMediaItemsNotPresentInArray(array $newMediaArray, string $collectionName = 'default'): void
@@ -684,5 +698,16 @@ trait MediaAttributeTrait
                     ]
                 )
             )->toArray();
+    }
+
+    /**
+     * @throws \InvalidArgumentException
+     * @return void
+     */
+    private function checkSelfIsModel()
+    {
+        if (!$this instanceof Model) {
+            throw new \InvalidArgumentException('The class using MediaAttributeTrait must be an instance of Illuminate\Database\Eloquent\Model');
+        }
     }
 }

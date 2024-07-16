@@ -60,9 +60,9 @@ class BaseService
 
     private function autoModel()
     {
-        $this->primaryKey = $this->model->getKeyName();
-        $this->orderKey = $this->model->timestamps ? $this->autoOrderKey() : $this->primaryKey;
-        $this->tableName = $this->model->getTable();
+        $this->primaryKey = optional($this->getModel())->getKeyName();
+        $this->orderKey = optional($this->getModel())->timestamps ? $this->autoOrderKey() : $this->primaryKey;
+        $this->tableName = optional($this->getModel())->getTable();
     }
 
     /**
@@ -108,7 +108,7 @@ class BaseService
      */
     public function getClassName():string
     {
-        return $this->className;
+        return (string) $this->className;
     }
 
     /**
@@ -116,7 +116,12 @@ class BaseService
      */
     public function getTableName(): string
     {
-        return $this->tableName;
+        return (string) $this->tableName;
+    }
+
+    public function getPrimaryKey():string
+    {
+        return (string) $this->primaryKey;
     }
 
     /**

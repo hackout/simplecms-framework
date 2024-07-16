@@ -26,8 +26,8 @@ class MakeSelect
             'created_at',
             'updated_at'
         ];
-        if (!$select) {
-            if ($primaryKey && !in_array($primaryKey, $selectList->toArray())) {
+        if (empty($select)) {
+            if (!empty($primaryKey) && !in_array($primaryKey, $selectList->toArray())) {
                 $selectList->push($primaryKey);
             }
             foreach ($defaultSelect as $defaultField) {

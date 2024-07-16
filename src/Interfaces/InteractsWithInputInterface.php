@@ -216,11 +216,10 @@ interface InteractsWithInputInterface
     /**
      * Retrieve input from the request as an enum.
      *
-     * @template TEnum
      *
      * @param  string  $key
-     * @param  class-string<TEnum>  $enumClass
-     * @return TEnum|null
+     * @param  class-string  $enumClass
+     * @return mixed
      */
     public function enum($key, $enumClass);
 

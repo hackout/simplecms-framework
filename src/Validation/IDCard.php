@@ -203,7 +203,7 @@ class IDCard
     public function getGender(): int
     {
         $sexBit = intval(substr($this->id, 16, 1));
-        return is_float($sexBit / 2) ? 1 : 0;
+        return $sexBit % 2 == 0 ? 0 : 1;
     }
 
     /**

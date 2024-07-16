@@ -299,7 +299,7 @@ class Captcha
      */
     protected function generate(): array
     {
-        $characters = is_string($this->characters) ? str_split($this->characters) : $this->characters;
+        $characters =  is_string($this->characters) ? str_split($this->characters) : $this->characters;
 
         $bag = [];
 
@@ -310,9 +310,12 @@ class Captcha
             $key = $x + $y;
             $key .= '';
         } else {
-            for ($i = 0; $i < $this->length; $i++) {
-                $char = $characters[rand(0, count($characters) - 1)];
-                $bag[] = $this->sensitive ? $char : $this->str->lower($char);
+            if(count($characters) > 0)
+            {
+                for ($i = 0; $i < $this->length; $i++) {
+                    $char = $characters[rand(0, count($characters) - 1)];
+                    $bag[] = $this->sensitive ? $char : $this->str->lower($char);
+                }
             }
             $key = implode('', $bag);
         }

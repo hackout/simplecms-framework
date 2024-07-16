@@ -36,8 +36,12 @@ class TreeCollection extends Collection
         foreach ($nestedKeys as $key) {
             unset($collection[$key]);
         }
+        $newCollection = new Collection;
+        foreach ($collection as $key => $value) {
+            $newCollection->put($key, $value);
+        }
 
-        return new Collection($collection);
+        return $newCollection;
     }
 
     /**
