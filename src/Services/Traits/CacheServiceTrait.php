@@ -8,6 +8,8 @@ use SimpleCMS\Framework\Services\Work\CanCache;
 /**
  * @use \SimpleCMS\Framework\Services\BaseService
  * @abstract \SimpleCMS\Framework\Services\BaseService
+ * @use \SimpleCMS\Framework\Services\SimpleService
+ * @abstract \SimpleCMS\Framework\Services\SimpleService
  */
 trait CacheServiceTrait
 {

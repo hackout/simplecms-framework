@@ -8,6 +8,8 @@ use SimpleCMS\Framework\Exceptions\SimpleException;
  *
  * @author Dennis Lui <hackout@vip.qq.com>
  * 
+ * @use \SimpleCMS\Framework\Services\BaseService
+ * @abstract \SimpleCMS\Framework\Services\BaseService
  * @use \SimpleCMS\Framework\Services\SimpleService
  * @abstract \SimpleCMS\Framework\Services\SimpleService
  */

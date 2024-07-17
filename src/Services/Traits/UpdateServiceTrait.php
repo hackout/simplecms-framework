@@ -12,6 +12,8 @@ use SimpleCMS\Framework\Exceptions\SimpleException;
  *
  * @author Dennis Lui <hackout@vip.qq.com>
  * 
+ * @use \SimpleCMS\Framework\Services\BaseService
+ * @abstract \SimpleCMS\Framework\Services\BaseService
  * @use \SimpleCMS\Framework\Services\SimpleService
  * @abstract \SimpleCMS\Framework\Services\SimpleService
  */
@@ -121,7 +123,7 @@ trait UpdateServiceTrait
      * 
      * @param string $field 键名
      * @param array<string|int,string|int> $data 请求保存项
-     * @return boolean
+     * @return bool
      */
     public function quick(string $field, array $data)
     {
@@ -133,7 +135,7 @@ trait UpdateServiceTrait
             $where[] = "WHEN '$key' THEN '$value'";
         }
         $sql = "UPDATE `" . $this->getTableName() . "` SET `$field` = CASE `$primaryKey` " . implode(" ", $where) . " ELSE $field END WHERE `$primaryKey` IN (" . implode(",", $keys) . ")";
-        $result = DB::update($sql);
+        $result = (bool) DB::update($sql);
         if ($result) {
             $this->clearCache();
         }

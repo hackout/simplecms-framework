@@ -13,6 +13,8 @@ use Illuminate\Database\Query\Builder as DatabaseBuilder;
 /**
  * @use \SimpleCMS\Framework\Services\BaseService
  * @abstract \SimpleCMS\Framework\Services\BaseService
+ * @use \SimpleCMS\Framework\Services\SimpleService
+ * @abstract \SimpleCMS\Framework\Services\SimpleService
  */
 trait BuilderServiceTrait
 {

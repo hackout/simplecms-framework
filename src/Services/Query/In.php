@@ -39,7 +39,7 @@ class In
         };
     }
 
-    private static function parseData(array $values): string
+    private static function parseData(array $values): array
     {
         $result = [];
         foreach($values as $value)
