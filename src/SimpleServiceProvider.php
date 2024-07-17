@@ -78,15 +78,16 @@ class SimpleServiceProvider extends ServiceProvider
                 __DIR__ . '/Console/stubs/route.frontend.stub' => base_path('stubs/route.frontend.stub'),
             ], 'stubs');
         }
+        $this->loadRoutes();
         $this->bootConfig();
+        $this->loadFacades();
+        $this->bindObservers();
         $this->loadedHelpers();
         $this->bootDefaultDisk();
         $this->loadedValidator();
         $this->loadValidatorMap();
+        $this->loadValidatorCaptcha();
         $this->loadTranslationsFrom(__DIR__ . '/../lang', 'simplecms');
-        $this->loadRoutes();
-        $this->loadFacades();
-        $this->bindObservers();
     }
 
     /**
@@ -162,6 +163,10 @@ class SimpleServiceProvider extends ServiceProvider
                 }
             }
         );
+    }
+
+    protected function loadValidatorCaptcha():void
+    {
         Validator::extend(
             'captcha',
             function ($attribute, $value) {
@@ -176,7 +181,7 @@ class SimpleServiceProvider extends ServiceProvider
         );
     }
 
-    private function loadValidatorMap(): void
+    protected function loadValidatorMap(): void
     {
         $array = [
             'id_card' => IDCardRule::class,

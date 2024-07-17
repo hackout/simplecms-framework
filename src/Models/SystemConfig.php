@@ -5,6 +5,7 @@ namespace SimpleCMS\Framework\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use SimpleCMS\Framework\Contracts\SimpleMedia;
+use SimpleCMS\Framework\Enums\SystemConfigEnum;
 use SimpleCMS\Framework\Traits\MediaAttributeTrait;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -40,56 +41,6 @@ class SystemConfig extends Model implements SimpleMedia
 
     public array $hasOneMedia = ['file'];
 
-    /**
-     * 单行文本
-     */
-    const TYPE_INPUT = 'input';
-
-    /**
-     * 多行文本
-     */
-    const TYPE_TEXTAREA = 'textarea';
-
-    /**
-     * 富文本
-     */
-    const TYPE_EDITOR = 'editor';
-
-    /**
-     * 文件
-     */
-    const TYPE_FILE = 'file';
-
-    /**
-     * 图片
-     */
-    const TYPE_IMAGE = 'image';
-
-    /**
-     * 单选项
-     */
-    const TYPE_RADIO = 'radio';
-
-    /**
-     * 下拉选项
-     */
-    const TYPE_SELECT = 'select';
-
-    /**
-     * 开关
-     */
-    const TYPE_SWITCH = 'switch';
-
-    /**
-     * 多选项
-     */
-    const TYPE_CHECKBOX = 'checkbox';
-
-    /**
-     * 列表
-     */
-    const TYPE_LIST = 'list';
-
     protected $fillable = [
         'code',
         'name',
@@ -116,27 +67,36 @@ class SystemConfig extends Model implements SimpleMedia
 
     public function getValueAttribute()
     {
-        switch ($this->type) {
-            case 'switch':
-                $content = $this->content == 1;
-                break;
-            case 'list':
-            case 'checkbox':
-                $content = json_decode($this->content, true) ?? [];
-                break;
-            case 'radio':
-            case 'select':
-                $content = intval($this->content);
-                break;
-            case 'file':
-            case 'image':
-                $content = $this->file;
-                break;
-            default:
-                $content = $this->content;
-                break;
+        $type = SystemConfigEnum::fromValue($this->type);
+        if (empty($this->content)) {
+            return $this->convertContentEmpty($type);
         }
-        return $content;
+        if ($type->isFile()) {
+            return $this->file;
+        }
+        return $this->convertContentValue($type);
+    }
+
+    private function convertContentEmpty(SystemConfigEnum $type)
+    {
+        return match ($type) {
+            SystemConfigEnum::Switch => false,
+            SystemConfigEnum::list => [],
+            SystemConfigEnum::checkbox => [],
+            default => null
+        };
+    }
+
+    private function convertContentValue(SystemConfigEnum $type)
+    {
+        return match ($type) {
+            SystemConfigEnum::Switch => (bool) $this->content,
+            SystemConfigEnum::list => json_decode($this->content, true),
+            SystemConfigEnum::checkbox => json_decode($this->content, true),
+            SystemConfigEnum::Radio => (int) $this->content,
+            SystemConfigEnum::Select => (int) $this->content,
+            default => $this->content
+        };
     }
 
 }

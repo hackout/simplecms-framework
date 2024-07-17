@@ -23,13 +23,34 @@ class Config
         return SystemConfig::orderBy('sort_order', 'DESC')->get();
     }
 
+    /**
+     * 获取指定配置项的值
+     *
+     * @param string $code
+     * @return mixed
+     */
+    public function getConfigValue(string $code, array $arguments)
+    {
+        if ($config = SystemConfig::where('code', $code)->first()) {
+            return $config->value;
+        }
+        if (empty($arguments))
+            return null;
+        return head($arguments);
+    }
+
+    /**
+     * Magic method to handle dynamic method calls
+     *
+     * @param string $action
+     * @param mixed $arguments
+     * @return mixed
+     */
     public function __call(string $action, $arguments)
     {
         if (strpos($action, 'get') === 0) {
             $property = Str::snake(Str::replaceFirst('get', '', $action));
-            if ($config = SystemConfig::where('code', $property)->first()) {
-                return $config->value;
-            }
+            return $this->getConfigValue($property, $arguments);
         }
     }
 }
