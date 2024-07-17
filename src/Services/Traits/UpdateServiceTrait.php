@@ -98,7 +98,7 @@ trait UpdateServiceTrait
             return $result;
         }
         $type = 'array';
-        if (is_string($id) || is_numeric($id)) {
+        if (in_array(gettype($id), ["integer", "double", "string"])) {
             $type = 'string';
         } elseif (is_callable($id)) {
             $type = 'callable';
