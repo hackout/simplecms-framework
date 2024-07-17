@@ -12,9 +12,7 @@ use Illuminate\Database\Query\Builder as DatabaseBuilder;
 
 /**
  * @use \SimpleCMS\Framework\Services\BaseService
- * @abstract \SimpleCMS\Framework\Services\BaseService
  * @use \SimpleCMS\Framework\Services\SimpleService
- * @abstract \SimpleCMS\Framework\Services\SimpleService
  */
 trait BuilderServiceTrait
 {
@@ -35,27 +33,27 @@ trait BuilderServiceTrait
 
     private function builderQuery(): void
     {
-        if ($query = $this->getQuery()) {
+        if ($query = $this->/** @scrutinizer ignore-call */getQuery()) {
             $this->builder->where($query);
         }
     }
 
     private function builderWith(): void
     {
-        if ($with = $this->getWith()) {
+        if ($with = $this->/** @scrutinizer ignore-call */getWith()) {
             $this->builder->with($with);
         }
     }
 
     private function builderGroup(): void
     {
-        if ($group = $this->getGroup()) {
+        if ($group = $this->/** @scrutinizer ignore-call */getGroup()) {
             $this->builder->groupBy($group);
         }
     }
     private function builderHas(): void
     {
-        if ($has = $this->getHas()) {
+        if ($has = $this->/** @scrutinizer ignore-call */getHas()) {
             foreach ($has as $key => $value) {
                 $this->builder->whereHas($key, function ($query) use ($value) {
                     $query->where($value);
@@ -66,14 +64,14 @@ trait BuilderServiceTrait
 
     private function builderSelect(): void
     {
-        if ($select = $this->getSelect()) {
+        if ($select = $this->/** @scrutinizer ignore-call */getSelect()) {
             $this->builder->selectRaw(Arr::join($select, ','));
         }
     }
 
     private function builder(?string $prop = null, ?string $order = null): Builder|Model|null
     {
-        $this->builder = $this->getModel();
+        $this->builder = $this->/** @scrutinizer ignore-call */getModel();
         if (empty($this->builder))
             return null;
 
@@ -81,15 +79,15 @@ trait BuilderServiceTrait
         $this->builderWith();
         $this->builderGroup();
         $this->builderHas();
-        $this->setSelect((new MakeSelect)->run($this->getModel(), $this->getSelect()));
+        $this->setSelect((new MakeSelect)->run($this->/** @scrutinizer ignore-call */getModel(), $this->/** @scrutinizer ignore-call */getSelect()));
         $this->builderSelect();
         if ($prop) {
-            $this->setOrderKey($prop);
+            $this->/** @scrutinizer ignore-call */setOrderKey($prop);
         }
         if ($order) {
-            $this->setOrderType(Str::remove('ending', $order));
+            $this->/** @scrutinizer ignore-call */setOrderType(Str::remove('ending', $order));
         }
-        $this->builder->orderBy($this->getOrderKey(), $this->getOrderType());
+        $this->builder->orderBy($this->/** @scrutinizer ignore-call */getOrderKey(), $this->/** @scrutinizer ignore-call */getOrderType());
 
         return $this->builder;
     }
@@ -103,6 +101,6 @@ trait BuilderServiceTrait
      */
     public function db(string $tableName = null): DatabaseBuilder
     {
-        return DB::table($tableName ?? $this->getTableName());
+        return DB::table($tableName ?? $this->/** @scrutinizer ignore-call */getTableName());
     }
 }

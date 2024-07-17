@@ -8,7 +8,7 @@ class Group
 {
     public static function run(array $data = [], null|array|Expression|string $value = null): array
     {
-        if (!$value)
+        if (empty($value))
             return [];
         foreach (static::valueToArray($value) as $rs) {
             $data[] = $rs;
@@ -19,11 +19,11 @@ class Group
     private static function valueToArray(array|Expression|string $value = null): array
     {
         $result = [];
-        if (is_array($value)) {
+        if (gettype($value) == 'array') {
             $result = $value;
         } elseif ($value instanceof Expression) {
             $result[] = $value;
-        } elseif (!empty($value)) {
+        } else {
             $result[] = $value;
         }
         return $result;

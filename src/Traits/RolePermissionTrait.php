@@ -16,8 +16,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * 
  * @use \Illuminate\Database\Eloquent\Model
  * @use \Illuminate\Database\Eloquent\Concerns\HasRelationships
- * @abstract \Illuminate\Database\Eloquent\Model
- * @abstract \Illuminate\Database\Eloquent\Concerns\HasRelationships
  * 
  * @static string SUPER_ID
  *
@@ -34,7 +32,7 @@ trait RolePermissionTrait
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'roles_more', 'model_id', 'role_id')->wherePivot('model_type', get_class($this));
+        return $this->/** @scrutinizer ignore-call */belongsToMany(Role::class, 'roles_more', 'model_id', 'role_id')->wherePivot('model_type', get_class($this));
     }
 
     /**

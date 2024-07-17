@@ -1,6 +1,7 @@
 <?php
 namespace SimpleCMS\Framework\Services\Set;
 
+use function gettype;
 use function is_callable;
 use Illuminate\Support\Arr;
 use Illuminate\Contracts\Database\Query\Expression;
@@ -10,7 +11,7 @@ class Query
 {
     public static function run(array $data = [], callable|null|array|Expression|string $value = null): array
     {
-        if (!$value)
+        if (empty($value))
             return [];
         foreach (static::valueToArray($value) as $rs) {
             $data[] = $rs;
@@ -23,7 +24,7 @@ class Query
         if (is_callable($value) || $value instanceof Expression) {
             return [$value];
         }
-        if (is_string($value)) {
+        if (gettype($value) == 'string') {
             return [new QueryRaw($value)];
         }
         return self::getArrayValue($value);

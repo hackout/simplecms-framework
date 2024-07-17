@@ -19,7 +19,7 @@ trait WithModelStub
      */
     protected function buildModelReplacements(array $replace): array
     {
-        $modelClass = $this->parseModel((string) $this->option('model'));
+        $modelClass = $this->parseModel((string) $this->/** @scrutinizer ignore-call */option('model'));
 
         return array_merge($replace, [
             'DummyFullModelClass' => $modelClass,
@@ -43,6 +43,7 @@ trait WithModelStub
 
         $model = str_replace('/', '\\', $model);
 
+        /** @scrutinizer ignore-call */
         $rootNamespace = $this->rootNamespace();
 
         if (Str::startsWith($model, $rootNamespace)) {

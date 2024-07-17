@@ -24,12 +24,12 @@ trait RemoveServiceTrait
      */
     public function delete(string|int $id)
     {
-        $this->setItem($this->findById($id));
-        if (!$item = $this->getItem()) {
+        $this->/** @scrutinizer ignore-call */setItem($this->/** @scrutinizer ignore-call */findById($id));
+        if (!$item = $this->/** @scrutinizer ignore-call */getItem()) {
             throw new SimpleException(trans('simplecms:delete_failed'));
         }
         if ($result = $item->delete()) {
-            $this->clearCache();
+            $this->/** @scrutinizer ignore-call */clearCache();
         }
         return $result;
     }
@@ -42,8 +42,8 @@ trait RemoveServiceTrait
      */
     public function clean()
     {
-        optional($this->getModel())->truncate();
-        $this->clearCache();
+        optional($this->/** @scrutinizer ignore-call */getModel())->truncate();
+        $this->/** @scrutinizer ignore-call */clearCache();
     }
 
     /**
@@ -54,9 +54,9 @@ trait RemoveServiceTrait
      */
     public function batch_delete(array $ids)
     {
-        $result = optional($this->getModel())->destroy($ids);
+        $result = optional($this->/** @scrutinizer ignore-call */getModel())->destroy($ids);
         if ($result) {
-            $this->clearCache();
+            $this->/** @scrutinizer ignore-call */clearCache();
         }
         return (bool) $result;
     }

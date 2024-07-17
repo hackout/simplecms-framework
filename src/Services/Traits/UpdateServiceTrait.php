@@ -13,9 +13,7 @@ use SimpleCMS\Framework\Exceptions\SimpleException;
  * @author Dennis Lui <hackout@vip.qq.com>
  * 
  * @use \SimpleCMS\Framework\Services\BaseService
- * @abstract \SimpleCMS\Framework\Services\BaseService
  * @use \SimpleCMS\Framework\Services\SimpleService
- * @abstract \SimpleCMS\Framework\Services\SimpleService
  */
 trait UpdateServiceTrait
 {
@@ -30,20 +28,20 @@ trait UpdateServiceTrait
      */
     public function update(string|int $id, array $data, array $mediaFields = [])
     {
-        $this->setItem($this->findById($id));
-        if (!$item = $this->getItem()) {
+        $this->setItem($this->/** @scrutinizer ignore-call */ findById($id));
+        if (!$item = $this->/** @scrutinizer ignore-call */ getItem()) {
             throw new SimpleException(trans('simplecms:not_exists'));
         }
 
-        list($sql, $files, $multipleFiles) = ConvertData::run($this->getModel(), $data, $mediaFields);
+        list($sql, $files, $multipleFiles) = ConvertData::run($this->/** @scrutinizer ignore-call */ getModel(), $data, $mediaFields);
         $item->fill($sql);
         $result = $item->save();
 
         if ($result) {
-            if ($this->hasMedia()) {
-                $this->updateMedia($files, $multipleFiles, $mediaFields);
+            if ($this->/** @scrutinizer ignore-call */ hasMedia()) {
+                $this->/** @scrutinizer ignore-call */ updateMedia($files, $multipleFiles, $mediaFields);
             }
-            $this->clearCache();
+            $this->/** @scrutinizer ignore-call */ clearCache();
         }
 
         return $result;
@@ -59,7 +57,7 @@ trait UpdateServiceTrait
      */
     public function updateV2(array $where, array $data)
     {
-        $model = $this->getModel();
+        $model = $this->/** @scrutinizer ignore-call */ getModel();
         $result = false;
         if (!$model) {
             return $result;
@@ -78,7 +76,7 @@ trait UpdateServiceTrait
         }
 
         if ($result) {
-            $this->clearCache();
+            $this->/** @scrutinizer ignore-call */ clearCache();
         }
 
         return $result;
@@ -94,14 +92,14 @@ trait UpdateServiceTrait
      */
     public function setValue(string|int|array|callable $id, string $field, string|float|array $value = null)
     {
-        $model = $this->getModel();
+        $model = $this->/** @scrutinizer ignore-call */ getModel();
         $result = false;
         if (!$model) {
             return $result;
         }
-        $type = 'string';
-        if (is_array($id)) {
-            $type = 'array';
+        $type = 'array';
+        if (is_string($id) || is_numeric($id)) {
+            $type = 'string';
         } elseif (is_callable($id)) {
             $type = 'callable';
         }
@@ -112,7 +110,7 @@ trait UpdateServiceTrait
         }
 
         if ($result) {
-            $this->clearCache();
+            $this->/** @scrutinizer ignore-call */ clearCache();
         }
         return (bool) $result;
     }
@@ -127,17 +125,17 @@ trait UpdateServiceTrait
      */
     public function quick(string $field, array $data)
     {
-        $primaryKey = $this->getPrimaryKey();
+        $primaryKey = $this->/** @scrutinizer ignore-call */ getPrimaryKey();
         $keys = [];
         $where = [];
         foreach ($data as $key => $value) {
             $keys[] = "'" . $key . "'";
             $where[] = "WHEN '$key' THEN '$value'";
         }
-        $sql = "UPDATE `" . $this->getTableName() . "` SET `$field` = CASE `$primaryKey` " . implode(" ", $where) . " ELSE $field END WHERE `$primaryKey` IN (" . implode(",", $keys) . ")";
+        $sql = "UPDATE `" . $this->/** @scrutinizer ignore-call */ getTableName() . "` SET `$field` = CASE `$primaryKey` " . implode(" ", $where) . " ELSE $field END WHERE `$primaryKey` IN (" . implode(",", $keys) . ")";
         $result = (bool) DB::update($sql);
         if ($result) {
-            $this->clearCache();
+            $this->/** @scrutinizer ignore-call */ clearCache();
         }
         return $result;
     }

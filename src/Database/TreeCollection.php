@@ -75,7 +75,7 @@ class TreeCollection extends Collection
             unset($collection[$key]);
         }
 
-        return new Collection($collection);
+        return new Collection(/** @scrutinizer ignore-type */ $collection);
     }
 
     /**

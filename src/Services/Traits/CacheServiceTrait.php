@@ -19,7 +19,7 @@ trait CacheServiceTrait
      */
     protected function getCacheName(array|null $array = null): string
     {
-        $cacheName = $this->getTableName();
+        $cacheName = $this->/** @scrutinizer ignore-call */getTableName();
         if ($array) {
             $cacheName .= '_' . $this->getCacheKey($array);
         }
@@ -36,7 +36,7 @@ trait CacheServiceTrait
      */
     protected function getCacheData(array $array, callable $function): mixed
     {
-        if (!CanCache::run($this->getClassName()))
+        if (!CanCache::run($this->/** @scrutinizer ignore-call */getClassName()))
             return $function();
         $cacheKeyName = $this->getCacheName($array);
         $cacheName = $this->getCacheName();

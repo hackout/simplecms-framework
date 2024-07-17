@@ -17,7 +17,6 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  *   use \SimpleCMS\Framework\Traits\MediaAttributeTrait;
  * 
  * @use \Illuminate\Database\Eloquent\Model
- * @abstract \Illuminate\Database\Eloquent\Model
  *
  */
 trait MediaAttributeTrait

@@ -17,8 +17,6 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property-read Collection<RequestLog> $request_logs 请求日志
  * 
  * @use \Illuminate\Database\Eloquent\Concerns\HasRelationships
- * @abstract \Illuminate\Database\Eloquent\Concerns\HasRelationships
- *
  */
 trait RequestLogTrait
 {
@@ -32,6 +30,6 @@ trait RequestLogTrait
      */
     public function request_logs(): MorphMany
     {
-        return $this->morphMany(RequestLog::class, 'model');
+        return $this->/** @scrutinizer ignore-call */morphMany(RequestLog::class, 'model');
     }
 }

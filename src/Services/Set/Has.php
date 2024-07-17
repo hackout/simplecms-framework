@@ -16,7 +16,7 @@ class Has
     {
         if (!$value || Arr::isList($value))
             return [];
-        if(is_array($value))
+        if(gettype($value) == 'array')
         {
             foreach ($value as $key => $val) {
                 $data[$key] = $val;

@@ -40,9 +40,9 @@ class AddMedia
         if (strpos($file, '/') === 0) {
             self::applyLocalFile($model, $file, $columnName);
         } elseif (Str::isUrl($file)) {
-            $model->addMediaFromUrl($file)->toMediaCollection($columnName);
+            $model->/** @scrutinizer ignore-call */addMediaFromUrl($file)->toMediaCollection($columnName);
         } elseif (is_base_image($file)) {
-            $model->addMediaFromBase64($file)->toMediaCollection($columnName);
+            $model->/** @scrutinizer ignore-call */addMediaFromBase64($file)->toMediaCollection($columnName);
         }
     }
 

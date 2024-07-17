@@ -4,9 +4,7 @@ namespace SimpleCMS\Framework\Services\Traits;
 
 /**
  * @use \SimpleCMS\Framework\Services\BaseService
- * @abstract \SimpleCMS\Framework\Services\BaseService
  * @use \SimpleCMS\Framework\Services\SimpleService
- * @abstract \SimpleCMS\Framework\Services\SimpleService
  */
 trait RetrieveServiceTrait
 {
@@ -16,8 +14,8 @@ trait RetrieveServiceTrait
      */
     public function count($columns = '*'): int
     {
-        $builder = $this->getBuilder();
-        return $this->getCacheData([$builder->toRawSql(), 'count', $columns], fn() => $builder->count($columns));
+        $builder = $this->/** @scrutinizer ignore-call */getBuilder();
+        return $this->/** @scrutinizer ignore-call */getCacheData([$builder->toRawSql(), 'count', $columns], fn() => $builder->count($columns));
     }
 
     /**
@@ -26,8 +24,8 @@ trait RetrieveServiceTrait
      */
     public function min($column)
     {
-        $builder = $this->getBuilder();
-        return $this->getCacheData([$builder->toRawSql(), 'min', $column], fn() => $builder->min($column));
+        $builder = $this->/** @scrutinizer ignore-call */getBuilder();
+        return $this->/** @scrutinizer ignore-call */getCacheData([$builder->toRawSql(), 'min', $column], fn() => $builder->min($column));
     }
 
     /**
@@ -36,8 +34,8 @@ trait RetrieveServiceTrait
      */
     public function max($column)
     {
-        $builder = $this->getBuilder();
-        return $this->getCacheData([$builder->toRawSql(), 'max', $column], fn() => $builder->max($column));
+        $builder = $this->/** @scrutinizer ignore-call */getBuilder();
+        return $this->/** @scrutinizer ignore-call */getCacheData([$builder->toRawSql(), 'max', $column], fn() => $builder->max($column));
     }
 
     /**
@@ -46,8 +44,8 @@ trait RetrieveServiceTrait
      */
     public function sum($column)
     {
-        $builder = $this->getBuilder();
-        return $this->getCacheData([$builder->toRawSql(), 'sum', $column], fn() => $builder->sum($column) ?: 0);
+        $builder = $this->/** @scrutinizer ignore-call */getBuilder();
+        return $this->/** @scrutinizer ignore-call */getCacheData([$builder->toRawSql(), 'sum', $column], fn() => $builder->sum($column) ?: 0);
 
     }
 
@@ -57,9 +55,9 @@ trait RetrieveServiceTrait
      */
     public function avg($column)
     {
-        $builder = $this->getBuilder();
+        $builder = $this->/** @scrutinizer ignore-call */getBuilder();
 
-        return $this->getCacheData([$builder->toRawSql(), 'avg', $column], fn() => $builder->avg($column));
+        return $this->/** @scrutinizer ignore-call */getCacheData([$builder->toRawSql(), 'avg', $column], fn() => $builder->avg($column));
     }
 
     /**

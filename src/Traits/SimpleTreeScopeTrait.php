@@ -36,8 +36,6 @@ use Illuminate\Database\Eloquent\Collection;
  * 
  * @use SimpleTreeTrait
  * 
- * @abstract SimpleTreeTrait
- * 
  */
 trait SimpleTreeScopeTrait
 {

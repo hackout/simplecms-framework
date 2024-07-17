@@ -12,7 +12,7 @@ class ConvertQueryParam
 {
     public static function run(string|array $value, $key): array
     {
-        $values = is_array($value) ? $value : [$value];
+        $values = (array) $value;
         list($action, $fields, $extra) = array_pad($values, 3, null);
         !$fields && $fields = $key;
         $queryModel = self::matchQuery($action);

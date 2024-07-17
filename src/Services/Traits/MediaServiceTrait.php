@@ -12,9 +12,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * @author Dennis Lui <hackout@vip.qq.com>
  * 
  * @use \SimpleCMS\Framework\Services\BaseService
- * @abstract \SimpleCMS\Framework\Services\BaseService
  * @use \SimpleCMS\Framework\Services\SimpleService
- * @abstract \SimpleCMS\Framework\Services\SimpleService
  */
 trait MediaServiceTrait
 {
@@ -113,7 +111,7 @@ trait MediaServiceTrait
      */
     public function addMedia(UploadedFile|string $file, string $columnName): void
     {
-        AddMedia::run($this->getItem(), $file, $columnName);
+        AddMedia::run($this->/** @scrutinizer ignore-call */ getItem(), $file, $columnName);
     }
 
     /**
@@ -139,7 +137,7 @@ trait MediaServiceTrait
      */
     protected function hasMedia(): bool
     {
-        return HasMedia::run($this->getModel());
+        return HasMedia::run($this->/** @scrutinizer ignore-call */ getModel());
     }
 
     /**
@@ -147,7 +145,8 @@ trait MediaServiceTrait
      */
     protected function getMediaColumn(): ?string
     {
-        return defined($this->className . '::MEDIA_FILE') ? $this->className::MEDIA_FILE : null;
+        $modelClass = $this->/** @scrutinizer ignore-call */ getClassName();
+        return defined($modelClass . '::MEDIA_FILE') ? $modelClass::MEDIA_FILE : null;
     }
 
 

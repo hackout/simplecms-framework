@@ -40,8 +40,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * 
  * @use \Illuminate\Database\Eloquent\Model
  * @use \Illuminate\Database\Eloquent\Concerns\HasRelationships
- * @abstract \Illuminate\Database\Eloquent\Model
- * @abstract \Illuminate\Database\Eloquent\Concerns\HasRelationships
  *
  */
 trait SimpleTreeTrait
@@ -63,7 +61,7 @@ trait SimpleTreeTrait
      */
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(static::class, $this->getParentColumnName());
+        return $this->/** @scrutinizer ignore-call */belongsTo(static::class, $this->getParentColumnName());
     }
 
     /**
@@ -74,7 +72,7 @@ trait SimpleTreeTrait
      */
     public function children(): HasMany
     {
-        return $this->hasMany(static::class, $this->getParentColumnName());
+        return $this->/** @scrutinizer ignore-call */hasMany(static::class, $this->getParentColumnName());
     }
 
     /**
@@ -110,7 +108,7 @@ trait SimpleTreeTrait
             }
         }
 
-        return new Collection($result);
+        return new Collection(/** @scrutinizer ignore-type */$result);
     }
 
     /**
@@ -173,7 +171,7 @@ trait SimpleTreeTrait
      */
     public function getParentId()
     {
-        return $this->getAttribute($this->getParentColumnName());
+        return $this->/** @scrutinizer ignore-call */getAttribute($this->getParentColumnName());
     }
 
     /**
@@ -181,6 +179,6 @@ trait SimpleTreeTrait
      */
     public function newCollection(array $models = [])
     {
-        return new TreeCollection($models);
+        return new TreeCollection(/** @scrutinizer ignore-type */$models);
     }
 }

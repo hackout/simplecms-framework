@@ -23,7 +23,9 @@ class LoadLanguage
             $locale = $request->header('Accept-Language', config('app.locale'));
         }
         if (!is_string($locale))
+        {
             $locale = config('app.locale');
+        }
         App::setLocale($locale);
         return $next($request);
     }

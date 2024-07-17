@@ -81,8 +81,8 @@ class SystemConfig extends Model implements SimpleMedia
     {
         return match ($type) {
             SystemConfigEnum::Switch => false,
-            SystemConfigEnum::list => [],
-            SystemConfigEnum::checkbox => [],
+            SystemConfigEnum::List => [],
+            SystemConfigEnum::Checkbox => [],
             default => null
         };
     }
@@ -91,8 +91,8 @@ class SystemConfig extends Model implements SimpleMedia
     {
         return match ($type) {
             SystemConfigEnum::Switch => (bool) $this->content,
-            SystemConfigEnum::list => json_decode($this->content, true),
-            SystemConfigEnum::checkbox => json_decode($this->content, true),
+            SystemConfigEnum::List => json_decode($this->content, true),
+            SystemConfigEnum::Checkbox => json_decode($this->content, true),
             SystemConfigEnum::Radio => (int) $this->content,
             SystemConfigEnum::Select => (int) $this->content,
             default => $this->content

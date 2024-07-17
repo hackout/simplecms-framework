@@ -91,8 +91,8 @@ enum SystemConfigEnum: string
     public function isArray(): bool
     {
         return match ($this) {
-            self::list => true,
-            self::checkbox => true,
+            self::List => true,
+            self::Checkbox => true,
             default => false
         };
     }
@@ -111,8 +111,8 @@ enum SystemConfigEnum: string
             self::Switch => false,
             self::Radio => false,
             self::Select => false,
-            self::list => false,
-            self::checkbox => false,
+            self::List => false,
+            self::Checkbox => false,
             self::File => false,
             self::Image => false,
             default => true
