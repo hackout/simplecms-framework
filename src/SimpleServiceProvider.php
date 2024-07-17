@@ -82,6 +82,7 @@ class SimpleServiceProvider extends ServiceProvider
         $this->loadedHelpers();
         $this->bootDefaultDisk();
         $this->loadedValidator();
+        $this->loadValidatorMap();
         $this->loadTranslationsFrom(__DIR__ . '/../lang', 'simplecms');
         $this->loadRoutes();
         $this->loadFacades();
@@ -136,38 +137,6 @@ class SimpleServiceProvider extends ServiceProvider
     protected function loadedValidator(): void
     {
         Validator::extend(
-            'id_card',
-            IDCardRule::class
-        );
-        Validator::extend(
-            'mobile',
-            MobileRule::class
-        );
-        Validator::extend(
-            'telephone',
-            TelephoneRule::class
-        );
-        Validator::extend(
-            'phone',
-            PhoneRule::class
-        );
-        Validator::extend(
-            'chinese',
-            ChineseRule::class
-        );
-        Validator::extend(
-            'car_number',
-            CarNumberRule::class
-        );
-        Validator::extend(
-            'company_id',
-            CompanyIDRule::class
-        );
-        Validator::extend(
-            'chinese_postcode',
-            ChinesePostCodeRule::class
-        );
-        Validator::extend(
             'image_or_url',
             function ($attribute, $value, $parameters) {
                 if (Str::isUrl($value) || strpos($value, '/') === 0) {
@@ -205,6 +174,23 @@ class SimpleServiceProvider extends ServiceProvider
                 return config('cms.captcha.disable') || ($value && captcha_api_check($value, $parameters[0], $parameters[1] ?? 'default'));
             }
         );
+    }
+
+    private function loadValidatorMap(): void
+    {
+        $array = [
+            'id_card' => IDCardRule::class,
+            'mobile' => MobileRule::class,
+            'telephone' => TelephoneRule::class,
+            'phone' => PhoneRule::class,
+            'chinese' => ChineseRule::class,
+            'car_number' => CarNumberRule::class,
+            'company_id' => CompanyIDRule::class,
+            'chinese_postcode' => ChinesePostCodeRule::class
+        ];
+        foreach ($array as $name => $className) {
+            Validator::extend($name, $className);
+        }
     }
 
     /**

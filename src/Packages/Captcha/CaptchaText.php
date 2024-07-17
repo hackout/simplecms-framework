@@ -1,7 +1,6 @@
 <?php
 namespace SimpleCMS\Framework\Packages\Captcha;
 
-use function is_string;
 use function str_split;
 use Illuminate\Support\Facades\Crypt;
 
@@ -20,24 +19,8 @@ trait CaptchaText
      */
     protected function generate(): array
     {
-        $characters = (array) (is_string($this->characters) ? str_split($this->characters) : $this->characters);
-        $bag = [];
-        if ($this->math) {
-            $x = random_int(10, 30);
-            $y = random_int(1, 9);
-            $bag = "$x + $y = ";
-            $key = $x + $y;
-            $key .= '';
-        } else {
-            if (!empty($characters)) {
-                for ($i = 0; $i < $this->length; $i++) {
-                    $char = $characters[rand(0, count($characters) - 1)];
-                    $bag[] = $this->sensitive ? $char : $this->str->lower($char);
-                }
-            }
-            $key = implode('', $bag);
-        }
-        $hash = $this->hasher->make($key);
+        $bag = $this->getGenerateBag();
+        $hash = $this->hasher->make($this->getGenerateKey($bag));
         if ($this->encrypt)
             $hash = Crypt::encrypt($hash);
         $this->session->put('captcha', [
@@ -52,7 +35,7 @@ trait CaptchaText
         ];
     }
 
-    
+
     /**
      * Random font size
      *
@@ -77,5 +60,46 @@ trait CaptchaText
         }
 
         return $color;
+    }
+
+    private function getGenerateCharacters(): array
+    {
+        if (is_array($this->characters)) {
+            return $this->characters;
+        }
+        return str_split($this->characters) ?? [];
+    }
+
+    private function getGenerateBag(): array
+    {
+        $bag = [];
+        if ($this->math) {
+            $x = random_int(10, 30);
+            $y = random_int(1, 9);
+            $text = "$x + $y = ";
+            $bag = str_split($text);
+        } else {
+            $characters = $this->getGenerateCharacters();
+            if (!empty($characters)) {
+                for ($i = 0; $i < $this->length; $i++) {
+                    $char = $characters[rand(0, count($characters) - 1)];
+                    $bag[] = $this->sensitive ? $char : $this->str->lower($char);
+                }
+            }
+        }
+        return $bag;
+    }
+
+    private function getGenerateKey(array $generate): string
+    {
+        $string = implode('', $generate);
+        if ($this->math) {
+            $newString = str_replace([' ', '='], '', $string);
+            $strings = explode('+', $newString);
+            $intA = (int) $strings[0];
+            $intB = (int) $strings[1];
+            $string = (string) ($intA + $intB);
+        }
+        return $string;
     }
 }

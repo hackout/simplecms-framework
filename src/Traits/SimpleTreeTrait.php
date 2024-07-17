@@ -47,6 +47,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 trait SimpleTreeTrait
 {
 
+    use SimpleTreeScopeTrait;
     public static function bootSimpleTreeTrait()
     {
         static::deleting(function ($model) {
@@ -149,91 +150,6 @@ trait SimpleTreeTrait
     }
 
     /**
-     * 获取全部父级
-     * $model->getRoot()
-     * @return Collection
-     */
-    public function scopeGetAllRoot($query)
-    {
-        return $query->where($this->getParentColumnName(), null)->get();
-    }
-
-    /**
-     * 加入树型请求
-     * Children are eager loaded inside the $model->children relation.
-     * @return Collection A collection
-     */
-    public function scopeGetNested($query)
-    {
-        return $query->get()->toNested();
-    }
-
-    /**
-     * scopeListsNested gets an array with values of a given column. Values are indented
-     * according to their depth.
-     * @param  string $column Array values
-     * @param  string $key    Array keys
-     * @param  string $indent Character to indent depth
-     * @return array
-     */
-    public function scopeListsNested($query, $column, $key = null, $indent = '&nbsp;&nbsp;&nbsp;')
-    {
-        $idName = $this->getKeyName();
-        $parentName = $this->getParentColumnName();
-
-        $columns = [$idName, $parentName, $column];
-        if ($key !== null) {
-            $columns[] = $key;
-        }
-
-        $collection = $query->getQuery()->get($columns);
-
-        // Assign all child nodes to their parents
-        $pairMap = [];
-        $rootItems = [];
-        foreach ($collection as $record) {
-            if ($parentId = $record->{$parentName}) {
-                if (!isset($pairMap[$parentId])) {
-                    $pairMap[$parentId] = [];
-                }
-                $pairMap[$parentId][] = $record;
-            } else {
-                $rootItems[] = $record;
-            }
-        }
-
-        // Recursive helper function
-        $buildCollection = function ($items, $map, $depth = 0) use (&$buildCollection, $column, $key, $indent, $idName) {
-            $result = [];
-
-            $indentString = str_repeat($indent, $depth);
-
-            foreach ($items as $item) {
-                if (!property_exists($item, $column)) {
-                    throw new Exception('Column mismatch in listsNested method. Are you sure the columns exist?');
-                }
-
-                if ($key !== null) {
-                    $result[$item->{$key}] = $indentString . $item->{$column};
-                } else {
-                    $result[] = $indentString . $item->{$column};
-                }
-
-                // Add the children
-                $childItems = $map instanceof Collection ? $map->get($item->{$idName}, []) : collect($map->get($item->{$idName}, []));
-                if (count($childItems) > 0) {
-                    $result = $result + $buildCollection($childItems, $map, $depth + 1);
-                }
-            }
-
-            return $result;
-        };
-
-        // Build a nested collection
-        return $buildCollection($rootItems, $pairMap);
-    }
-
-    /**
      * 获取父级字段名
      * @return string
      */
@@ -248,7 +164,7 @@ trait SimpleTreeTrait
      */
     public function getQualifiedParentColumnName()
     {
-        return $this->getTable() . '.' . $this->getParentColumnName();
+        return /** @scrutinizer ignore-call */ $this->getTable() . '.' . $this->getParentColumnName();
     }
 
     /**

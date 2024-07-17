@@ -14,6 +14,19 @@ class Convert
         if ($number > $maxLength) {
             throw new SimpleException(trans("simplecms::excel_plus.convert.outsize", ['max' => $maxLength]));
         }
+        $strings = $this->getStringArray($number, $num);
+
+        $result = '';
+        foreach ($strings as $key) {
+            if ($key) {
+                $result .= $letters[$key - 1];
+            }
+        }
+        return $result;
+    }
+
+    private function getStringArray(int|float|string $number, int $num): array
+    {
         $strings = [];
         if (intval($number / $num) > $num) {
             $strings[] = intval(intval($number / $num) / $num);
@@ -29,13 +42,7 @@ class Convert
         if (!intval(implode('', $strings))) {
             $strings[0] = 26;
         }
-        $result = '';
-        foreach ($strings as $key) {
-            if ($key) {
-                $result .= $letters[$key - 1];
-            }
-        }
-        return $result;
+        return $strings;
     }
 
     /**

@@ -118,9 +118,6 @@ class Captcha extends CaptchaAbstract
         }
 
         $text = $this->text;
-        if (is_string($text)) {
-            $text = str_split($text);
-        }
 
         foreach ($text as $key => $char) {
             $marginLeft = $this->textLeftPadding + ($key * ($this->image->width() - $this->textLeftPadding) / $this->length);

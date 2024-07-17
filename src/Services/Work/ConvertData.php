@@ -1,6 +1,7 @@
 <?php
 namespace SimpleCMS\Framework\Services\Work;
 
+use Illuminate\Support\Collection;
 use function is_array;
 use function is_string;
 use Illuminate\Http\UploadedFile;
@@ -18,19 +19,32 @@ class ConvertData
     {
         $sql = $data;
         $files = [];
-        $multipleFiles = [];
+        $multiple = [];
         if (app(HasMedia::class)->run($model)) {
             $sql = [];
             foreach ($data as $field => $value) {
-                if (!empty($value) && ($value instanceof UploadedFile || (is_string($field) && isset($mediaFields[$field])))) {
-                    $files[$field] = $value;
-                } elseif (is_array($value) && !empty($value) && (head($value) instanceof UploadedFile || isset($mediaFields[$field]))) {
-                    $multipleFiles[$field] = $value;
-                } else {
-                    $sql[$field] = $value;
-                }
+                $result = self::makeResult($value, $field, $mediaFields);
+                $result['type'] == 'sql' && $sql[$field] = $value;
+                $result['type'] == 'multiple' && $multiple[$field] = $value;
+                $result['type'] == 'files' && $files[$field] = $value;
             }
         }
-        return [$sql, $files, $multipleFiles];
+        return [$sql, $files, $multiple];
     }
+
+    private static function makeResult($values, string $field, array $mediaFields): array
+    {
+        $result = [
+            'field' => $field,
+            'value' => $values,
+            'type' => 'sql'
+        ];
+        if (isset($mediaFields[$field]) && !empty($values)) {
+            $result['value'] = $values;
+            $result['type'] = is_array($values) ? 'multiple' : 'files';
+            return $result;
+        }
+        return $result;
+    }
+
 }

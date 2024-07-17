@@ -25,11 +25,9 @@ class Drawing
     public function __construct(private UploadedFile|string $uploadedFile)
     {
     }
-
     /**
      * 提取图片到Collection
      *
-     * @author Dennis Lui <hackout@vip.qq.com>
      * @return array
      */
     public function toArray(): array
@@ -39,33 +37,56 @@ class Drawing
         $currSheet = $obj->getActiveSheet();
         $array = [];
         $this->checkPath();
+
         foreach ($currSheet->getDrawingCollection() as $drawing) {
-            if ($drawing instanceof MemoryDrawing) {
-                list($imageContents, $extension) = ObMemory::convert($drawing);
-            } elseif ($drawing->getIsURL()) {
-                list($imageContents, $extension) = Url::convert($drawing);
-            } else {
-                list($imageContents, $extension) = Zip::convert($drawing);
-            }
+            list($imageContents, $extension) = $this->convertDrawing($drawing);
+
             if (!$imageContents || !$extension) {
                 continue;
             }
-            $fileName = Storage::path('public/imports/' . Str::Uuid() . '.' . $extension);
-            file_put_contents($fileName, $imageContents);
+
+            $fileName = $this->saveImage($imageContents, $extension);
             $coordinates = Coordinate::indexesFromString($drawing->getCoordinates());
             $rowKey = $coordinates['1'] - 1;
             $cellKey = $coordinates['0'] - 1;
-            if (!array_key_exists($rowKey, $array)) {
-                $array[$rowKey] = [];
-            }
-            if (!array_key_exists($cellKey, $array[$rowKey])) {
-                $array[$rowKey][$cellKey] = [];
-            }
+
             $array[$rowKey][$cellKey][] = $fileName;
         }
 
         return $array;
     }
+
+    /**
+     * Convert drawing to image contents and extension.
+     *
+     * @param $drawing
+     * @return array
+     */
+    protected function convertDrawing($drawing): array
+    {
+        if ($drawing instanceof MemoryDrawing) {
+            return ObMemory::convert($drawing);
+        } elseif ($drawing->getIsURL()) {
+            return Url::convert($drawing);
+        } else {
+            return Zip::convert($drawing);
+        }
+    }
+
+    /**
+     * Save image to storage and return the file name.
+     *
+     * @param string $imageContents
+     * @param string $extension
+     * @return string
+     */
+    protected function saveImage(string $imageContents, string $extension): string
+    {
+        $fileName = Storage::path('public/imports/' . Str::Uuid() . '.' . $extension);
+        file_put_contents($fileName, $imageContents);
+        return $fileName;
+    }
+
 
     /**
      * Check the path

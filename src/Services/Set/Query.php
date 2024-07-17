@@ -1,7 +1,6 @@
 <?php
 namespace SimpleCMS\Framework\Services\Set;
 
-use function is_array;
 use function is_callable;
 use Illuminate\Support\Arr;
 use Illuminate\Contracts\Database\Query\Expression;
@@ -21,24 +20,28 @@ class Query
 
     private static function valueToArray(callable|array|Expression|string $value): array
     {
+        if (is_callable($value) || $value instanceof Expression) {
+            return [$value];
+        }
+        if (is_string($value)) {
+            return [new QueryRaw($value)];
+        }
+        return self::getArrayValue($value);
+    }
+
+    private static function getArrayValue(array $value): array
+    {
+        if (is_callable(head($value))) {
+            return $value;
+        }
+        if (Arr::isList($value)) {
+            return [$value];
+        }
         $result = [];
-        if (is_callable($value)) {
-            $result[] = [$value];
-        } else if (is_array($value)) {
-            if (!Arr::isList($value)) {
-                foreach ($value as $key => $val) {
-                    $result[] = [$key, '=', $val];
-                }
-            } else if (is_callable(head($value))) {
-                $result = $value;
-            } else {
-                $result[] = $value;
-            }
-        } elseif ($value instanceof Expression) {
-            $result[] = [$value];
-        } else {
-            $result[] = [new QueryRaw($value)];
+        foreach ($value as $key => $val) {
+            $result[] = [$key, '=', $val];
         }
         return $result;
+
     }
 }

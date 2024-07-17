@@ -100,7 +100,7 @@ abstract class CaptchaAbstract
     protected $characters;
 
     /**
-     * @var array|string
+     * @var array
      */
     protected $text;
 
