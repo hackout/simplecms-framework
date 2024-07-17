@@ -7,9 +7,7 @@ use SimpleCMS\Framework\Services\Work\CanCache;
 
 /**
  * @use \SimpleCMS\Framework\Services\BaseService
- * @abstract \SimpleCMS\Framework\Services\BaseService
  * @use \SimpleCMS\Framework\Services\SimpleService
- * @abstract \SimpleCMS\Framework\Services\SimpleService
  */
 trait CacheServiceTrait
 {
@@ -17,7 +15,7 @@ trait CacheServiceTrait
      * @param array|null $array
      * @return string
      */
-    protected function getCacheName(array|null $array = null): string
+    public function getCacheName(array|null $array = null): string
     {
         $cacheName = $this->/** @scrutinizer ignore-call */getTableName();
         if ($array) {
@@ -34,7 +32,7 @@ trait CacheServiceTrait
      * @param  callable $function
      * @return mixed
      */
-    protected function getCacheData(array $array, callable $function): mixed
+    public function getCacheData(array $array, callable $function): mixed
     {
         if (!CanCache::run($this->/** @scrutinizer ignore-call */getClassName()))
             return $function();
@@ -54,7 +52,7 @@ trait CacheServiceTrait
      * @author Dennis Lui <hackout@vip.qq.com>
      * @return void
      */
-    protected function clearCacheData()
+    public function clearCacheData()
     {
         $cacheName = $this->getCacheName();
         $cache = Cache::get($cacheName, []);
@@ -75,7 +73,7 @@ trait CacheServiceTrait
         $this->clearCacheData();
     }
 
-    protected function getCacheKey(array $array): string
+    public function getCacheKey(array $array): string
     {
         return md5(json_encode($array));
     }
