@@ -45,5 +45,5 @@ interface CacheInterface
      * @param  array  $array
      * @return string
      */
-    protected function getCacheKey(array $array): string;
+    public function getCacheKey(array $array): string;
 }
