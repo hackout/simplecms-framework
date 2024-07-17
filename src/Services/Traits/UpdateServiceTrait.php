@@ -72,7 +72,7 @@ trait UpdateServiceTrait
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            logger($e->getMessage());
+            error_log($e->getMessage());
         }
 
         if ($result) {

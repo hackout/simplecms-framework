@@ -71,8 +71,20 @@ class Captcha extends CaptchaAbstract
         $this->text = $generator['value'];
         $this->canvas = $this->imageManager->read($this->background());
         $this->canvas->resize($this->width, $this->height);
-        $this->image = $this->canvas;
+        $this->addImage();
 
+        Cache::put($this->utils->get_cache_key($generator['key']), $generator['value'], $this->expire);
+
+        return $api ? [
+            'sensitive' => $generator['sensitive'],
+            'key' => $generator['key'],
+            'img' => $this->image->toJpeg($this->quality)->toDataUri()
+        ] : response($this->image->toJpeg($this->quality), '200', ['Content-Type' => 'image/jpeg']);
+    }
+
+    private function addImage(): void
+    {
+        $this->image = $this->canvas;
         if ($this->contrast != 0) {
             $this->image->contrast($this->contrast);
         }
@@ -90,14 +102,6 @@ class Captcha extends CaptchaAbstract
         if ($this->blur) {
             $this->image->blur($this->blur);
         }
-
-        Cache::put($this->utils->get_cache_key($generator['key']), $generator['value'], $this->expire);
-
-        return $api ? [
-            'sensitive' => $generator['sensitive'],
-            'key' => $generator['key'],
-            'img' => $this->image->toJpeg($this->quality)->toDataUri()
-        ] : response($this->image->toJpeg($this->quality), '200', ['Content-Type' => 'image/jpeg']);
     }
 
 
