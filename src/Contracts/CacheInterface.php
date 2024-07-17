@@ -13,7 +13,7 @@ interface CacheInterface
      * @param array|null $array
      * @return string
      */
-    protected function getCacheName(array|null $array = null): string;
+    public function getCacheName(array|null $array = null): string;
 
     /**
      * 读取数据缓存
@@ -23,7 +23,7 @@ interface CacheInterface
      * @param  callable $function
      * @return mixed
      */
-    protected function getCacheData(array $array, callable $function): mixed;
+    public function getCacheData(array $array, callable $function): mixed;
 
     /**
      * 清空缓存标记
