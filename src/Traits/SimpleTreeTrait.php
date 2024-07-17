@@ -39,7 +39,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read mixed $children 下级
  * 
  * @use \Illuminate\Database\Eloquent\Model
+ * @use \Illuminate\Database\Eloquent\Concerns\HasRelationships
  * @abstract \Illuminate\Database\Eloquent\Model
+ * @abstract \Illuminate\Database\Eloquent\Concerns\HasRelationships
  *
  */
 trait SimpleTreeTrait

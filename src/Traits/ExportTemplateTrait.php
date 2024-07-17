@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
  * @use \SimpleCMS\Framework\Services\SimpleService
  * @abstract \SimpleCMS\Framework\Services\SimpleService
  * 
- * @static class-string EXPORT_NAME
+ * @const string EXPORT_NAME 
  */
 trait ExportTemplateTrait
 {

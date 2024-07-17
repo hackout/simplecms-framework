@@ -2,6 +2,7 @@
 
 namespace SimpleCMS\Framework\Services;
 
+use function is_null;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -97,8 +98,10 @@ class BaseService
      */
     private function autoOrderKey(): string
     {
-        if (in_array('sort_order', $this->model->getFillable())) {
-            return 'sort_order';
+        if (!is_null($this->model)) {
+            if (in_array('sort_order', $this->model->getFillable())) {
+                return 'sort_order';
+            }
         }
         return 'created_at';
     }
@@ -106,7 +109,7 @@ class BaseService
     /**
      * @return string
      */
-    public function getClassName():string
+    public function getClassName(): string
     {
         return (string) $this->className;
     }
@@ -119,7 +122,7 @@ class BaseService
         return (string) $this->tableName;
     }
 
-    public function getPrimaryKey():string
+    public function getPrimaryKey(): string
     {
         return (string) $this->primaryKey;
     }

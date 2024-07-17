@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\DB;
  * 
  * @author Dennis Lui <hackout@vip.qq.com>
  * 
- * @template TKey
- * @template TValue
  */
 class System
 {
@@ -30,29 +28,29 @@ class System
         $serverInfo = collect();
         // 获取服务器信息
         $server = collect();
-        $server->put('name',(string) Request::server('SERVER_NAME'));
-        $server->put('software',(string) Request::server('SERVER_SOFTWARE'));
-        $server->put('ip',(string) Request::server('SERVER_ADDR'));
-        $server->put('port',(string) Request::server('SERVER_PORT'));
-        $serverInfo->put('server',$server);
+        $server->put(/** @scrutinizer ignore-type */ 'name',/** @scrutinizer ignore-type */ (string) Request::server('SERVER_NAME'));
+        $server->put(/** @scrutinizer ignore-type */ 'software',/** @scrutinizer ignore-type */ (string) Request::server('SERVER_SOFTWARE'));
+        $server->put(/** @scrutinizer ignore-type */ 'ip',/** @scrutinizer ignore-type */ (string) Request::server('SERVER_ADDR'));
+        $server->put(/** @scrutinizer ignore-type */ 'port',/** @scrutinizer ignore-type */ (string) Request::server('SERVER_PORT'));
+        $serverInfo->put(/** @scrutinizer ignore-type */ 'server',/** @scrutinizer ignore-type */ $server);
 
         // 获取 PHP 版本信息
-        $serverInfo->put('php',phpversion());
+        $serverInfo->put(/** @scrutinizer ignore-type */ 'php',/** @scrutinizer ignore-type */ phpversion());
 
         // 获取数据库信息（需要先配置数据库连接）
         $dbInfo = DB::connection()->getPdo()->getAttribute(\PDO::ATTR_SERVER_VERSION);
 
-        $serverInfo->put('database',$dbInfo);
+        $serverInfo->put(/** @scrutinizer ignore-type */ 'database',/** @scrutinizer ignore-type */ $dbInfo);
 
         // 获取服务器的 CPU 信息
-        $serverInfo->put('cpu',$this->getCpuInfo());
+        $serverInfo->put(/** @scrutinizer ignore-type */ 'cpu',/** @scrutinizer ignore-type */ $this->getCpuInfo());
 
         // 获取服务器的系统版本信息
         $systemVersion = php_uname('a');
-        $serverInfo->put('system',$systemVersion);
+        $serverInfo->put(/** @scrutinizer ignore-type */ 'system',/** @scrutinizer ignore-type */ $systemVersion);
 
-        $serverInfo->put('framework',$this->getFramework());
-        $serverInfo->put('laravel',app()->/** @scrutinizer ignore-call */ version());
+        $serverInfo->put(/** @scrutinizer ignore-type */ 'framework',/** @scrutinizer ignore-type */ $this->getFramework());
+        $serverInfo->put(/** @scrutinizer ignore-type */ 'laravel', app()->/** @scrutinizer ignore-call */ version());
         return $serverInfo;
     }
 

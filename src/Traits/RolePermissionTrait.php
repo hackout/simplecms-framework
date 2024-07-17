@@ -15,7 +15,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  *   const SUPER_ID = 'my_is_super';
  * 
  * @use \Illuminate\Database\Eloquent\Model
+ * @use \Illuminate\Database\Eloquent\Concerns\HasRelationships
  * @abstract \Illuminate\Database\Eloquent\Model
+ * @abstract \Illuminate\Database\Eloquent\Concerns\HasRelationships
  * 
  * @static string SUPER_ID
  *

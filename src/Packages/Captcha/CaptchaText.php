@@ -20,7 +20,7 @@ trait CaptchaText
      */
     protected function generate(): array
     {
-        $characters = is_string($this->characters) ? str_split($this->characters) : $this->characters;
+        $characters = (array) (is_string($this->characters) ? str_split($this->characters) : $this->characters);
         $bag = [];
         if ($this->math) {
             $x = random_int(10, 30);

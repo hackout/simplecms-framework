@@ -165,39 +165,75 @@ class SimpleService extends BaseService implements CacheInterface, BuilderInterf
         return $result;
     }
 
+
     /**
      * 更新附件
      *
-     * @author Dennis Lui <hackout@vip.qq.com>
-     * @param  array $files
-     * @param  array $multipleFiles
-     * @param  array $mediaFields
+     * @param array $files
+     * @param array $multipleFiles
+     * @param array $mediaFields
      * @return void
      */
     protected function updateMedia(array $files, array $multipleFiles, array $mediaFields): void
     {
         if (!empty($files)) {
-            if (empty($mediaFields)) {
-                $mediaColumn = $this->getMediaColumn() ?? head(array_keys($files));
-                $this->addMedia(head($files), $mediaColumn);
-            } else {
-                foreach ($files as $field => $file) {
-                    if (array_key_exists($field, $mediaFields) && $mediaFields[$field]) {
-                        $this->addMedia($file, $mediaFields[$field]);
-                    }
-                }
-            }
+            $this->processSingleFiles($files, $mediaFields);
         }
         if (!empty($multipleFiles)) {
+            $this->processMultipleFiles($multipleFiles, $mediaFields);
+        }
+    }
 
-            if (empty($mediaFields)) {
-                $mediaColumn = $this->getMediaColumn() ?? head(array_keys($multipleFiles));
-                $this->addMultipleMedia(head($multipleFiles), $mediaColumn);
-            } else {
-                foreach ($multipleFiles as $field => $file) {
-                    if (array_key_exists($field, $mediaFields) && $mediaFields[$field]) {
-                        $this->addMultipleMedia($file, $mediaFields[$field]);
-                    }
+    /**
+     * 处理单个文件
+     *
+     * @param array $files
+     * @param array $mediaFields
+     * @return void
+     */
+    private function processSingleFiles(array $files, array $mediaFields): void
+    {
+        if (empty($mediaFields)) {
+            $mediaColumn = $this->getMediaColumn() ?? head(array_keys($files));
+            $this->addMedia(head($files), $mediaColumn);
+        } else {
+            $this->processFilesWithFields($files, $mediaFields, false);
+        }
+    }
+
+    /**
+     * 处理多个文件
+     *
+     * @param array $multipleFiles
+     * @param array $mediaFields
+     * @return void
+     */
+    private function processMultipleFiles(array $multipleFiles, array $mediaFields): void
+    {
+        if (empty($mediaFields)) {
+            $mediaColumn = $this->getMediaColumn() ?? head(array_keys($multipleFiles));
+            $this->addMultipleMedia(head($multipleFiles), $mediaColumn);
+        } else {
+            $this->processFilesWithFields($multipleFiles, $mediaFields, true);
+        }
+    }
+
+    /**
+     * 处理带有字段的文件
+     *
+     * @param array $files
+     * @param array $mediaFields
+     * @param bool $isMultiple
+     * @return void
+     */
+    private function processFilesWithFields(array $files, array $mediaFields, bool $isMultiple): void
+    {
+        foreach ($files as $field => $file) {
+            if (array_key_exists($field, $mediaFields) && $mediaFields[$field]) {
+                if ($isMultiple) {
+                    $this->addMultipleMedia($file, $mediaFields[$field]);
+                } else {
+                    $this->addMedia($file, $mediaFields[$field]);
                 }
             }
         }
@@ -389,7 +425,7 @@ class SimpleService extends BaseService implements CacheInterface, BuilderInterf
         if ($result) {
             $this->clearCache();
         }
-        return $result;
+        return (bool) $result;
     }
 
 

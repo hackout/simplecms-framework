@@ -60,7 +60,7 @@ trait MediaAttributeTrait
     public function getFirstMediaArray(string $collectionName = 'default', array|callable $filters = []): array
     {
         $medias = $this->getMediaArray($collectionName, $filters);
-        if (!$medias)
+        if (empty($medias))
             return [];
         return head($medias);
     }
