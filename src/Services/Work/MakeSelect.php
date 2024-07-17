@@ -18,7 +18,7 @@ class MakeSelect
      */
     public function run(mixed $model, $select = []): mixed
     {
-        $selectList = new Collection($select ? $select : (array) $model->getFillable());
+        $selectList = new Collection(/** @scrutinizer ignore-type */ $select ?? (array) $model->getFillable());
         $casts = $model->getCasts();
         $primaryKey = $model->getKeyName();
         $defaultSelect = [
@@ -28,11 +28,11 @@ class MakeSelect
         ];
         if (empty($select)) {
             if (!empty($primaryKey) && !in_array($primaryKey, $selectList->toArray())) {
-                $selectList->push($primaryKey);
+                $selectList->push(/** @scrutinizer ignore-type */ $primaryKey);
             }
             foreach ($defaultSelect as $defaultField) {
                 if (array_key_exists($defaultField, $casts)) {
-                    $selectList->push($defaultField);
+                    $selectList->push(/** @scrutinizer ignore-type */ $defaultField);
                 }
             }
         }

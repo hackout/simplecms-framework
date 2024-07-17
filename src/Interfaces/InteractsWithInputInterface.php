@@ -218,7 +218,7 @@ interface InteractsWithInputInterface
      *
      *
      * @param  string  $key
-     * @param  class-string  $enumClass
+     * @param  string  $enumClass
      * @return mixed
      */
     public function enum($key, $enumClass);

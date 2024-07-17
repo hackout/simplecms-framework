@@ -24,7 +24,7 @@ class ConvertData
             foreach ($data as $field => $value) {
                 if (!empty($value) && ($value instanceof UploadedFile || (is_string($field) && isset($mediaFields[$field])))) {
                     $files[$field] = $value;
-                } elseif (is_array($value) && $value && (head($value) instanceof UploadedFile || isset($mediaFields[$field]))) {
+                } elseif (is_array($value) && !empty($value) && (head($value) instanceof UploadedFile || isset($mediaFields[$field]))) {
                     $multipleFiles[$field] = $value;
                 } else {
                     $sql[$field] = $value;

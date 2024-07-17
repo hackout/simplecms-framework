@@ -71,7 +71,7 @@ trait BuilderServiceTrait
     private function builder(?string $prop = null, ?string $order = null): Builder|Model|null
     {
         $this->builder = $this->getModel();
-        if (!$this->builder)
+        if (empty($this->builder))
             return null;
 
         $this->builderQuery();

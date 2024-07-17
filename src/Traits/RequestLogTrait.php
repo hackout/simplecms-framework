@@ -28,6 +28,7 @@ trait RequestLogTrait
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @return MorphMany
+     * 
      */
     public function request_logs(): MorphMany
     {

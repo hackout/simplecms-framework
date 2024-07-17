@@ -2,6 +2,7 @@
 namespace SimpleCMS\Framework\Services;
 
 use FFMpeg\FFMpeg;
+use FFMpeg\Media\Video;
 use Illuminate\Support\Str;
 use FFMpeg\Coordinate\TimeCode;
 use Intervention\Image\ImageManager;
@@ -53,8 +54,15 @@ class SimpleUploadService
         $ffmpeg = FFMpeg::create($ffmpegConfig);
         $video = $ffmpeg->open(Storage::path($file));
         $poster = str_replace(Str::of(Storage::path($file))->afterLast('.'), 'jpg', Storage::path($file));
-        $frame = $video->frame(TimeCode::fromSeconds(1));
-        $frame->save($poster, true);
+        if ($video instanceof Video) {
+            $frame = $video->frame(TimeCode::fromSeconds(1));
+            $frame->save($poster, true);
+        } else {
+            if (is_writeable(dirname($poster))) {
+                $musicScreenshot = config('cms.music_screenshot', __DIR__ . '/../../assets/music.jpg');
+                copy($musicScreenshot, $poster);
+            }
+        }
         return $poster;
     }
 
@@ -70,7 +78,7 @@ class SimpleUploadService
     {
         $uuid = Str::uuid();
         $filename = $uuid . '.' . $fileBag->getClientOriginalExtension();
-        $file = Storage::putFileAs('public/' . $dir . '/temp', $fileBag, $filename);
+        $file = (string) Storage::putFileAs('public/' . $dir . '/temp', $fileBag, $filename);
         $result = [
             'url' => Storage::url($file),
             'alt' => $fileBag->getClientOriginalName(),
@@ -79,7 +87,7 @@ class SimpleUploadService
             'path' => 'public/' . $dir . '/temp/' . $filename,
             'poster' => null
         ];
-        if ($width) {
+        if ($width && !empty($file)) {
             $result['poster'] = $this->makeThumbnail($file, $width);
         }
         return $result;

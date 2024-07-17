@@ -19,7 +19,7 @@ trait WithModelStub
      */
     protected function buildModelReplacements(array $replace): array
     {
-        $modelClass = $this->parseModel($this->option('model'));
+        $modelClass = $this->parseModel((string) $this->option('model'));
 
         return array_merge($replace, [
             'DummyFullModelClass' => $modelClass,

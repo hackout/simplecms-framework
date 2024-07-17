@@ -23,6 +23,7 @@ class SimpleService extends BaseService implements CacheInterface, BuilderInterf
 {
     use Macroable, CacheServiceTrait, BuilderServiceTrait, RetrieveServiceTrait;
 
+    protected string $name = 'simple.service';
     /**
      * 上传文件/图片/视频
      *
@@ -370,12 +371,21 @@ class SimpleService extends BaseService implements CacheInterface, BuilderInterf
     {
         $model = $this->getModel();
         $result = false;
-        if (!$model)
+        if (!$model) {
             return $result;
-        if (is_array($id) || is_callable($id)) {
-            return (bool) $model->where($id)->update(["{$field}" => $value]);
         }
-        $result = (bool) $model->where('id', $id)->update(["{$field}" => $value]);
+        $type = 'string';
+        if (is_array($id)) {
+            $type = 'array';
+        } elseif (is_callable($id)) {
+            $type = 'callable';
+        }
+        if (in_array($type, ['array', 'callable'])) {
+            $result = $model->where($id)->update(["{$field}" => $value]);
+        } else {
+            $result = $model->where('id', $id)->update(["{$field}" => $value]);
+        }
+
         if ($result) {
             $this->clearCache();
         }

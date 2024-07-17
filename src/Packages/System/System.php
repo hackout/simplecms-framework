@@ -30,29 +30,29 @@ class System
         $serverInfo = collect();
         // 获取服务器信息
         $server = collect();
-        $server->put(toKey('name'), toValue((string) Request::server('SERVER_NAME')));
-        $server->put(toKey('software'), toValue((string) Request::server('SERVER_SOFTWARE')));
-        $server->put(toKey('ip'), toValue((string) Request::server('SERVER_ADDR')));
-        $server->put(toKey('port'), toValue((string) Request::server('SERVER_PORT')));
-        $serverInfo->put(toKey('server'), toValue($server));
+        $server->put('name',(string) Request::server('SERVER_NAME'));
+        $server->put('software',(string) Request::server('SERVER_SOFTWARE'));
+        $server->put('ip',(string) Request::server('SERVER_ADDR'));
+        $server->put('port',(string) Request::server('SERVER_PORT'));
+        $serverInfo->put('server',$server);
 
         // 获取 PHP 版本信息
-        $serverInfo->put(toKey('php'), toValue(phpversion()));
+        $serverInfo->put('php',phpversion());
 
         // 获取数据库信息（需要先配置数据库连接）
         $dbInfo = DB::connection()->getPdo()->getAttribute(\PDO::ATTR_SERVER_VERSION);
 
-        $serverInfo->put(toKey('database'), toValue($dbInfo));
+        $serverInfo->put('database',$dbInfo);
 
         // 获取服务器的 CPU 信息
-        $serverInfo->put(toKey('cpu'), toValue($this->getCpuInfo()));
+        $serverInfo->put('cpu',$this->getCpuInfo());
 
         // 获取服务器的系统版本信息
         $systemVersion = php_uname('a');
-        $serverInfo->put(toKey('system'), toValue($systemVersion));
+        $serverInfo->put('system',$systemVersion);
 
-        $serverInfo->put(toKey('framework'), toValue($this->getFramework()));
-        $serverInfo->put(toKey('laravel'), toValue(app()->/** @scrutinizer ignore-call */ version()));
+        $serverInfo->put('framework',$this->getFramework());
+        $serverInfo->put('laravel',app()->/** @scrutinizer ignore-call */ version());
         return $serverInfo;
     }
 

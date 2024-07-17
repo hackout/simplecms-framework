@@ -7,6 +7,7 @@ return [
     'ffprobe_path' => (string) env('FFPROBE_PATH', 'D:\\ffmpeg-master-latest-win64-gpl\\bin\\ffprobe.exe'),
     //默认密码
     'default_password' => (string) env('DEFAULT_PASSWORD', '123456'),
+    'music_screenshot' => env('MUSIC_SCREENSHOT',null),
     'captcha' => [
         'disable' => env('CAPTCHA_DISABLE', false),
         'characters' => ['2', '3', '4', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'm', 'n', 'p', 'q', 'r', 't', 'u', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'M', 'N', 'P', 'Q', 'R', 'T', 'U', 'X', 'Y', 'Z'],
