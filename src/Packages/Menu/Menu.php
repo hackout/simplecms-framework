@@ -31,7 +31,7 @@ class Menu
         }
 
         $current = $this->matchRoute($menu, true, true);
-        $siblingList = collect([$current]);
+        $siblingList = collect(/** @scrutinizer ignore-type */[$current]);
         $breadcrumbs = [$current];
 
         $parent = $menu->parent;

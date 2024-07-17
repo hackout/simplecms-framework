@@ -67,7 +67,7 @@ trait CaptchaText
         if (is_array($this->characters)) {
             return $this->characters;
         }
-        return str_split($this->characters) ?? [];
+        return str_split($this->characters);
     }
 
     private function getGenerateBag(): array
@@ -87,7 +87,7 @@ trait CaptchaText
                 }
             }
         }
-        return $bag;
+        return (array) $bag;
     }
 
     private function getGenerateKey(array $generate): string
