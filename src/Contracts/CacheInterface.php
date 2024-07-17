@@ -31,7 +31,7 @@ interface CacheInterface
      * @author Dennis Lui <hackout@vip.qq.com>
      * @return void
      */
-    protected function clearCacheData();
+    public function clearCacheData();
 
     /**
      * 清空缓存数据
