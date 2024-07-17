@@ -1,12 +1,13 @@
 <?php
 
-namespace SimpleCMS\Framework\Services;
+namespace SimpleCMS\Framework\Services\Traits;
 
 use Illuminate\Support\Facades\Cache;
+use SimpleCMS\Framework\Services\Work\CanCache;
 
 /**
- * @use BaseService
- * @abstract BaseService
+ * @use \SimpleCMS\Framework\Services\BaseService
+ * @abstract \SimpleCMS\Framework\Services\BaseService
  */
 trait CacheServiceTrait
 {
@@ -33,7 +34,7 @@ trait CacheServiceTrait
      */
     protected function getCacheData(array $array, callable $function): mixed
     {
-        if (!Work\CanCache::run($this->getClassName()))
+        if (!CanCache::run($this->getClassName()))
             return $function();
         $cacheKeyName = $this->getCacheName($array);
         $cacheName = $this->getCacheName();

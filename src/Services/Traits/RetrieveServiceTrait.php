@@ -1,10 +1,10 @@
 <?php
 
-namespace SimpleCMS\Framework\Services;
+namespace SimpleCMS\Framework\Services\Traits;
 
 /**
- * @use BaseService
- * @abstract BaseService
+ * @use \SimpleCMS\Framework\Services\BaseService
+ * @abstract \SimpleCMS\Framework\Services\BaseService
  */
 trait RetrieveServiceTrait
 {

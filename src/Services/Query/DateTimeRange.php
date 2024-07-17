@@ -38,18 +38,13 @@ class DateTimeRange
     private static function buildQueryFunction(array $values, array $fields, bool $isFull): callable
     {
         return function (Builder $query) use ($values, $fields, $isFull) {
-            $condition = self::determineCondition($values);
+            $condition = Condition::range($values);
             $data = self::parseData($values, $condition);
 
             foreach ($fields as $key => $field) {
-                self::applyConditionToQuery($query, $field, $condition, $data, $isFull, $key);
+                BuilderQuery::applyQuery($query, $field, $condition, $data, $isFull, $key);
             }
         };
-    }
-
-    private static function determineCondition(array $values): string
-    {
-        return (head($values) === null) ? '<' : ((last($values) === null) ? '>=' : 'between');
     }
 
     private static function parseData(array $values, string $condition): mixed
@@ -67,14 +62,4 @@ class DateTimeRange
         return $data;
     }
 
-    private static function applyConditionToQuery(Builder $query, string $field, string $condition, mixed $data, bool $isFull, int $key): void
-    {
-        if ($isFull) {
-            $method = ($condition === 'between') ? 'whereBetween' : 'where';
-        } else {
-            $method = ($condition === 'between') ? 'orWhereBetween' : 'orWhere';
-        }
-
-        $query->{$key ? $method : 'where'}($field, $condition, $data);
-    }
 }

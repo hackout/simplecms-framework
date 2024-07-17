@@ -1,17 +1,18 @@
 <?php
 
-namespace SimpleCMS\Framework\Services;
+namespace SimpleCMS\Framework\Services\Traits;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use SimpleCMS\Framework\Services\Work\MakeSelect;
 use Illuminate\Database\Query\Builder as DatabaseBuilder;
 
 /**
- * @use BaseService
- * @abstract BaseService
+ * @use \SimpleCMS\Framework\Services\BaseService
+ * @abstract \SimpleCMS\Framework\Services\BaseService
  */
 trait BuilderServiceTrait
 {
@@ -78,7 +79,7 @@ trait BuilderServiceTrait
         $this->builderWith();
         $this->builderGroup();
         $this->builderHas();
-        $this->setSelect((new Work\MakeSelect)->run($this->getModel(), $this->getSelect()));
+        $this->setSelect((new MakeSelect)->run($this->getModel(), $this->getSelect()));
         $this->builderSelect();
         if ($prop) {
             $this->setOrderKey($prop);

@@ -11,40 +11,40 @@ class Search
     /**
      * 搜索字段
      * 
-     * 说明:
      * 
+     * 说明:
      * $isFull 如果为真则需要所有字段均出现该关键词
      *
      * @author Dennis Lui <hackout@vip.qq.com>
-     * @param  array|string       $keywords
+     * @param  int|float|string   $value
      * @param  array|string       $fields
      * @param  bool               $isFull 
      * @return array
      */
-    public static function builder(...$params): array
+    public static function builder(int|float|string $value, array|string $fields, bool $isFull = false): array
     {
-        list($keywords, $fields, $isFull) = array_pad($params, 3, null);
-        if (!is_array($keywords)) {
-            $keywords = explode(',', trim($keywords));
-        }
-        if (!is_array($fields)) {
-            $fields = [$fields];
-        }
-        $isFull = !empty($isFull);
+        $fields = !is_array($fields) ? [$fields] : $fields;
+
         return [
-            function (Builder $query) use ($keywords, $fields, $isFull) {
-                foreach ($keywords as $index => $keyword) {
-                    $method = 'whereAny';
-                    if ($isFull)
-                        $method = 'whereAll';
-                    if ($index) {
-                        $method = 'orWhereAny';
-                        if ($isFull)
-                            $method = 'orWhereAll';
-                    }
-                    $query->$method($fields, 'LIKE', "%$keyword%");
-                }
-            }
+            self::buildQueryFunction($value, $fields, $isFull)
         ];
+    }
+
+    private static function buildQueryFunction(int|float|string $value, array $fields, bool $isFull): callable
+    {
+        return function (Builder $query) use ($value, $fields, $isFull) {
+            $data = self::parseData($value);
+            foreach ($fields as $key => $field) {
+                BuilderQuery::applyQuery($query, $field, 'like', $data, $isFull, $key);
+            }
+        };
+    }
+
+    private static function parseData(int|float|string $value): string
+    {
+        $result = '%';
+        $result .= $value;
+        $result .= '%';
+        return $result;
     }
 }
