@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 class BaseService
 {
-    protected string $className = null;
+    protected string $className;
 
     private array $query = [];
 
