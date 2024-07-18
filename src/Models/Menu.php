@@ -49,7 +49,7 @@ class Menu extends Model implements SimpleMedia
      */
     const TYPE_FRONTEND = 2;
 
-    public $hasOneMedia = ['file'];
+    protected $hasOneMedia = ['file'];
 
     protected $fillable = [
         'name',

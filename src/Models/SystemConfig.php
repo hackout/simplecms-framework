@@ -39,7 +39,7 @@ class SystemConfig extends Model implements SimpleMedia
      */
     const MEDIA_FILE = 'file';
 
-    public $hasOneMedia = ['file'];
+    protected $hasOneMedia = ['file'];
 
     protected $fillable = [
         'code',
