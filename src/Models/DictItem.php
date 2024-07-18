@@ -26,7 +26,7 @@ class DictItem extends Model implements SimpleMedia
 
     const MEDIA_FILE = 'file';
 
-    public array $hasOneMedia = ['file'];
+    public $hasOneMedia = ['file'];
 
     protected $fillable = [
         'dict_id',
