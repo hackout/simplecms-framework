@@ -1,10 +1,7 @@
 <?php
 namespace SimpleCMS\Framework\Services\Work;
 
-use Illuminate\Support\Collection;
 use function is_array;
-use function is_string;
-use Illuminate\Http\UploadedFile;
 
 /**
  * 请求更新数据转换
@@ -26,7 +23,7 @@ class ConvertData
                 $result = self::makeResult($value, $field, $mediaFields);
                 $result['type'] == 'sql' && $sql[$field] = $value;
                 $result['type'] == 'multiple' && $multiple[$field] = $value;
-                $result['type'] == 'files' && $files[$field] = $value;
+                $result['type'] == 'file' && $files[$field] = $value;
             }
         }
         return [$sql, $files, $multiple];
@@ -39,9 +36,9 @@ class ConvertData
             'value' => $values,
             'type' => 'sql'
         ];
-        if (isset($mediaFields[$field]) && !empty($values)) {
+        if (in_array($field, $mediaFields) && !empty($values)) {
             $result['value'] = $values;
-            $result['type'] = is_array($values) ? 'multiple' : 'files';
+            $result['type'] = is_array($values) ? 'multiple' : 'file';
             return $result;
         }
         return $result;
