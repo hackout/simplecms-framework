@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 trait RolePermissionTrait
 {
+    protected $superPrimaryKey = 'is_super';
 
     public static function bootRolePermissionTrait()
     {
@@ -66,10 +67,6 @@ trait RolePermissionTrait
 
     protected function getSuperColumnName(): string
     {
-        // 检查类属性是否存在并且不为空
-        if (property_exists($this, 'superPrimaryKey') && !empty($this->superPrimaryKey)) {
-            return $this->superPrimaryKey;
-        }
-        return 'is_super';
+        return $this->superPrimaryKey;
     }
 }

@@ -22,6 +22,8 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 trait MediaAttributeTrait
 {
     use InteractsWithMedia;
+    protected $hasOneMedia = [];
+
     /**
      * 获取既定规格附件
      *
@@ -94,10 +96,7 @@ trait MediaAttributeTrait
      */
     public function getHasOneMedia(): array
     {
-        if (property_exists($this, 'hasOneMedia')) {
-            return $this->hasOneMedia;
-        }
-        return [];
+        return $this->hasOneMedia;
     }
 
 }

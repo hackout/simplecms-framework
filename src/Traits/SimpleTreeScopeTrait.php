@@ -141,6 +141,7 @@ trait SimpleTreeScopeTrait
     {
         $result = [];
         $indentString = str_repeat($indent, $depth);
+        /** @scrutinizer ignore-call */
         $idName = $this->getKeyName();
 
         foreach ($items as $item) {

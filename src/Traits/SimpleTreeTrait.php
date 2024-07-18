@@ -46,6 +46,9 @@ trait SimpleTreeTrait
 {
 
     use SimpleTreeScopeTrait;
+
+    protected $parentPrimaryKey = 'parent_id';
+
     public static function bootSimpleTreeTrait()
     {
         static::deleting(function ($model) {
@@ -82,7 +85,7 @@ trait SimpleTreeTrait
     public function getAll()
     {
         $collection = [];
-        foreach ($this->getAllRoot() as $rootNode) {
+        foreach ($this->/** @scrutinizer ignore-call */ getAllRoot() as $rootNode) {
             $collection[] = $rootNode;
             $collection = $collection + $rootNode->getAllChildren()->getDictionary();
         }
@@ -153,11 +156,7 @@ trait SimpleTreeTrait
      */
     public function getParentColumnName()
     {
-        // 检查类属性是否存在并且不为空
-        if (property_exists($this, 'parentPrimaryKey') && !empty($this->parentPrimaryKey)) {
-            return $this->parentPrimaryKey;
-        }
-        return 'parent_id';
+        return $this->parentPrimaryKey;
     }
 
     /**

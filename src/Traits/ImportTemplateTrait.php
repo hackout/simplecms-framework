@@ -1,6 +1,7 @@
 <?php
 namespace SimpleCMS\Framework\Traits;
 
+use function is_null;
 use Maatwebsite\Excel\Facades\Excel;
 use SimpleCMS\Framework\Exceptions\SimpleException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -13,12 +14,13 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  * @author Dennis Lui <hackout@vip.qq.com>
  * 
  * @use \SimpleCMS\Framework\Services\SimpleService
- * @abstract \SimpleCMS\Framework\Services\SimpleService
  * 
- * @const string IMPORT_NAME 
  */
 trait ImportTemplateTrait
 {
+
+    protected $importName = null;
+
     /**
      * 获取导入模板路径
      *
@@ -77,11 +79,10 @@ trait ImportTemplateTrait
      */
     protected function getImportClassName(): string
     {
-        // 检查类属性是否存在并且不为空
-        if (property_exists($this, 'importName') && !empty($this->importName)) {
+        if (!is_null($this->importName)) {
             return $this->importName;
         }
-        
+
         return '\App\Exports\\' . basename($this->className) . 'Import';
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace SimpleCMS\Framework\Traits;
 
+use function is_null;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
@@ -11,12 +12,11 @@ use Illuminate\Support\Facades\Storage;
  * @author Dennis Lui <hackout@vip.qq.com>
  * 
  * @use \SimpleCMS\Framework\Services\SimpleService
- * @abstract \SimpleCMS\Framework\Services\SimpleService
  * 
- * @const string EXPORT_NAME 
  */
 trait ExportTemplateTrait
 {
+    protected $exportName = null;
 
     /**
      * 导出数据
@@ -46,8 +46,7 @@ trait ExportTemplateTrait
      */
     protected function getExportClassName(): string
     {
-        // 检查类属性是否存在并且不为空
-        if (property_exists($this, 'exportName') && !empty($this->exportName)) {
+        if (!is_null($this->exportName)) {
             return $this->exportName;
         }
         
