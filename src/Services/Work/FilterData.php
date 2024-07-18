@@ -1,6 +1,7 @@
 <?php
 namespace SimpleCMS\Framework\Services\Work;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
@@ -10,10 +11,6 @@ use Illuminate\Support\Collection as BaseCollection;
  * 转换模型到数组
  *
  * @author Dennis Lui <hackout@vip.qq.com>
- * 
- * @template TKey of array-key
- *
- * @template-covariant TValue
  * 
  */
 class FilterData
@@ -35,7 +32,7 @@ class FilterData
             foreach ($fieldList as $value) {
                 list($key,$field) = self::parseField($value);
 
-                $newItem->put($field,self::processData($item,$key));
+                $newItem->put(/** @scrutinizer ignore-type */$field,/** @scrutinizer ignore-type */self::processData($item,$key));
             }
             return $newItem;
         });
@@ -44,7 +41,7 @@ class FilterData
     /**
      * @param mixed $item
      * @param string $key
-     * @return TValue|null
+     * @return mixed
      */
     private static function processData($item,string $key)
     {
@@ -60,7 +57,7 @@ class FilterData
     /**
      * @param mixed $item
      * @param string $key
-     * @return TValue|null
+     * @return mixed
      */
     private static function parseOnlyValue($result,array $only)
     {
@@ -78,9 +75,9 @@ class FilterData
      * @param  \Illuminate\Database\Eloquent\Model         $result
      * @param  array          $fields
      * @param  array          $alias
-     * @return TValue|null
+     * @return mixed
      */
-    private static function convertCollectionOnly($result,array $fields,array $alias)
+    private static function convertCollectionOnly(Collection|Model $result,array $fields,array $alias)
     {
         foreach($alias as $key=>$field)
         {
@@ -115,7 +112,7 @@ class FilterData
 
     /**
      * @param string $value
-     * @return array<string,TKey>
+     * @return array<string,mixed>
      */
     private static function parseField(string $value): array
     {
@@ -125,17 +122,6 @@ class FilterData
             $field = self::parseFieldData($key);
         }
         return [$key,$field];
-    }
-
-
-    private static function parseFieldDataByList(string $key):array
-    {
-        $keys = [];
-        foreach(explode(',',Str::afterLast($key,':')) as $rs)
-        {
-            $keys[] = Str::afterLast($rs,' as ');
-        }
-        return $keys;
     }
 
 }

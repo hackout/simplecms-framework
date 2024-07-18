@@ -79,7 +79,7 @@ trait BuilderServiceTrait
         $this->builderWith();
         $this->builderGroup();
         $this->builderHas();
-        $this->setSelect((new MakeSelect)->run($this->/** @scrutinizer ignore-call */ getModel(), $this->/** @scrutinizer ignore-call */ getSelect()));
+        $this->/** @scrutinizer ignore-call */ setSelect((new MakeSelect)->run($this->/** @scrutinizer ignore-call */ getModel(), $this->/** @scrutinizer ignore-call */ getSelect()));
         $this->builderSelect();
         if ($prop) {
             $this->/** @scrutinizer ignore-call */ setOrderKey($prop);

@@ -1,10 +1,9 @@
 <?php
 namespace SimpleCMS\Framework\Services\Traits;
 
-use SimpleCMS\Framework\Services\Work\ConvertData;
-use function is_array;
 use function is_callable;
 use Illuminate\Support\Facades\DB;
+use SimpleCMS\Framework\Services\Work\ConvertData;
 use SimpleCMS\Framework\Exceptions\SimpleException;
 
 /**
@@ -28,7 +27,7 @@ trait UpdateServiceTrait
      */
     public function update(string|int $id, array $data, array $mediaFields = [])
     {
-        $this->setItem($this->/** @scrutinizer ignore-call */ findById($id));
+        $this->/** @scrutinizer ignore-call */ setItem($this->/** @scrutinizer ignore-call */ findById($id));
         if (!$item = $this->/** @scrutinizer ignore-call */ getItem()) {
             throw new SimpleException(trans('simplecms:not_exists'));
         }

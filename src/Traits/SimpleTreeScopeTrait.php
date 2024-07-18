@@ -47,7 +47,7 @@ trait SimpleTreeScopeTrait
      */
     public function scopeGetAllRoot($query)
     {
-        return $query->where($this->getParentColumnName(), null)->get();
+        return $query->where($this->/** @scrutinizer ignore-call */getParentColumnName(), null)->get();
     }
 
     /**
@@ -90,7 +90,7 @@ trait SimpleTreeScopeTrait
         /** @scrutinizer ignore-call */
         $idName = $this->getKeyName();
 
-        $parentName = $this->getParentColumnName();
+        $parentName = $this->/** @scrutinizer ignore-call */getParentColumnName();
 
         $columns = [$idName, $parentName, $column];
         if ($key !== null) {
@@ -108,7 +108,7 @@ trait SimpleTreeScopeTrait
      */
     protected function buildParentChildMap($collection)
     {
-        $parentName = $this->getParentColumnName();
+        $parentName = $this->/** @scrutinizer ignore-call */getParentColumnName();
         $pairMap = [];
         $rootItems = [];
 
@@ -155,7 +155,7 @@ trait SimpleTreeScopeTrait
             }
 
             // Add the children
-            $childItems = $map instanceof Collection ? $map->get($item->{$idName}, []) : collect($map)->get($item->{$idName}, []);
+            $childItems = $map instanceof Collection ? $map->get($item->{$idName}, []) : collect(/** @scrutinizer ignore-type */$map)->get($item->{$idName}, []);
             if (count($childItems) > 0) {
                 $result = $result + $this->buildNestedCollection($childItems, $map, $column, $key, $indent, $depth + 1);
             }
