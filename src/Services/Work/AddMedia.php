@@ -4,7 +4,6 @@ namespace SimpleCMS\Framework\Services\Work;
 use function is_string;
 use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
-use SimpleCMS\Framework\Contracts\SimpleMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
@@ -15,13 +14,13 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  */
 class AddMedia
 {
-
     /**
-     * @param  UploadedFile|string $file
-     * @param  string              $columnName
+     * @param mixed $model
+     * @param \Illuminate\Http\UploadedFile|string $file
+     * @param string $columnName
      * @return void
      */
-    public static function run(SimpleMedia $model, UploadedFile|string $file, string $columnName): void
+    public static function run($model, UploadedFile|string $file, string $columnName): void
     {
         if ($model->getHasOneMedia() && in_array($columnName, $model->getHasOneMedia())) {
             $model->getMedia($columnName)->each(fn(Media $media) => $media->delete());
@@ -35,7 +34,7 @@ class AddMedia
         }
     }
 
-    private static function applyStringMedia(SimpleMedia $model, string $file, string $columnName): void
+    private static function applyStringMedia($model, string $file, string $columnName): void
     {
         if (strpos($file, '/') === 0) {
             self::applyLocalFile($model, $file, $columnName);
@@ -46,7 +45,7 @@ class AddMedia
         }
     }
 
-    private static function applyLocalFile(SimpleMedia $model, string $file, string $columnName): void
+    private static function applyLocalFile($model, string $file, string $columnName): void
     {
         if (strpos($file, '/storage') === 0) {
             self::applyStorageFile($model, $file, $columnName);
@@ -55,13 +54,13 @@ class AddMedia
         }
     }
 
-    private static function applyStorageFile(SimpleMedia $model, string $file, string $columnName): void
+    private static function applyStorageFile($model, string $file, string $columnName): void
     {
         if (file_exists(storage_path(str_replace('/storage', '/app/public', $file)))) {
             $model->addMedia(storage_path(str_replace('/storage', '/app/public', $file)))->toMediaCollection($columnName);
         }
     }
-    private static function applyPublicFile(SimpleMedia $model, string $file, string $columnName): void
+    private static function applyPublicFile($model, string $file, string $columnName): void
     {
         if (file_exists(public_path($file))) {
             $model->addMedia(public_path($file))->toMediaCollection($columnName);
