@@ -34,28 +34,28 @@ trait BuilderServiceTrait
     private function builderQuery(): void
     {
         if ($query = $this->/** @scrutinizer ignore-call */ getQuery()) {
-            optional($this->builder)->where($query);
+            $this->builder = optional($this->builder)->where($query);
         }
     }
 
     private function builderWith(): void
     {
         if ($with = $this->/** @scrutinizer ignore-call */ getWith()) {
-            optional($this->builder)->with($with);
+            $this->builder = optional($this->builder)->with($with);
         }
     }
 
     private function builderGroup(): void
     {
         if ($group = $this->/** @scrutinizer ignore-call */ getGroup()) {
-            optional($this->builder)->groupBy($group);
+            $this->builder = optional($this->builder)->groupBy($group);
         }
     }
     private function builderHas(): void
     {
         if ($has = $this->/** @scrutinizer ignore-call */ getHas()) {
             foreach ($has as $key => $value) {
-                optional($this->builder)->whereHas($key, function ($query) use ($value) {
+                $this->builder = optional($this->builder)->whereHas($key, function ($query) use ($value) {
                     $query->where($value);
                 });
             }
@@ -65,7 +65,7 @@ trait BuilderServiceTrait
     private function builderSelect(): void
     {
         if ($select = $this->/** @scrutinizer ignore-call */ getSelect()) {
-            optional($this->builder)->selectRaw(Arr::join($select, ','));
+            $this->builder = optional($this->builder)->selectRaw(Arr::join($select, ','));
         }
     }
 
@@ -87,7 +87,7 @@ trait BuilderServiceTrait
         if ($order) {
             $this->/** @scrutinizer ignore-call */ setOrderType(Str::remove('ending', $order));
         }
-        $this->builder->orderBy($this->/** @scrutinizer ignore-call */ getOrderKey(), $this->/** @scrutinizer ignore-call */ getOrderType());
+        $this->builder = $this->builder->orderBy($this->/** @scrutinizer ignore-call */ getOrderKey(), $this->/** @scrutinizer ignore-call */ getOrderType());
 
         return $this->builder;
     }
