@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Storage;
  */
 trait ExportTemplateTrait
 {
-    protected $exportName = null;
 
     /**
      * 导出数据
@@ -46,11 +45,7 @@ trait ExportTemplateTrait
      */
     protected function getExportClassName(): string
     {
-        if (!is_null($this->exportName)) {
-            return $this->exportName;
-        }
-        
-        return '\App\Exports\\' . basename($this->className) . 'Export';
+        return defined(static::class.'::EXPORT_NAME') ? static::EXPORT_NAME : '\App\Exports\\' . basename($this->className) . 'Export';
     }
 
 }

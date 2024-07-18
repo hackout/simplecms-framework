@@ -2,7 +2,6 @@
 
 namespace SimpleCMS\Framework\Traits;
 
-use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use SimpleCMS\Framework\Database\TreeCollection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -33,21 +32,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *   $query->listsNested(); // Returns an indented array of key and value columns.
  *
  * 你可以重新定义父级ID的字段:
- *
- *   const PARENT_ID = 'my_parent_column';
+ * 
  * @property-read mixed $parent 上级
  * @property-read mixed $children 下级
  * 
  * @use \Illuminate\Database\Eloquent\Model
  * @use \Illuminate\Database\Eloquent\Concerns\HasRelationships
  *
+ * @static string PARENT_KEY
  */
 trait SimpleTreeTrait
 {
 
     use SimpleTreeScopeTrait;
-
-    protected $parentPrimaryKey = 'parent_id';
 
     public static function bootSimpleTreeTrait()
     {
@@ -156,7 +153,7 @@ trait SimpleTreeTrait
      */
     public function getParentColumnName()
     {
-        return $this->parentPrimaryKey;
+        return defined(static::class . '::PARENT_KEY') ? static::PARENT_KEY : 'parent_id';
     }
 
     /**

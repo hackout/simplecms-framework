@@ -12,17 +12,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * 
  * 你可以定义超管的字段:
  *
- *   const SUPER_ID = 'my_is_super';
+ *   const SUPER_KEY = 'my_is_super';
  * 
  * @use \Illuminate\Database\Eloquent\Model
  * @use \Illuminate\Database\Eloquent\Concerns\HasRelationships
  * 
- * @static string SUPER_ID
+ * @static string SUPER_KEY
  *
  */
 trait RolePermissionTrait
 {
-    protected $superPrimaryKey = 'is_super';
 
     public static function bootRolePermissionTrait()
     {
@@ -67,6 +66,6 @@ trait RolePermissionTrait
 
     protected function getSuperColumnName(): string
     {
-        return $this->superPrimaryKey;
+        return defined(static::class.'::SUPER_KEY') ? static::SUPER_KEY : 'is_super';
     }
 }
