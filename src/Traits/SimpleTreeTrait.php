@@ -153,11 +153,10 @@ trait SimpleTreeTrait
      */
     public function getParentColumnName()
     {
-        // 使用类常量
-        if (defined('self::PARENT_ID')) {
-            return self::PARENT_ID;
+        // 检查类属性是否存在并且不为空
+        if (property_exists($this, 'parentPrimaryKey') && !empty($this->parentPrimaryKey)) {
+            return $this->parentPrimaryKey;
         }
-
         return 'parent_id';
     }
 

@@ -46,11 +46,11 @@ trait ExportTemplateTrait
      */
     protected function getExportClassName(): string
     {
-        // 使用类常量
-        if (defined('self::EXPORT_NAME')) {
-            return self::EXPORT_NAME;
+        // 检查类属性是否存在并且不为空
+        if (property_exists($this, 'exportName') && !empty($this->exportName)) {
+            return $this->exportName;
         }
-
+        
         return '\App\Exports\\' . basename($this->className) . 'Export';
     }
 

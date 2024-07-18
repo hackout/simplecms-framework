@@ -66,11 +66,10 @@ trait RolePermissionTrait
 
     protected function getSuperColumnName(): string
     {
-        // 使用类常量
-        if (defined('self::SUPER_ID')) {
-            return self::SUPER_ID;
+        // 检查类属性是否存在并且不为空
+        if (property_exists($this, 'superPrimaryKey') && !empty($this->superPrimaryKey)) {
+            return $this->superPrimaryKey;
         }
-
         return 'is_super';
     }
 }

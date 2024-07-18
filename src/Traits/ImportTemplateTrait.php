@@ -77,11 +77,11 @@ trait ImportTemplateTrait
      */
     protected function getImportClassName(): string
     {
-        // 使用类常量
-        if (defined('self::IMPORT_NAME')) {
-            return self::IMPORT_NAME;
+        // 检查类属性是否存在并且不为空
+        if (property_exists($this, 'importName') && !empty($this->importName)) {
+            return $this->importName;
         }
-
+        
         return '\App\Exports\\' . basename($this->className) . 'Import';
     }
 }
