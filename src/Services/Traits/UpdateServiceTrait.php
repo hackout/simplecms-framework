@@ -32,7 +32,7 @@ trait UpdateServiceTrait
             throw new SimpleException(trans('simplecms:not_exists'));
         }
 
-        list($sql, $files, $multipleFiles) = ConvertData::run($this->/** @scrutinizer ignore-call */ getModel(), $data, $mediaFields);
+        list($sql, $files, $multipleFiles,$mediaFields) = ConvertData::run($this->/** @scrutinizer ignore-call */ getModel(), $data, $mediaFields);
         $item->fill($sql);
         $result = $item->save();
 

@@ -110,7 +110,7 @@ class SimpleService extends BaseService implements CacheInterface, BuilderInterf
      */
     public function create(array $data, array $mediaFields = [])
     {
-        list($sql, $files, $multipleFiles) = Work\ConvertData::run($this->getModel(), $data, $mediaFields);
+        list($sql, $files, $multipleFiles,$mediaFields) = Work\ConvertData::run($this->getModel(), $data, $mediaFields);
 
         $item = $this->newModel();
         $item->fill($sql);

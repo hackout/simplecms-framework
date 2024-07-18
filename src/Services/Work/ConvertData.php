@@ -28,7 +28,7 @@ class ConvertData
                 $result['type'] == 'files' && $files[$field] = $value;
             }
         }
-        return [$sql, $files, $multiple];
+        return [$sql, $files, $multiple,$mediaFields];
     }
 
     private static function parseMediaFields(array $mediaFields): array
