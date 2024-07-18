@@ -1,9 +1,9 @@
 <?php
 namespace SimpleCMS\Framework\Services\Traits;
 
-use SimpleCMS\Framework\Services\SimpleUploadService;
 use SimpleCMS\Framework\Services\Work\AddMedia;
 use SimpleCMS\Framework\Services\Work\HasMedia;
+use SimpleCMS\Framework\Services\SimpleUploadService;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -91,7 +91,7 @@ trait MediaServiceTrait
     private function processFilesWithFields(array $files, array $mediaFields, bool $isMultiple): void
     {
         foreach ($files as $field => $file) {
-            if (in_array($field, $mediaFields)) {
+            if (array_key_exists($field, $mediaFields) && $mediaFields[$field]) {
                 if ($isMultiple) {
                     $this->addMultipleMedia($file, $mediaFields[$field]);
                 } else {
