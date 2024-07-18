@@ -67,7 +67,7 @@ trait CaptchaText
         if (is_array($this->characters)) {
             return $this->characters;
         }
-        return str_split($this->characters);
+        return (array) str_split($this->characters);
     }
 
     private function getGenerateBag(): array
@@ -77,7 +77,7 @@ trait CaptchaText
             $x = random_int(10, 30);
             $y = random_int(1, 9);
             $text = "$x + $y = ";
-            $bag = str_split($text);
+            $bag = (array) str_split($text);
         } else {
             $characters = $this->getGenerateCharacters();
             if (!empty($characters)) {
@@ -87,7 +87,7 @@ trait CaptchaText
                 }
             }
         }
-        return (array) $bag;
+        return $bag;
     }
 
     private function getGenerateKey(array $generate): string

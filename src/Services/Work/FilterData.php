@@ -1,6 +1,8 @@
 <?php
 namespace SimpleCMS\Framework\Services\Work;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as BaseCollection;
 
@@ -8,6 +10,10 @@ use Illuminate\Support\Collection as BaseCollection;
  * 转换模型到数组
  *
  * @author Dennis Lui <hackout@vip.qq.com>
+ * 
+ * @template TKey of array-key
+ *
+ * @template-covariant TValue
  * 
  */
 class FilterData
@@ -27,68 +33,109 @@ class FilterData
             $newItem = new BaseCollection();
 
             foreach ($fieldList as $value) {
-                list($key, $val, $relation, $key1) = self::parseField($value);
+                list($key,$field) = self::parseField($value);
 
-                if (strpos($relation, ':') === false) {
-                    $result = self::processRelationByNotSplit($item, $relation, $key1, $key, $val);
-                } else {
-                    $result = self::processRelationBySplit($item, $relation, $val);
-                }
-                $newItem->put($result['key'], $result['value']);
+                $newItem->put($field,self::processData($item,$key));
             }
             return $newItem;
         });
     }
 
-    private static function parseField($value): array
+    /**
+     * @param mixed $item
+     * @param string $key
+     * @return TValue|null
+     */
+    private static function processData($item,string $key)
     {
-        list($key, $val) = array_pad(explode(' as ', strtolower($value)), 2, null);
-        list($relation, $key1) = array_pad(explode('.', strtolower($key)), 2, null);
-        $key1 = $key1 ?: $relation;
-        $val = $val ?: $key1;
-        return [$key, $val, $relation, $key1];
+        $dotKey = Str::before($key,':');
+        $result = object_get($item,$dotKey);
+        if (strpos($key, ':') !== false) {
+            $only = explode(',',Str::afterLast($key,':'));
+            $result = self::parseOnlyValue($result,$only);
+        }
+        return object_get($item,$key);
     }
 
-    private static function parseRelationColumns($relation, $val): array
+    /**
+     * @param mixed $item
+     * @param string $key
+     * @return TValue|null
+     */
+    private static function parseOnlyValue($result,array $only)
     {
-        list($relation, $relationColumnString) = explode(':', $relation);
-        list($val, $valColumnString) = array_pad(explode(':', $val), 2, null);
-        $valColumns = $valColumnString ? explode(',', $valColumnString) : null;
-        $relationColumns = explode(',', $relationColumnString);
-        return [
-            $relation,
-            $val,
-            $valColumns,
-            $relationColumns
-        ];
+        list($fields,$alias) = self::parseAliasField($only);
+        if(gettype($result) == 'array')
+        {
+            return self::convertArrOnly($result,$fields,$alias);
+        }
+        return self::convertCollectionOnly($result,$fields,$alias);
     }
 
-    private static function processRelationBySplit($item, $relation, $val): array
+    /**
+     * 
+     * @author Dennis Lui <hackout@vip.qq.com>
+     * @param  \Illuminate\Database\Eloquent\Model         $result
+     * @param  array          $fields
+     * @param  array          $alias
+     * @return TValue|null
+     */
+    private static function convertCollectionOnly($result,array $fields,array $alias)
     {
-        $result = [
-            'key' => $val,
-            'value' => null
-        ];
-        list($relation, $val, $valColumns, $relationColumns) = self::parseRelationColumns($relation, $val);
-        $result['key'] = $val;
-        $result['value'] = optional($item->$relation)->map(function ($_item) use ($relationColumns, $valColumns) {
-            $newItem = [];
-            foreach ($relationColumns as $index => $key) {
-                $column = isset($valColumns[$index]) ? $valColumns[$index] : $key;
-                $newItem[$column] = $_item->$key;
-            }
-            return $newItem;
-        })->toArray();
-        return $result;
+        foreach($alias as $key=>$field)
+        {
+            $result->$field = $result->{$fields[$key]};
+        }
+        return  $result->only($alias);
     }
 
-    private static function processRelationByNotSplit($item, $relation, $key1, $key, $val): array
+    private static function convertArrOnly(array $result,array $fields,array $alias):array
     {
-        $result = [
-            'key' => $val,
-            'value' => $relation === $key ? $item->$key : optional($item->$relation)->$key1
-        ];
-        return $result;
+        if(Arr::isList($result)) return $result;
+        $result = Arr::only($result,$fields);
+        $newResult = [];
+        foreach($alias as $key=>$name)
+        {
+            $newResult[$name] = isset($result[$key]) ? $result[$key] : null;
+        }
+        return $newResult;
+    }
+
+    private static function parseAliasField(array $only):array
+    {
+        $fields = [];
+        $alias = [];
+        foreach($only as $rs)
+        {
+            $fields[] = Str::beforeLast($rs,' as ');
+            $alias[] = Str::afterLast($rs,' as ');
+        }
+        return [$fields,$alias];
+    }
+
+    /**
+     * @param string $value
+     * @return array<string,TKey>
+     */
+    private static function parseField(string $value): array
+    {
+        return array_pad(explode(' as ', strtolower($value)),2,null);
+        if(empty($field))
+        {
+            $field = self::parseFieldData($key);
+        }
+        return [$key,$field];
+    }
+
+
+    private static function parseFieldDataByList(string $key):array
+    {
+        $keys = [];
+        foreach(explode(',',Str::afterLast($key,':')) as $rs)
+        {
+            $keys[] = Str::afterLast($rs,' as ');
+        }
+        return $keys;
     }
 
 }

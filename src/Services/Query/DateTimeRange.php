@@ -23,8 +23,8 @@ class DateTimeRange
      */
     public static function builder(array|string $value, array|string $fields, bool $isFull = false): array
     {
-        $values = is_array($value) ? $value : [trim($value), null];
-        $fields = is_array($fields) ? $fields : [$fields];
+        $values = gettype($value) == 'array' ? $value : [trim($value), null];
+        $fields = gettype($fields) == 'array' ? $fields : [$fields];
 
         if (head($values) === null && last($values) === null) {
             return [];

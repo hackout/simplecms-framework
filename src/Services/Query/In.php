@@ -21,8 +21,8 @@ class In
      */
     public static function builder(array|string $values, array|string $fields, bool $isFull = false): array
     {
-        $values = !is_array($values) ? [$values] : $values;
-        $fields = !is_array($fields) ? [$fields] : $fields;
+        $values = gettype($values) != 'array' ? [$values] : $values;
+        $fields = gettype($fields) != 'array' ? [$fields] : $fields;
 
         return [
             self::buildQueryFunction($values, $fields, $isFull)

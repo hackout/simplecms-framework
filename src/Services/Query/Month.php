@@ -23,7 +23,7 @@ class Month
      */
     public static function builder(int|float|string $value, array|string $fields, bool $isFull = false): array
     {
-        $fields = !is_array($fields) ? [$fields] : $fields;
+        $fields = gettype($fields) != 'array' ? [$fields] : $fields;
 
         return [
             self::buildQueryFunction($value, $fields, $isFull)
