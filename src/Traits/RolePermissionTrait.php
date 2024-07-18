@@ -66,6 +66,11 @@ trait RolePermissionTrait
 
     protected function getSuperColumnName(): string
     {
-        return defined('static::SUPER_ID') ? static::SUPER_ID : 'is_super';
+        // 使用类常量
+        if (defined('self::SUPER_ID')) {
+            return self::SUPER_ID;
+        }
+
+        return 'is_super';
     }
 }

@@ -51,7 +51,7 @@ class FilterData
             $only = explode(',',Str::afterLast($key,':'));
             $result = self::parseOnlyValue($result,$only);
         }
-        return object_get($item,$key);
+        return $result;
     }
 
     /**
@@ -117,11 +117,6 @@ class FilterData
     private static function parseField(string $value): array
     {
         return array_pad(explode(' as ', strtolower($value)),2,null);
-        if(empty($field))
-        {
-            $field = self::parseFieldData($key);
-        }
-        return [$key,$field];
     }
 
 }

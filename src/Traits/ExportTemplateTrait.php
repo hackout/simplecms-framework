@@ -46,7 +46,12 @@ trait ExportTemplateTrait
      */
     protected function getExportClassName(): string
     {
-        return defined('static::EXPORT_NAME') ? static::EXPORT_NAME : '\App\Exports\\' . basename($this->className) . 'Export';
+        // 使用类常量
+        if (defined('self::EXPORT_NAME')) {
+            return self::EXPORT_NAME;
+        }
+
+        return '\App\Exports\\' . basename($this->className) . 'Export';
     }
 
 }

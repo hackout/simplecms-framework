@@ -77,6 +77,11 @@ trait ImportTemplateTrait
      */
     protected function getImportClassName(): string
     {
-        return defined('static::IMPORT_NAME') ? static::IMPORT_NAME : '\App\Imports\\' . basename($this->className) . 'Import';
+        // 使用类常量
+        if (defined('self::IMPORT_NAME')) {
+            return self::IMPORT_NAME;
+        }
+
+        return '\App\Exports\\' . basename($this->className) . 'Import';
     }
 }

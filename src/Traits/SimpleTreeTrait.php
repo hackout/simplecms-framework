@@ -61,7 +61,7 @@ trait SimpleTreeTrait
      */
     public function parent(): BelongsTo
     {
-        return $this->/** @scrutinizer ignore-call */belongsTo(static::class, $this->getParentColumnName());
+        return $this->/** @scrutinizer ignore-call */ belongsTo(static::class, $this->getParentColumnName());
     }
 
     /**
@@ -72,7 +72,7 @@ trait SimpleTreeTrait
      */
     public function children(): HasMany
     {
-        return $this->/** @scrutinizer ignore-call */hasMany(static::class, $this->getParentColumnName());
+        return $this->/** @scrutinizer ignore-call */ hasMany(static::class, $this->getParentColumnName());
     }
 
     /**
@@ -108,7 +108,7 @@ trait SimpleTreeTrait
             }
         }
 
-        return new Collection(/** @scrutinizer ignore-type */$result);
+        return new Collection(/** @scrutinizer ignore-type */ $result);
     }
 
     /**
@@ -153,7 +153,12 @@ trait SimpleTreeTrait
      */
     public function getParentColumnName()
     {
-        return defined('static::PARENT_ID') ? static::PARENT_ID : 'parent_id';
+        // 使用类常量
+        if (defined('self::PARENT_ID')) {
+            return self::PARENT_ID;
+        }
+
+        return 'parent_id';
     }
 
     /**
@@ -171,7 +176,7 @@ trait SimpleTreeTrait
      */
     public function getParentId()
     {
-        return $this->/** @scrutinizer ignore-call */getAttribute($this->getParentColumnName());
+        return $this->/** @scrutinizer ignore-call */ getAttribute($this->getParentColumnName());
     }
 
     /**
@@ -179,6 +184,6 @@ trait SimpleTreeTrait
      */
     public function newCollection(array $models = [])
     {
-        return new TreeCollection(/** @scrutinizer ignore-type */$models);
+        return new TreeCollection(/** @scrutinizer ignore-type */ $models);
     }
 }
