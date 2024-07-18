@@ -12,7 +12,7 @@ class {{ class }} extends SimpleService
 {
     use ExportTemplateTrait,ImportTemplateTrait;
 
-    public ?string $className = {{modelName}}::class;
+    public string $className = {{modelName}}::class;
     
     /**
      * 获取列表

@@ -9,7 +9,7 @@ use SimpleCMS\Framework\Services\SimpleService;
 class {{ class }} extends SimpleService
 {
 
-    public ?string $className = {{modelName}}::class;
+    public string $className = {{modelName}}::class;
     
     /**
      * 获取列表

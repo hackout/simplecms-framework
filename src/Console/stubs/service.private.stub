@@ -8,6 +8,6 @@ use App\Enums\{{ modelName }}Enum;
 
 class {{ class }} extends SimpleService
 {
-    public ?string $className = {{modelName}}::class;
+    public string $className = {{modelName}}::class;
     
 }
