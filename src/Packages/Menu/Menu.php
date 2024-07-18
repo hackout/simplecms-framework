@@ -2,7 +2,7 @@
 namespace SimpleCMS\Framework\Packages\Menu;
 
 use Illuminate\Routing\Route;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use SimpleCMS\Framework\Models\Menu as MenuModel;
 
 /**
