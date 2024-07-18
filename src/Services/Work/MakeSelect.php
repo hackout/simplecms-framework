@@ -19,7 +19,7 @@ class MakeSelect
      */
     public function run(Model $model, $select = []): mixed
     {
-        $selectList = new Collection(/** @scrutinizer ignore-type */ $select ?? (array) $model->getFillable());
+        $selectList = new Collection(/** @scrutinizer ignore-type */ !empty($select) ? $select : (array) $model->getFillable());
         $casts = $model->getCasts();
         if (empty($select)) {
             $selectList = self::convertEmptySelect($selectList, $casts, $model);
