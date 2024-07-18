@@ -91,7 +91,7 @@ trait MediaServiceTrait
     private function processFilesWithFields(array $files, array $mediaFields, bool $isMultiple): void
     {
         foreach ($files as $field => $file) {
-            if (array_key_exists($field, $mediaFields) && $mediaFields[$field]) {
+            if (in_array($field, $mediaFields)) {
                 if ($isMultiple) {
                     $this->addMultipleMedia($file, $mediaFields[$field]);
                 } else {
