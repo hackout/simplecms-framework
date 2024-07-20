@@ -36,7 +36,7 @@ class Query
             return $value;
         }
         if (Arr::isList($value)) {
-            return [$value];
+            return $value;
         }
         $result = [];
         foreach ($value as $key => $val) {
