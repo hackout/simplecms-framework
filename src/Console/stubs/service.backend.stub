@@ -3,7 +3,6 @@
 namespace {{ namespace }};
 
 use {{ modelNamespace }}\{{ modelName }};
-use App\Enums\{{ modelName }}Enum;
 use SimpleCMS\Framework\Services\SimpleService;
 use SimpleCMS\Framework\Traits\ExportTemplateTrait;
 use SimpleCMS\Framework\Traits\ImportTemplateTrait;

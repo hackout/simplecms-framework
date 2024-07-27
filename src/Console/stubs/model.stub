@@ -9,10 +9,10 @@ use SimpleCMS\Framework\Contracts\SimpleMedia;
 use SimpleCMS\Framework\Traits\MediaAttributeTrait;
 use SimpleCMS\Framework\Traits\PrimaryKeyUuidTrait;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * {{ class }} Model
- 
  * @author Dennis Lui <hackout@vip.qq.com>
  *
  * @property string $id 主键
@@ -23,7 +23,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  */
 class {{ class }} extends Model implements SimpleMedia
 {
-    use PrimaryKeyUuidTrait,MediaAttributeTrait;
+    use HasFactory,PrimaryKeyUuidTrait,MediaAttributeTrait;
 
     /**
      * Media Key
