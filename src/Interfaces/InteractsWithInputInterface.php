@@ -128,7 +128,7 @@ interface InteractsWithInputInterface
      * @param  string  $key
      * @return bool
      */
-    protected function isEmptyString($key);
+    public function isEmptyString($key);
 
     /**
      * Get the keys for all of the input and files.
@@ -295,7 +295,7 @@ interface InteractsWithInputInterface
      * @param  array  $files
      * @return array
      */
-    protected function convertUploadedFiles(array $files);
+    public function convertUploadedFiles(array $files);
 
     /**
      * Determine if the uploaded data contains a file.
@@ -311,7 +311,7 @@ interface InteractsWithInputInterface
      * @param  mixed  $file
      * @return bool
      */
-    protected function isValidFile($file);
+    public function isValidFile($file);
 
     /**
      * Retrieve a file from the request.
@@ -329,7 +329,7 @@ interface InteractsWithInputInterface
      * @param  string|array|null  $default
      * @return string|array|null
      */
-    protected function retrieveItem($source, $key, $default);
+    public function retrieveItem($source, $key, $default);
 
     /**
      * Dump the items.

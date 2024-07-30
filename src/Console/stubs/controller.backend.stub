@@ -19,7 +19,7 @@ class {{ class }} extends BaseController
      * {{ class }} 首页
      *
      * @author Dennis Lui <hackout@vip.qq.com>
-     * @param  Request         $request
+     * @param  {{ storeRequest }} $request
      * @param  {{ storeService }} $service
      * @return InertiaResponse
      */
@@ -39,7 +39,7 @@ class {{ class }} extends BaseController
      * {{ class }} 获取列表
      *
      * @author Dennis Lui <hackout@vip.qq.com>
-     * @param  Request         $request
+     * @param  {{ storeRequest }} $request
      * @param  {{ storeService }} $service
      * @return JsonResponse
      */
@@ -61,7 +61,7 @@ class {{ class }} extends BaseController
      * {{ class }} 添加信息
      *
      * @author Dennis Lui <hackout@vip.qq.com>
-     * @param  Request         $request
+     * @param  {{ storeRequest }} $request
      * @param  {{ storeService }} $service
      * @return JsonResponse
      */
@@ -84,7 +84,7 @@ class {{ class }} extends BaseController
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  string $id
-     * @param  Request         $request
+     * @param  {{ storeRequest }} $request
      * @param  {{ storeService }} $service
      * @return JsonResponse
      */
@@ -115,7 +115,7 @@ class {{ class }} extends BaseController
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  string $id
-     * @param  Request         $request
+     * @param  {{ storeRequest }} $request
      * @param  {{ storeService }} $service
      * @return JsonResponse
      */
@@ -144,7 +144,7 @@ class {{ class }} extends BaseController
      *
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  string         $id
-     * @param  Request         $request
+     * @param  {{ storeRequest }} $request
      * @param  {{ storeService }} $service
      * @return JsonResponse
      */
