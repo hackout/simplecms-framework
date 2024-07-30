@@ -77,9 +77,9 @@ class ControllerMakeCommand extends GeneratorCommand
         $table = Str::snake(Str::pluralStudly(class_basename($this->option('model'))));
 
         [$namespace, $storeRequestClass, $updateRequestClass] = [
-            'SimpleCMS\\Framework\\Http\\Requests',
-            'SimpleRequest',
-            'SimpleRequest',
+            'Illuminate\\Http',
+            'Request',
+            'Request',
         ];
         $namespacedRequests = $namespace . '\\' . $storeRequestClass . ';';
 
