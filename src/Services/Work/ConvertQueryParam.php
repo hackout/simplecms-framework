@@ -19,7 +19,7 @@ class ConvertQueryParam
         return [
             $queryModel,
             $fields,
-            $extra
+            (bool) $extra
         ];
     }
 
