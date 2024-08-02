@@ -1,10 +1,8 @@
 <?php
 namespace SimpleCMS\Framework\Packages\System;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Cache as BaseCache;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\{DB,Redis,Cache as BaseCache};
 
 /**
  * 缓存管理

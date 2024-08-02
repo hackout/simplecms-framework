@@ -1,9 +1,6 @@
 <?php
 namespace SimpleCMS\Framework\Services\Query;
 
-use function explode;
-use function is_array;
-use function array_pad;
 use Illuminate\Database\Query\Builder;
 
 class Search

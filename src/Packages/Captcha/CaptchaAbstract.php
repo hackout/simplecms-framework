@@ -3,11 +3,10 @@
 namespace SimpleCMS\Framework\Packages\Captcha;
 
 use Illuminate\Support\Str;
-use Intervention\Image\Image;
-use Intervention\Image\ImageManager;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\Store as Session;
 use Illuminate\Contracts\Config\Repository;
+use Intervention\Image\{Image,ImageManager};
 use Illuminate\Hashing\BcryptHasher as Hasher;
 use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;

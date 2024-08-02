@@ -4,8 +4,7 @@ namespace {{ namespace }};
 
 use {{ modelNamespace }}\{{ modelName }};
 use SimpleCMS\Framework\Services\SimpleService;
-use SimpleCMS\Framework\Traits\ExportTemplateTrait;
-use SimpleCMS\Framework\Traits\ImportTemplateTrait;
+use SimpleCMS\Framework\Traits\{ExportTemplateTrait,ImportTemplateTrait};
 
 class {{ class }} extends SimpleService
 {

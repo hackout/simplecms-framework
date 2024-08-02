@@ -2,8 +2,7 @@
 
 namespace SimpleCMS\Framework\Contracts;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\{Model,Builder};
 use Illuminate\Database\Query\Builder as DatabaseBuilder;
 
 /**

@@ -2,11 +2,9 @@
 
 namespace SimpleCMS\Framework\Services\Traits;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
+use Illuminate\Support\{Arr,Str};
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\{Model,Builder};
 use SimpleCMS\Framework\Services\Work\MakeSelect;
 use Illuminate\Database\Query\Builder as DatabaseBuilder;
 

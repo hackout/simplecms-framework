@@ -1,7 +1,6 @@
 <?php
 namespace SimpleCMS\Framework\Traits;
 
-use function is_null;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
@@ -45,7 +44,7 @@ trait ExportTemplateTrait
      */
     protected function getExportClassName(): string
     {
-        return defined(static::class.'::EXPORT_NAME') ? static::EXPORT_NAME : '\App\Exports\\' . basename($this->className) . 'Export';
+        return defined(static::class.'::EXPORT_NAME') ? static::EXPORT_NAME : '\App\Exports\\' . last_name($this->className) . 'Export';
     }
 
 }

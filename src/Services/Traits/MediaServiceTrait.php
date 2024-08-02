@@ -1,10 +1,9 @@
 <?php
 namespace SimpleCMS\Framework\Services\Traits;
 
-use SimpleCMS\Framework\Services\Work\AddMedia;
-use SimpleCMS\Framework\Services\Work\HasMedia;
 use SimpleCMS\Framework\Services\SimpleUploadService;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use SimpleCMS\Framework\Services\Work\{AddMedia,HasMedia};
 
 /**
  * 附件处理类

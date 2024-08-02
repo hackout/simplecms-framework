@@ -2,10 +2,8 @@
 namespace SimpleCMS\Framework\Packages\System;
 
 use function phpversion;
-use Illuminate\Support\Number;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\{Number,Collection};
+use Illuminate\Support\Facades\{Request,DB};
 
 /**
  * 系统环境信息

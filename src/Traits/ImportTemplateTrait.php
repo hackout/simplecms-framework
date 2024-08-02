@@ -37,7 +37,7 @@ trait ImportTemplateTrait
      */
     protected function getImportBaseName(): string
     {
-        return property_exists($this, 'template') && $this->template ? $this->template : basename($this->className);
+        return property_exists($this, 'template') && $this->template ? $this->template : last_name($this->className);
     }
 
     /**
@@ -76,6 +76,6 @@ trait ImportTemplateTrait
      */
     protected function getImportClassName(): string
     {
-        return defined(static::class.'::IMPORT_NAME') ? static::IMPORT_NAME : '\App\Imports\\' . basename($this->className) . 'Import';
+        return defined(static::class.'::IMPORT_NAME') ? static::IMPORT_NAME : '\App\Imports\\' . last_name($this->className) . 'Import';
     }
 }

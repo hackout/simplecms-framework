@@ -49,7 +49,8 @@ class Dict
             return collect();
         return $dict->items->map(fn(DictItem $dictItem) => [
             'name' => $dictItem->name,
-            'value' => $dictItem->value
+            'value' => $dictItem->value,
+            'id' => $dictItem->id
         ]);
     }
 
@@ -75,9 +76,9 @@ class Dict
      * @author Dennis Lui <hackout@vip.qq.com>
      * @param  string      $code
      * @param  string      $name
-     * @return string|null
+     * @return int|null
      */
-    public function getValueByName(string $code, string $name): ?string
+    public function getValueByName(string $code, string $name): ?int
     {
         $dict = DictModel::where('code', $code)->first();
         if (!$dict)
@@ -85,4 +86,23 @@ class Dict
         return optional($dict->items->where('name', $name)->first())->value;
     }
 
+    /**
+     * 获取键值
+     * @param int|string $id
+     * @return mixed
+     */
+    public function getValueById(int|string $id): ?int
+    {
+        return optional(DictItem::find($id))->value;
+    }
+
+    /**
+     * 获取键名
+     * @param int|string $id
+     * @return mixed
+     */
+    public function getNameById(int|string $id): ?int
+    {
+        return optional(DictItem::find($id))->name;
+    }
 }

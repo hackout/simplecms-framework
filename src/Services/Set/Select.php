@@ -1,7 +1,6 @@
 <?php
 namespace SimpleCMS\Framework\Services\Set;
 
-use function is_array;
 use Illuminate\Contracts\Database\Query\Expression;
 
 class Select

@@ -2,7 +2,6 @@
 namespace SimpleCMS\Framework\Services\Query;
 
 use Carbon\Carbon;
-use function is_array;
 use Illuminate\Database\Query\Builder;
 
 class DateTime

@@ -2,15 +2,12 @@
 
 namespace SimpleCMS\Framework\Packages\Captcha;
 
-use function is_string;
-use function str_split;
 use Illuminate\Support\Str;
-use Intervention\Image\Image;
-use Intervention\Image\ImageManager;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Session\Store as Session;
 use Illuminate\Contracts\Config\Repository;
+use Intervention\Image\{Image,ImageManager};
 use Illuminate\Hashing\BcryptHasher as Hasher;
 use Intervention\Image\Geometry\Factories\LineFactory;
 

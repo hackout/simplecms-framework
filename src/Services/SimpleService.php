@@ -2,13 +2,10 @@
 
 namespace SimpleCMS\Framework\Services;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
-use Illuminate\Database\Eloquent\Collection;
-use SimpleCMS\Framework\Contracts\CacheInterface;
-use SimpleCMS\Framework\Contracts\BuilderInterface;
+use Illuminate\Database\Eloquent\{Model, Collection};
 use Illuminate\Support\Collection as BaseCollection;
-use SimpleCMS\Framework\Contracts\RetrieveInterface;
+use SimpleCMS\Framework\Contracts\{CacheInterface, BuilderInterface, RetrieveInterface};
 
 /**
  * SimpleService for Based service
@@ -110,7 +107,7 @@ class SimpleService extends BaseService implements CacheInterface, BuilderInterf
      */
     public function create(array $data, array $mediaFields = [])
     {
-        list($sql, $files, $multipleFiles,$mediaFields) = Work\ConvertData::run($this->getModel(), $data, $mediaFields);
+        list($sql, $files, $multipleFiles, $mediaFields) = Work\ConvertData::run($this->getModel(), $data, $mediaFields);
 
         $item = $this->newModel();
         $item->fill($sql);

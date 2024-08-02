@@ -2,10 +2,9 @@
 
 namespace SimpleCMS\Framework\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
 use SimpleCMS\Framework\Contracts\SimpleMedia;
 use SimpleCMS\Framework\Traits\MediaAttributeTrait;
+use Illuminate\Database\Eloquent\{Model,Collection};
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**

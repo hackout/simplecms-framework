@@ -1,11 +1,8 @@
 <?php
 namespace SimpleCMS\Framework\Services\Work;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Database\Eloquent\{Model,Collection};
+use Illuminate\Support\{Arr,Str,Collection as BaseCollection};
 
 /**
  * 转换模型到数组
