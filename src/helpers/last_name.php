@@ -8,10 +8,9 @@ use Illuminate\Support\Str;
  * @param string<class-string> $model
  * @return string
  */
-function last_name(string $model):string
+function last_name(string $model): string
 {
-    $model = ltrim($model, '\\/');
 
     $model = str_replace('/', '\\', $model);
-    return Str::endsWith("\\",basename($model));
+    return Str::afterLast(basename($model), "\\");
 }
