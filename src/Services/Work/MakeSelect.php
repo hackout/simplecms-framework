@@ -63,9 +63,6 @@ class MakeSelect
         if (!$primaryKey = $model->getKeyName()) {
             return $collection;
         }
-        if ($collection->contains($primaryKey)) {
-            return $collection;
-        }
         $collection->push(/** @scrutinizer ignore-type */ $primaryKey);
         return self::convertDefaultSelect($collection, $casts);
         ;
