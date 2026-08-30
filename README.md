@@ -1,5 +1,7 @@
 # SimpleCMS Framework
 
+[English](README.md) | [中文](README-ZH.md)
+
 A Laravel package for building admin and content-driven applications with reusable service logic, media helpers, menu management, configuration access, captcha utilities, dictionary handling, and permission-oriented scaffolding.
 
 ## Overview

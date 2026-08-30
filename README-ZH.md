@@ -1,5 +1,7 @@
 # SimpleCMS Framework
 
+[English](README.md) | [中文](README-ZH.md)
+
 一个用于 Laravel 应用的扩展框架，提供通用的服务层、媒体管理、菜单权限、系统配置、验证码、字典、权限脚手架和后台管理常用工具能力。
 
 ## 概览
