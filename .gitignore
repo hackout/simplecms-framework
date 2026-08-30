@@ -1,0 +1,36 @@
+.DS_Store
+Thumbs.db
+
+# Composer
+/vendor/
+/composer.lock
+
+# PHP runtime / local tmp
+.phpunit.result.cache
+.php-cs-fixer.cache
+coverage/
+.tmp/
+tmp-test/
+
+# Laravel / app local files
+.env
+.env.*
+!.env.example
+/storage/*.key
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+*.log
+
+# Local package build output
+build/
+dist/

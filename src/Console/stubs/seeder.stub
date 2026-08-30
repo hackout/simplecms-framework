@@ -1,0 +1,23 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedUserModel }};
+use Illuminate\Database\Seeder;
+
+class {{ class }} extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $data = $this->getList();
+        //{{ modelClass }}::create(....)
+    }
+
+    public function getList()
+    {
+        return [];
+    }
+}

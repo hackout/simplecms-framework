@@ -1,0 +1,49 @@
+{
+    "name": "simplecms/framework",
+    "description": "Simple-CMS is a SimpleCMS",
+    "keywords": [
+        "laravel",
+        "framework",
+        "simplecms"
+    ],
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "SimpleCMS\\Framework\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "hackout",
+            "email": "hackout@vip.qq.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "alibabacloud/dysmsapi-20170525": "^2.0",
+        "intervention/image": "^3.6",
+        "jenssegers/agent": "^2.6.4",
+        "laravel/framework": "^12.0",
+        "laravel/tinker": "^2.10",
+        "maatwebsite/excel": "^3.1",
+        "php-ffmpeg/php-ffmpeg": "^1.2",
+        "spatie/laravel-medialibrary": "^11.12"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SimpleCMS\\Framework\\SimpleServiceProvider"
+            ],
+            "aliases": {
+                "SystemConfig": "SimpleCMS\\Framework\\Facades\\SystemConfig",
+                "SystemInfo": "SimpleCMS\\Framework\\Facades\\SystemInfo",
+                "ExcelConvert": "SimpleCMS\\Framework\\Facades\\ExcelConvert",
+                "ExcelDrawing": "SimpleCMS\\Framework\\Facades\\ExcelDrawing",
+                "Captcha": "SimpleCMS\\Framework\\Facades\\Captcha",
+                "Dict": "SimpleCMS\\Framework\\Facades\\Dict",
+                "Menu": "SimpleCMS\\Framework\\Facades\\Menu",
+                "Finger": "SimpleCMS\\Framework\\Facades\\Finger"
+            }
+        }
+    }
+}
