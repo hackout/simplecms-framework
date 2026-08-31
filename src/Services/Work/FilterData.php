@@ -113,7 +113,13 @@ class FilterData
      */
     private static function parseField(string $value): array
     {
-        return array_pad(explode(' as ', strtolower($value)),2,null);
+        $trimmed = trim($value);
+        if (preg_match('/\s+as\s+/i', $trimmed)) {
+            $parts = preg_split('/\s+as\s+/i', $trimmed, 2);
+            return [trim($parts[0]), trim($parts[1] ?? $parts[0])];
+        }
+
+        return [trim($trimmed), trim($trimmed)];
     }
 
 }

@@ -25,32 +25,37 @@ class BaseService
 {
     protected string $className = '';
 
-    private array $query = [];
+    protected array $query = [];
 
-    private array $with = [];
+    protected array $with = [];
 
-    private array $has = [];
+    protected array $has = [];
 
-    private array $group = [];
+    protected array $group = [];
 
-    private array $select = [];
+    protected array $select = [];
 
-    private ?string $tableName = null;
+    protected ?string $tableName = null;
 
-    private ?Model $model = null;
+    protected ?Model $model = null;
 
-    private ?string $primaryKey = null;
+    protected ?string $primaryKey = null;
 
-    private ?string $orderKey = null;
+    protected ?string $orderKey = null;
 
-    private string $orderType = 'desc';
+    protected string $orderType = 'desc';
 
-    private mixed $item = null;
+    protected mixed $item = null;
 
     public function __construct(?string $className = null)
     {
         if ($className !== null && $className !== '') {
             $this->setModel($className);
+            return;
+        }
+
+        if ($this->className !== '') {
+            $this->setModel($this->className);
         }
     }
 
