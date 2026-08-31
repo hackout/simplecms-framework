@@ -25,15 +25,35 @@ class RequestLogService extends SimpleService
     private function applyLog(Request $request, bool $status, string $controllerName, string $actionName): void
     {
         if (method_exists($controllerName, $actionName)) {
-            $reflectionMethod = new \ReflectionMethod($controllerName, $actionName);
-            $attributes = $reflectionMethod->getAttributes(ApiName::class);
-            $name = $controllerName . '@' . $actionName;
-            foreach ($attributes as $attribute) {
-
+            $reflectionClass = new \ReflectionClass($controllerName);
+            $className = null;
+            foreach ($reflectionClass->getAttributes(ApiName::class) as $attribute) {
                 if ($attribute->getName() === ApiName::class) {
-                    $name = $attribute->getArguments()['name'];
+                    $className = $attribute->getArguments()['name'] ?? null;
+                    break;
                 }
             }
+
+            $reflectionMethod = new \ReflectionMethod($controllerName, $actionName);
+            $methodName = null;
+            foreach ($reflectionMethod->getAttributes(ApiName::class) as $attribute) {
+                if ($attribute->getName() === ApiName::class) {
+                    $methodName = $attribute->getArguments()['name'] ?? null;
+                    break;
+                }
+            }
+
+            $defaultName = $controllerName . '@' . $actionName;
+            $name = $defaultName;
+
+            if (!empty($className) && !empty($methodName)) {
+                $name = $className . ' : ' . $methodName;
+            } elseif (!empty($className)) {
+                $name = $className;
+            } elseif (!empty($methodName)) {
+                $name = $defaultName . ' : ' . $methodName;
+            }
+
             $sql = $this->makeSql($request, $name, $status);
 
             parent::create($sql);

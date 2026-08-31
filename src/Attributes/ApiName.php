@@ -2,7 +2,7 @@
 
 namespace SimpleCMS\Framework\Attributes;
 
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
 /**
  * API别名处理
  *
