@@ -11,7 +11,7 @@ function dynamic_require(string $path): void
 {
     $fullPath = $path;
 
-    if (! str_starts_with($path, DIRECTORY_SEPARATOR) && ! preg_match('/^[A-Za-z]:[\\\\/]/', $path)) {
+    if (! str_starts_with($path, DIRECTORY_SEPARATOR) && ! preg_match('#^[A-Za-z]:[\\/]#', $path)) {
         $fullPath = base_path($path);
     }
 
